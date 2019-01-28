@@ -3,12 +3,16 @@ package org.eugene.cost.ui;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TextArea;
 import javafx.stage.Stage;
 import org.eugene.cost.logic.model.Buy;
 import org.eugene.cost.logic.model.Day;
 import org.eugene.cost.logic.model.Session;
+import org.eugene.cost.logic.util.Calculate;
+
+import java.time.format.DateTimeFormatter;
 
 public class MoreSessionFxController {
     @FXML
@@ -21,6 +25,11 @@ public class MoreSessionFxController {
 
     @FXML
     private Button close;
+
+    @FXML
+    private Label totalPrice;
+    @FXML
+    private Label currentDay;
 
     private Stage stage;
 
@@ -61,9 +70,13 @@ public class MoreSessionFxController {
 
     private void updateBuyList(int index){
         buyList.getItems().clear();
+        String total = "0";
         for (Buy buy : session.getDayList().get(index).getBuyList()) {
             buyList.getItems().add(buy.toString());
+            total = Calculate.plus(total,buy.getPrice());
         }
+        currentDay.setText("Траты за " + session.getDayList().get(index).getDate().format(DateTimeFormatter.ofPattern("dd/MMM/yyyy")));
+        totalPrice.setText(total + " Руб.");
     }
 
     private void displayBuyDescription(int index){
