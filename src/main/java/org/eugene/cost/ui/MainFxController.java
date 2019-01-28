@@ -10,6 +10,7 @@ import org.eugene.cost.logic.model.Buy;
 import org.eugene.cost.logic.model.Day;
 import org.eugene.cost.logic.model.Session;
 import org.eugene.cost.logic.model.Sessions;
+import org.eugene.cost.logic.util.Calculate;
 import org.eugene.cost.logic.util.FileManager;
 import org.eugene.cost.logic.util.StringUtil;
 
@@ -53,6 +54,11 @@ public class MainFxController {
     private Button resumeDay;
     @FXML
     private Button setting;
+
+    @FXML
+    private RadioButton limitedBuys;
+    @FXML
+    private RadioButton nonLimitedBuys;
 
     private App app;
 
@@ -119,6 +125,8 @@ public class MainFxController {
         moreAboutBuy.setOnAction(this::handleBtnMoreAboutBuy);
         closeDay.setOnAction(this::handleBtnCloseDay);
         resumeDay.setOnAction(this::handleBtnResumeDay);
+        limitedBuys.setOnAction(this::handleLimitedRB);
+        nonLimitedBuys.setOnAction(this::handleNonLimitedRB);
         buyList.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
             currentBuyIntoBuyList = buyList.getSelectionModel().getSelectedIndex();
             displayBuyDescription(currentBuyIntoBuyList);
@@ -149,7 +157,17 @@ public class MainFxController {
     private void updateBuyList() {
         buyList.getItems().clear();
         for (Buy buy : currentDay.getBuyList()) {
-            buyList.getItems().add(buy.toString());
+            if (limitedBuys.isSelected()) {
+                if (buy.isLimited()) {
+                    buyList.getItems().add(buy.toString());
+                }
+            } else if (nonLimitedBuys.isSelected()) {
+                if (!buy.isLimited()) {
+                    buyList.getItems().add(buy.toString());
+                }
+            } else {
+                buyList.getItems().add(buy.toString());
+            }
         }
     }
 
@@ -172,8 +190,26 @@ public class MainFxController {
                     currentLimitDay.setTextFill(Paint.valueOf("green"));
                 }
             }
-            currentRateDay.setText(currentDay.getRate() + " Руб.");
+            currentRateDay.setText(calculateLimitedOrNonLimitedBuy() + " Руб.");
         }
+    }
+
+    private String calculateLimitedOrNonLimitedBuy() {
+        String rate = "0";
+        for (Buy buy : currentDay.getBuyList()) {
+            if (limitedBuys.isSelected()) {
+                if (buy.isLimited()) {
+                    rate = Calculate.plus(rate, buy.getPrice());
+                }
+            } else if (nonLimitedBuys.isSelected()) {
+                if (!buy.isLimited()) {
+                    rate = Calculate.plus(rate, buy.getPrice());
+                }
+            } else {
+                rate = Calculate.plus(rate, buy.getPrice());
+            }
+        }
+        return rate;
     }
 
     private void handleBtnStart(ActionEvent event) {
@@ -198,7 +234,8 @@ public class MainFxController {
             blockBtnAfterInitSession(false);
             FileManager.save(sessions);
         } catch (IncorrectDateException e) {
-            JOptionPane.showMessageDialog(null, "Некорректно выставлены начальная и конечная даты сессии!", "Ошибка", JOptionPane.ERROR_MESSAGE);;
+            JOptionPane.showMessageDialog(null, "Некорректно выставлены начальная и конечная даты сессии!", "Ошибка", JOptionPane.ERROR_MESSAGE);
+            ;
         }
     }
 
@@ -245,6 +282,22 @@ public class MainFxController {
         FileManager.save(sessions);
     }
 
+    private void handleLimitedRB(ActionEvent event) {
+        if (limitedBuys.isSelected()) {
+            nonLimitedBuys.setSelected(false);
+        }
+        updateBuyList();
+        updateLimitsAndRate();
+    }
+
+    private void handleNonLimitedRB(ActionEvent event) {
+        if (nonLimitedBuys.isSelected()) {
+            limitedBuys.setSelected(false);
+        }
+        updateBuyList();
+        updateLimitsAndRate();
+    }
+
     private void setButtonOnCloseDay(boolean isCloseDay) {
         resumeDay.setDisable(!isCloseDay);
         addBuy.setDisable(isCloseDay);
@@ -277,7 +330,7 @@ public class MainFxController {
         FileManager.save(sessions);
     }
 
-    public void applySession(Session session){
+    public void applySession(Session session) {
         this.session = session;
         this.session.autoCloseDays();
         blockBtnBeforeInitSession(true);
@@ -306,5 +359,7 @@ public class MainFxController {
         moreAboutBuy.setDisable(disable);
         closeDay.setDisable(disable);
         resumeDay.setDisable(disable);
+        limitedBuys.setDisable(disable);
+        nonLimitedBuys.setDisable(disable);
     }
 }

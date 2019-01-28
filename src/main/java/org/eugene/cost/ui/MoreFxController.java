@@ -3,6 +3,7 @@ package org.eugene.cost.ui;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
+import javafx.scene.control.CheckBox;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
@@ -25,6 +26,9 @@ public class MoreFxController {
     @FXML
     private Button cancel;
 
+    @FXML
+    private CheckBox nonLimited;
+
     private MainFxController mainFxController;
 
     private Stage stage;
@@ -39,6 +43,7 @@ public class MoreFxController {
             buyPrice.setText(currentBuy.getPrice());
             shopOrPlaceBuy.setText(currentBuy.getShopOrPlaceBuy());
             descriptionBuy.setText(currentBuy.getDescriptionBuy());
+            nonLimited.setSelected(!currentBuy.isLimited());
         }
         addBuy.setOnAction(this::handleAddBuyBtn);
         cancel.setOnAction(this::handleCancelBtn);
@@ -62,7 +67,7 @@ public class MoreFxController {
             JOptionPane.showMessageDialog(null, "Ошибка заполнения цены!", "Ошибка", JOptionPane.ERROR_MESSAGE);
             return;
         }
-        Buy buy = new Buy(price,shopOrPlaceBuy.getText(),descriptionBuy.getText());
+        Buy buy = new Buy(price,shopOrPlaceBuy.getText(),descriptionBuy.getText(),!nonLimited.isSelected());
         if(currentBuy == null){
             mainFxController.addBuyIntoCurrentDay(buy);
         } else {

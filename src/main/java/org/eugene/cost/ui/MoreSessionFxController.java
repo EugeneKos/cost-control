@@ -2,10 +2,7 @@ package org.eugene.cost.ui;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.ListView;
-import javafx.scene.control.TextArea;
+import javafx.scene.control.*;
 import javafx.stage.Stage;
 import org.eugene.cost.logic.model.Buy;
 import org.eugene.cost.logic.model.Day;
@@ -31,6 +28,11 @@ public class MoreSessionFxController {
     @FXML
     private Label currentDay;
 
+    @FXML
+    private RadioButton limitedBuys;
+    @FXML
+    private RadioButton nonLimitedBuys;
+
     private Stage stage;
 
     private Session session;
@@ -47,6 +49,8 @@ public class MoreSessionFxController {
             displayBuyDescription(buyList.getSelectionModel().getSelectedIndex());
         });
         close.setOnAction(this::handleCloseBtn);
+        limitedBuys.setOnAction(this::handleLimitedRB);
+        nonLimitedBuys.setOnAction(this::handleNonLimitedRB);
     }
 
     public void setStage(Stage stage) {
@@ -69,11 +73,26 @@ public class MoreSessionFxController {
     }
 
     private void updateBuyList(int index){
+        if (index < 0) return;
         buyList.getItems().clear();
         String total = "0";
         for (Buy buy : session.getDayList().get(index).getBuyList()) {
-            buyList.getItems().add(buy.toString());
-            total = Calculate.plus(total,buy.getPrice());
+            if(limitedBuys.isSelected()){
+                if(buy.isLimited()){
+                    buyList.getItems().add(buy.toString());
+                    total = Calculate.plus(total,buy.getPrice());
+                }
+            }
+            else if(nonLimitedBuys.isSelected()){
+                if(!buy.isLimited()){
+                    buyList.getItems().add(buy.toString());
+                    total = Calculate.plus(total,buy.getPrice());
+                }
+            } else {
+                buyList.getItems().add(buy.toString());
+                total = Calculate.plus(total,buy.getPrice());
+            }
+
         }
         currentDay.setText("Траты за " + session.getDayList().get(index).getDate().format(DateTimeFormatter.ofPattern("dd/MMM/yyyy")));
         totalPrice.setText(total + " Руб.");
@@ -85,5 +104,19 @@ public class MoreSessionFxController {
             return;
         }
         descriptionBuy.setText(session.getDayList().get(currentDayIntoDayList).getBuyList().get(index).getDescriptionBuy());
+    }
+
+    private void handleLimitedRB(ActionEvent event){
+        if(limitedBuys.isSelected()){
+            nonLimitedBuys.setSelected(false);
+        }
+        updateBuyList(currentDayIntoDayList);
+    }
+
+    private void handleNonLimitedRB(ActionEvent event){
+        if(nonLimitedBuys.isSelected()){
+            limitedBuys.setSelected(false);
+        }
+        updateBuyList(currentDayIntoDayList);
     }
 }

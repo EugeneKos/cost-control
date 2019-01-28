@@ -19,7 +19,13 @@ public class Day implements Serializable {
     }
 
     public void setLimit(String limit) {
-        this.limit = Calculate.minus(limit, rate);
+        String limitedRate = "0";
+        for (Buy buy : buyList){
+            if(buy.isLimited()){
+                limitedRate = Calculate.plus(limitedRate,buy.getPrice());
+            }
+        }
+        this.limit = Calculate.minus(limit, limitedRate);
     }
 
     public void setClose(boolean close) {
@@ -45,24 +51,30 @@ public class Day implements Serializable {
     public void addBuy(Buy buy, Session session) {
         if (buyList.add(buy)) {
             rate = Calculate.plus(rate, buy.getPrice());
-            limit = Calculate.minus(limit, buy.getPrice());
-            session.setBalance(Calculate.minus(session.getBalance(), buy.getPrice()));
+            if(buy.isLimited()){
+                limit = Calculate.minus(limit, buy.getPrice());
+                session.setBalance(Calculate.minus(session.getBalance(), buy.getPrice()));
+            }
         }
     }
 
     public void addBuy(int index, Buy buy, Session session) {
         buyList.add(index, buy);
         rate = Calculate.plus(rate, buy.getPrice());
-        limit = Calculate.minus(limit, buy.getPrice());
-        session.setBalance(Calculate.minus(session.getBalance(), buy.getPrice()));
+        if(buy.isLimited()){
+            limit = Calculate.minus(limit, buy.getPrice());
+            session.setBalance(Calculate.minus(session.getBalance(), buy.getPrice()));
+        }
 
     }
 
     public void removeBuy(Buy buy, Session session) {
         if (buyList.remove(buy)) {
             rate = Calculate.minus(rate, buy.getPrice());
-            limit = Calculate.plus(limit, buy.getPrice());
-            session.setBalance(Calculate.plus(session.getBalance(), buy.getPrice()));
+            if(buy.isLimited()){
+                limit = Calculate.plus(limit, buy.getPrice());
+                session.setBalance(Calculate.plus(session.getBalance(), buy.getPrice()));
+            }
         }
     }
 

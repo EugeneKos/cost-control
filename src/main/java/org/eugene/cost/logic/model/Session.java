@@ -98,7 +98,13 @@ public class Session implements Serializable {
         String mediumLimit = limit;
         for (Day day : dayList){
             if(day.isClose()){
-                mediumLimit = Calculate.minus(mediumLimit,day.getRate());
+                String limitedRate = "0";
+                for (Buy buy : day.getBuyList()){
+                    if(buy.isLimited()){
+                        limitedRate = Calculate.plus(limitedRate,buy.getPrice());
+                    }
+                }
+                mediumLimit = Calculate.minus(mediumLimit,limitedRate);
             }
         }
         mediumLimit = Calculate.divide(mediumLimit,""+numOpenDays);

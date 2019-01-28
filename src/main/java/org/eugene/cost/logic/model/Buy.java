@@ -6,11 +6,13 @@ public class Buy implements Serializable {
     private String price;
     private String shopOrPlaceBuy;
     private String descriptionBuy;
+    private boolean isLimited;
 
-    public Buy(String price, String shopOrPlaceBuy, String descriptionBuy) {
+    public Buy(String price, String shopOrPlaceBuy, String descriptionBuy, boolean isLimited) {
         this.price = price;
         this.shopOrPlaceBuy = shopOrPlaceBuy;
         this.descriptionBuy = descriptionBuy;
+        this.isLimited = isLimited;
     }
 
     public void setPrice(String price) {
@@ -25,6 +27,10 @@ public class Buy implements Serializable {
         this.descriptionBuy = descriptionBuy;
     }
 
+    public void setLimited(boolean limited) {
+        isLimited = limited;
+    }
+
     public String getPrice() {
         return price;
     }
@@ -37,8 +43,17 @@ public class Buy implements Serializable {
         return descriptionBuy;
     }
 
+    public boolean isLimited() {
+        return isLimited;
+    }
+
+    private String getLimitedInfo(){
+        if(isLimited) return "[L] ";
+        return "[NL] ";
+    }
+
     @Override
     public String toString() {
-        return price +" Руб. "+shopOrPlaceBuy;
+        return getLimitedInfo() + price +" Руб. "+shopOrPlaceBuy;
     }
 }
