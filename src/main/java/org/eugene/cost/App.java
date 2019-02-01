@@ -6,13 +6,17 @@ import javafx.scene.Scene;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
-import org.eugene.cost.logic.model.Buy;
-import org.eugene.cost.logic.model.Sessions;
-import org.eugene.cost.ui.MainFxController;
-import org.eugene.cost.ui.MoreFxController;
-import org.eugene.cost.ui.SettingsFxController;
+import org.eugene.cost.logic.model.card.bank.Bank;
+import org.eugene.cost.logic.model.limit.Buy;
+import org.eugene.cost.logic.model.limit.SessionRepository;
+import org.eugene.cost.ui.card.BankFXController;
+import org.eugene.cost.ui.card.OperationFXController;
+import org.eugene.cost.ui.limit.LimitFXController;
+import org.eugene.cost.ui.limit.MoreFXController;
+import org.eugene.cost.ui.limit.SettingsFXController;
 
 import java.io.IOException;
+import java.util.Set;
 
 public class App extends Application {
     private Stage parent;
@@ -20,25 +24,63 @@ public class App extends Application {
     public void start(Stage primaryStage) throws Exception {
         parent = primaryStage;
         FXMLLoader loader = new FXMLLoader();
-        loader.setLocation(getClass().getClassLoader().getResource("ui/cost-control-window.fxml"));
+        loader.setLocation(getClass().getClassLoader().getResource("ui/card-control-window.fxml"));
         AnchorPane panel = loader.load();
-        MainFxController controller = loader.getController();
+        BankFXController controller = loader.getController();
         controller.setApp(this);
         Scene scene = new Scene(panel);
-        primaryStage.setTitle("Контроль расходов");
+        primaryStage.setTitle("Управление финансами");
         primaryStage.setResizable(false);
         primaryStage.setScene(scene);
         primaryStage.show();
     }
 
-    public void openMore(MainFxController mainFxController, Buy buy) {
+    public void openOperation(Set<Bank> banks, BankFXController bankFXController){
+        try {
+            Stage primaryStage = new Stage();
+            FXMLLoader loader = new FXMLLoader();
+            loader.setLocation(getClass().getClassLoader().getResource("ui/operation-window.fxml"));
+            AnchorPane panel = loader.load();
+            OperationFXController controller = loader.getController();
+            controller.initialize(banks);
+            controller.setStage(primaryStage);
+            controller.setBankFXController(bankFXController);
+            Scene scene = new Scene(panel);
+            primaryStage.setTitle("Операции");
+            primaryStage.setResizable(false);
+            primaryStage.setScene(scene);
+            primaryStage.show();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void openLimit(){
+        try {
+            Stage primaryStage = new Stage();
+            FXMLLoader loader = new FXMLLoader();
+            loader.setLocation(getClass().getClassLoader().getResource("ui/cost-control-window.fxml"));
+            AnchorPane panel = loader.load();
+            LimitFXController controller = loader.getController();
+            controller.setApp(this);
+            Scene scene = new Scene(panel);
+            primaryStage.setTitle("Контроль расходов");
+            primaryStage.setResizable(false);
+            primaryStage.setScene(scene);
+            primaryStage.show();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void openMore(LimitFXController limitFXController, Buy buy) {
         try {
             Stage primaryStage = new Stage();
             FXMLLoader loader = new FXMLLoader();
             loader.setLocation(getClass().getClassLoader().getResource("ui/more.fxml"));
             AnchorPane panel = loader.load();
-            MoreFxController controller = loader.getController();
-            controller.setMainFxController(mainFxController);
+            MoreFXController controller = loader.getController();
+            controller.setLimitFXController(limitFXController);
             controller.setStage(primaryStage);
             controller.setCurrentBuy(buy);
             controller.init();
@@ -54,16 +96,16 @@ public class App extends Application {
         }
     }
 
-    public void openSetting(MainFxController mainFxController, Sessions sessions, boolean allowRemove){
+    public void openSetting(LimitFXController limitFXController, SessionRepository sessionRepository, boolean allowRemove){
         try {
             Stage primaryStage = new Stage();
             FXMLLoader loader = new FXMLLoader();
             loader.setLocation(getClass().getClassLoader().getResource("ui/settings.fxml"));
             AnchorPane panel = loader.load();
-            SettingsFxController controller = loader.getController();
-            controller.setMainFxController(mainFxController);
+            SettingsFXController controller = loader.getController();
+            controller.setLimitFXController(limitFXController);
             controller.setStage(primaryStage);
-            controller.setSessions(sessions);
+            controller.setSessionRepository(sessionRepository);
             controller.init(allowRemove);
             Scene scene = new Scene(panel);
             primaryStage.initOwner(parent);

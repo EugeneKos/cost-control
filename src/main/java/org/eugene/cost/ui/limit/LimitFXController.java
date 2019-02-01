@@ -1,4 +1,4 @@
-package org.eugene.cost.ui;
+package org.eugene.cost.ui.limit;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -6,10 +6,10 @@ import javafx.scene.control.*;
 import javafx.scene.paint.Paint;
 import org.eugene.cost.App;
 import org.eugene.cost.logic.exeption.IncorrectDateException;
-import org.eugene.cost.logic.model.Buy;
-import org.eugene.cost.logic.model.Day;
-import org.eugene.cost.logic.model.Session;
-import org.eugene.cost.logic.model.Sessions;
+import org.eugene.cost.logic.model.limit.Buy;
+import org.eugene.cost.logic.model.limit.Day;
+import org.eugene.cost.logic.model.limit.Session;
+import org.eugene.cost.logic.model.limit.SessionRepository;
 import org.eugene.cost.logic.util.Calculate;
 import org.eugene.cost.logic.util.FileManager;
 import org.eugene.cost.logic.util.StringUtil;
@@ -17,7 +17,7 @@ import org.eugene.cost.logic.util.StringUtil;
 import javax.swing.*;
 import java.time.LocalDate;
 
-public class MainFxController {
+public class LimitFXController {
     @FXML
     private DatePicker beginDate;
     @FXML
@@ -62,7 +62,7 @@ public class MainFxController {
 
     private App app;
 
-    private Sessions sessions;
+    private SessionRepository sessionRepository;
 
     private Session session;
 
@@ -136,9 +136,9 @@ public class MainFxController {
     }
 
     private void loadSessions() {
-        sessions = FileManager.loadSessions();
-        if (sessions == null) {
-            sessions = new Sessions();
+        sessionRepository = FileManager.loadSessions();
+        if (sessionRepository == null) {
+            sessionRepository = new SessionRepository();
         }
     }
 
@@ -225,22 +225,21 @@ public class MainFxController {
         try {
             session = new Session(limit, beginDate.getValue(), finalDate.getValue());
             session.calculateMediumLimit();
-            sessions.addSession(session);
+            sessionRepository.addSession(session);
             currentDate.setValue(beginDate.getValue());
             currentDay = session.getDay(beginDate.getValue());
             setButtonOnCloseDay(currentDay.isClose());
             updateLimitsAndRate();
             blockBtnBeforeInitSession(true);
             blockBtnAfterInitSession(false);
-            FileManager.save(sessions);
+            FileManager.save(sessionRepository);
         } catch (IncorrectDateException e) {
             JOptionPane.showMessageDialog(null, "Некорректно выставлены начальная и конечная даты сессии!", "Ошибка", JOptionPane.ERROR_MESSAGE);
-            ;
         }
     }
 
     private void handleBtnSetting(ActionEvent event) {
-        app.openSetting(this, sessions, session == null);
+        app.openSetting(this, sessionRepository, session == null);
     }
 
     private void handleBtnAddBuy(ActionEvent event) {
@@ -255,7 +254,7 @@ public class MainFxController {
         currentDay.removeBuy(currentDay.getBuy(currentBuyIntoBuyList), session);
         buyList.getItems().remove(currentBuyIntoBuyList);
         updateLimitsAndRate();
-        FileManager.save(sessions);
+        FileManager.save(sessionRepository);
     }
 
     private void handleBtnMoreAboutBuy(ActionEvent event) {
@@ -271,7 +270,7 @@ public class MainFxController {
         session.calculateMediumLimit();
         updateLimitsAndRate();
         setButtonOnCloseDay(true);
-        FileManager.save(sessions);
+        FileManager.save(sessionRepository);
     }
 
     private void handleBtnResumeDay(ActionEvent event) {
@@ -279,7 +278,7 @@ public class MainFxController {
         session.calculateMediumLimit();
         updateLimitsAndRate();
         setButtonOnCloseDay(false);
-        FileManager.save(sessions);
+        FileManager.save(sessionRepository);
     }
 
     private void handleLimitedRB(ActionEvent event) {
@@ -319,7 +318,7 @@ public class MainFxController {
         currentDay.addBuy(buy, session);
         updateBuyList();
         updateLimitsAndRate();
-        FileManager.save(sessions);
+        FileManager.save(sessionRepository);
     }
 
     public void applyChangeBuyIntoCurrentDay(Buy currentBuy, Buy newBuy) {
@@ -327,7 +326,7 @@ public class MainFxController {
         currentDay.addBuy(currentBuyIntoBuyList, newBuy, session);
         updateBuyList();
         updateLimitsAndRate();
-        FileManager.save(sessions);
+        FileManager.save(sessionRepository);
     }
 
     public void applySession(Session session) {
@@ -342,7 +341,7 @@ public class MainFxController {
         currentDay = session.getDay(beginDate.getValue());
         setButtonOnCloseDay(currentDay.isClose());
         updateLimitsAndRate();
-        FileManager.save(sessions);
+        FileManager.save(sessionRepository);
     }
 
     private void blockBtnBeforeInitSession(boolean disable) {

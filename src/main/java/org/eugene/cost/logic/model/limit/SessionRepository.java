@@ -1,10 +1,10 @@
-package org.eugene.cost.logic.model;
+package org.eugene.cost.logic.model.limit;
 
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Sessions implements Serializable {
+public class SessionRepository implements Serializable {
     private List<Session> sessions = new ArrayList<>();
 
     public void addSession(Session session){

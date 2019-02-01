@@ -1,14 +1,14 @@
 package org.eugene.cost.logic.util;
 
-import org.eugene.cost.logic.model.Sessions;
+import org.eugene.cost.logic.model.limit.SessionRepository;
 
 import java.io.*;
 
 public final class FileManager {
-    public static void save(Sessions sessions) {
+    public static void save(SessionRepository sessionRepository) {
         try (ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
              ObjectOutputStream objectOutputStream = new ObjectOutputStream(byteArrayOutputStream)) {
-            objectOutputStream.writeObject(sessions);
+            objectOutputStream.writeObject(sessionRepository);
             objectOutputStream.flush();
             writeFile(byteArrayOutputStream.toByteArray());
         } catch (IOException e) {
@@ -47,15 +47,15 @@ public final class FileManager {
         }
     }
 
-    public static Sessions loadSessions() {
+    public static SessionRepository loadSessions() {
         byte[] content = readFile();
         if (content == null) return null;
         if(content.length == 0) return null;
         try (ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(content);
              ObjectInputStream objectInputStream = new ObjectInputStream(byteArrayInputStream)) {
             Object object = objectInputStream.readObject();
-            if(object instanceof Sessions){
-                return (Sessions)object;
+            if(object instanceof SessionRepository){
+                return (SessionRepository)object;
             }
         } catch (IOException | ClassNotFoundException e) {
             e.printStackTrace();

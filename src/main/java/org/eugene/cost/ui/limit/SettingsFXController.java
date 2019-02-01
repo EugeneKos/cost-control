@@ -1,4 +1,4 @@
-package org.eugene.cost.ui;
+package org.eugene.cost.ui.limit;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -8,14 +8,14 @@ import javafx.scene.control.Button;
 import javafx.scene.control.ListView;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
-import org.eugene.cost.logic.model.Session;
-import org.eugene.cost.logic.model.Sessions;
+import org.eugene.cost.logic.model.limit.Session;
+import org.eugene.cost.logic.model.limit.SessionRepository;
 import org.eugene.cost.logic.util.FileManager;
 
 import javax.swing.*;
 import java.io.IOException;
 
-public class SettingsFxController {
+public class SettingsFXController {
     @FXML
     private ListView<String> sessionList;
 
@@ -26,11 +26,11 @@ public class SettingsFxController {
     @FXML
     private Button removeSession;
 
-    private MainFxController mainFxController;
+    private LimitFXController limitFXController;
 
     private Stage stage;
 
-    private Sessions sessions;
+    private SessionRepository sessionRepository;
 
     private int currentSessionIntoSessionList = -1;
 
@@ -51,7 +51,7 @@ public class SettingsFxController {
             FXMLLoader loader = new FXMLLoader();
             loader.setLocation(getClass().getClassLoader().getResource("ui/more-session.fxml"));
             AnchorPane panel = loader.load();
-            MoreSessionFxController controller = loader.getController();
+            MoreSessionFXController controller = loader.getController();
             controller.setStage(primaryStage);
             controller.setSession(session);
             controller.init();
@@ -65,16 +65,16 @@ public class SettingsFxController {
         }
     }
 
-    public void setMainFxController(MainFxController mainFxController) {
-        this.mainFxController = mainFxController;
+    public void setLimitFXController(LimitFXController limitFXController) {
+        this.limitFXController = limitFXController;
     }
 
     public void setStage(Stage stage) {
         this.stage = stage;
     }
 
-    public void setSessions(Sessions sessions) {
-        this.sessions = sessions;
+    public void setSessionRepository(SessionRepository sessionRepository) {
+        this.sessionRepository = sessionRepository;
     }
 
     private void handleApplySessionBtn(ActionEvent event){
@@ -82,7 +82,7 @@ public class SettingsFxController {
             JOptionPane.showMessageDialog(null, "Сессия не выбрана!", "Информация", JOptionPane.INFORMATION_MESSAGE);
             return;
         }
-        mainFxController.applySession(sessions.getSession(currentSessionIntoSessionList));
+        limitFXController.applySession(sessionRepository.getSession(currentSessionIntoSessionList));
         stage.close();
     }
 
@@ -91,7 +91,7 @@ public class SettingsFxController {
             JOptionPane.showMessageDialog(null, "Сессия не выбрана!", "Информация", JOptionPane.INFORMATION_MESSAGE);
             return;
         }
-        openMoreSession(sessions.getSession(currentSessionIntoSessionList));
+        openMoreSession(sessionRepository.getSession(currentSessionIntoSessionList));
     }
 
     private void handleRemoveSessionBtn(ActionEvent event){
@@ -99,16 +99,16 @@ public class SettingsFxController {
             JOptionPane.showMessageDialog(null, "Сессия не выбрана!", "Информация", JOptionPane.INFORMATION_MESSAGE);
             return;
         }
-        sessions.removeSession(currentSessionIntoSessionList);
+        sessionRepository.removeSession(currentSessionIntoSessionList);
         sessionList.getItems().remove(currentSessionIntoSessionList);
         updateSessionList();
-        FileManager.save(sessions);
+        FileManager.save(sessionRepository);
     }
 
     private void updateSessionList() {
         sessionList.getItems().clear();
         int num = 1;
-        for (Session session : sessions.getSessions()) {
+        for (Session session : sessionRepository.getSessions()) {
             sessionList.getItems().add("Session number " + num + "               Begin date: "+session.getBeginDate() + "                 Final date: "+session.getFinalDate() + "            is Active: "+session.isActiveSession());
             num++;
         }

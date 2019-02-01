@@ -1,17 +1,17 @@
-package org.eugene.cost.ui;
+package org.eugene.cost.ui.limit;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.stage.Stage;
-import org.eugene.cost.logic.model.Buy;
-import org.eugene.cost.logic.model.Day;
-import org.eugene.cost.logic.model.Session;
+import org.eugene.cost.logic.model.limit.Buy;
+import org.eugene.cost.logic.model.limit.Day;
+import org.eugene.cost.logic.model.limit.Session;
 import org.eugene.cost.logic.util.Calculate;
 
 import java.time.format.DateTimeFormatter;
 
-public class MoreSessionFxController {
+public class MoreSessionFXController {
     @FXML
     private ListView<String> dayList;
     @FXML

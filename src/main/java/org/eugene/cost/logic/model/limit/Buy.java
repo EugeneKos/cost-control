@@ -1,4 +1,4 @@
-package org.eugene.cost.logic.model;
+package org.eugene.cost.logic.model.limit;
 
 import java.io.Serializable;
 

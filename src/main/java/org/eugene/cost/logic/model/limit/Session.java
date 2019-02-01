@@ -1,4 +1,4 @@
-package org.eugene.cost.logic.model;
+package org.eugene.cost.logic.model.limit;
 
 import org.eugene.cost.logic.util.Calculate;
 import org.eugene.cost.logic.exeption.IncorrectDateException;

@@ -1,4 +1,4 @@
-package org.eugene.cost.ui;
+package org.eugene.cost.ui.limit;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -7,12 +7,12 @@ import javafx.scene.control.CheckBox;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
-import org.eugene.cost.logic.model.Buy;
+import org.eugene.cost.logic.model.limit.Buy;
 import org.eugene.cost.logic.util.StringUtil;
 
 import javax.swing.*;
 
-public class MoreFxController {
+public class MoreFXController {
     @FXML
     private TextField buyPrice;
     @FXML
@@ -29,7 +29,7 @@ public class MoreFxController {
     @FXML
     private CheckBox nonLimited;
 
-    private MainFxController mainFxController;
+    private LimitFXController limitFXController;
 
     private Stage stage;
 
@@ -49,8 +49,8 @@ public class MoreFxController {
         cancel.setOnAction(this::handleCancelBtn);
     }
 
-    public void setMainFxController(MainFxController mainFxController) {
-        this.mainFxController = mainFxController;
+    public void setLimitFXController(LimitFXController limitFXController) {
+        this.limitFXController = limitFXController;
     }
 
     public void setStage(Stage stage) {
@@ -69,9 +69,9 @@ public class MoreFxController {
         }
         Buy buy = new Buy(price,shopOrPlaceBuy.getText(),descriptionBuy.getText(),!nonLimited.isSelected());
         if(currentBuy == null){
-            mainFxController.addBuyIntoCurrentDay(buy);
+            limitFXController.addBuyIntoCurrentDay(buy);
         } else {
-            mainFxController.applyChangeBuyIntoCurrentDay(currentBuy,buy);
+            limitFXController.applyChangeBuyIntoCurrentDay(currentBuy,buy);
         }
         stage.close();
     }
