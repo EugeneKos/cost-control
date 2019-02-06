@@ -10,8 +10,8 @@ import org.eugene.cost.logic.model.card.bank.Bank;
 import org.eugene.cost.logic.model.card.bank.BankRepository;
 import org.eugene.cost.logic.model.card.bank.Card;
 import org.eugene.cost.logic.model.card.bank.Cash;
-import org.eugene.cost.logic.model.card.op.Debit;
 import org.eugene.cost.logic.model.card.op.Operation;
+import org.eugene.cost.logic.util.FileManager;
 
 public class BankFXController {
     @FXML
@@ -46,16 +46,11 @@ public class BankFXController {
     private Card currentCard;
     private Cash currentCash;
 
-    private BankRepository bankRepository = new BankRepository();
-
-    private void initBankRepository(){
-        bankRepository.addBank(new Card("20547.34","0000 1111 3333 4444"));
-        bankRepository.addBank(new Cash("10765.58","Заначка"));
-    }
+    private BankRepository bankRepository;
 
     @FXML
     public void initialize(){
-        initBankRepository();
+        loadBanks();
         initComboBox();
         cardBox.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
             currentCard = newValue;
@@ -65,7 +60,7 @@ public class BankFXController {
             currentCash = newValue;
             updateBalanceAndHistory();
         });
-        operations.getItems().add(new Debit("250","AAAA"));
+
         imageCard.setOnMouseClicked(this::handleImageCard);
         imageCash.setOnMouseClicked(this::handleImageCash);
         operationControl.setOnAction(this::handleOperationBtn);
@@ -73,11 +68,20 @@ public class BankFXController {
         limitControl.setOnAction(this::handleLimitBtn);
     }
 
+    private void loadBanks() {
+        bankRepository = (BankRepository) FileManager.loadRepository("banks");
+        if (bankRepository == null) {
+            bankRepository = new BankRepository();
+        }
+    }
+
     public void setApp(App app) {
         this.app = app;
     }
 
-    private void initComboBox(){
+    public void initComboBox(){
+        cardBox.getItems().clear();
+        cashBox.getItems().clear();
         for (Bank bank : bankRepository.getBanks()){
             if(bank instanceof Card){
                 cardBox.getItems().add((Card) bank);
@@ -131,7 +135,7 @@ public class BankFXController {
     }
 
     private void handleLimitBtn(ActionEvent event){
-        app.openLimit();
+        app.openLimit(bankRepository.getBanks(), this);
     }
 
     private void handleOperationBtn(ActionEvent event){
@@ -140,7 +144,7 @@ public class BankFXController {
     }
 
     private void handleFinanceBtn(ActionEvent event){
-
+        app.openFinance(bankRepository,this);
     }
 
     public void updateBalanceAndHistory(){
@@ -152,9 +156,15 @@ public class BankFXController {
         }
         if(bankType.getText().equals("карты") & currentCard != null){
             updateHistory(currentCard);
-        } else if(currentCash != null) {
+        } else if(bankType.getText().equals("наличных") & currentCash != null) {
             updateHistory(currentCash);
         }
+    }
+
+    public void clearBalanceAndHistory(){
+        cardBalance.setText("0 Руб.");
+        cashBalance.setText("0 Руб.");
+        operations.getItems().clear();
     }
 
     private void updateHistory(Bank bank){
@@ -162,5 +172,9 @@ public class BankFXController {
         for (Operation operation : bank.getOperationHistory()){
             operations.getItems().add(operation);
         }
+    }
+
+    public void saveBanks(){
+        FileManager.saveRepository(bankRepository);
     }
 }

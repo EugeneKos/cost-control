@@ -7,9 +7,11 @@ import javafx.scene.layout.AnchorPane;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import org.eugene.cost.logic.model.card.bank.Bank;
+import org.eugene.cost.logic.model.card.bank.BankRepository;
 import org.eugene.cost.logic.model.limit.Buy;
 import org.eugene.cost.logic.model.limit.SessionRepository;
 import org.eugene.cost.ui.card.BankFXController;
+import org.eugene.cost.ui.card.FinanceFXController;
 import org.eugene.cost.ui.card.OperationFXController;
 import org.eugene.cost.ui.limit.LimitFXController;
 import org.eugene.cost.ui.limit.MoreFXController;
@@ -46,16 +48,39 @@ public class App extends Application {
             controller.setStage(primaryStage);
             controller.setBankFXController(bankFXController);
             Scene scene = new Scene(panel);
+            primaryStage.initOwner(parent);
+            primaryStage.initModality(Modality.APPLICATION_MODAL);
             primaryStage.setTitle("Операции");
             primaryStage.setResizable(false);
             primaryStage.setScene(scene);
-            primaryStage.show();
+            primaryStage.showAndWait();
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
-    public void openLimit(){
+    public void openFinance(BankRepository bankRepository, BankFXController bankFXController){
+        try {
+            Stage primaryStage = new Stage();
+            FXMLLoader loader = new FXMLLoader();
+            loader.setLocation(getClass().getClassLoader().getResource("ui/finance-window.fxml"));
+            AnchorPane panel = loader.load();
+            FinanceFXController controller = loader.getController();
+            controller.initialize(bankRepository);
+            controller.setBankFXController(bankFXController);
+            Scene scene = new Scene(panel);
+            primaryStage.initOwner(parent);
+            primaryStage.initModality(Modality.APPLICATION_MODAL);
+            primaryStage.setTitle("Управление Финансами");
+            primaryStage.setResizable(false);
+            primaryStage.setScene(scene);
+            primaryStage.showAndWait();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void openLimit(Set<Bank> banks, BankFXController bankFXController){
         try {
             Stage primaryStage = new Stage();
             FXMLLoader loader = new FXMLLoader();
@@ -63,17 +88,21 @@ public class App extends Application {
             AnchorPane panel = loader.load();
             LimitFXController controller = loader.getController();
             controller.setApp(this);
+            controller.setBanks(banks);
+            controller.setBankFXController(bankFXController);
             Scene scene = new Scene(panel);
+            primaryStage.initOwner(parent);
+            primaryStage.initModality(Modality.APPLICATION_MODAL);
             primaryStage.setTitle("Контроль расходов");
             primaryStage.setResizable(false);
             primaryStage.setScene(scene);
-            primaryStage.show();
+            primaryStage.showAndWait();
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
-    public void openMore(LimitFXController limitFXController, Buy buy) {
+    public void openMore(LimitFXController limitFXController, Buy buy, Set<Bank> banks, BankFXController bankFXController) {
         try {
             Stage primaryStage = new Stage();
             FXMLLoader loader = new FXMLLoader();
@@ -83,6 +112,8 @@ public class App extends Application {
             controller.setLimitFXController(limitFXController);
             controller.setStage(primaryStage);
             controller.setCurrentBuy(buy);
+            controller.setBanks(banks);
+            controller.setBankFXController(bankFXController);
             controller.init();
             Scene scene = new Scene(panel);
             primaryStage.initOwner(parent);

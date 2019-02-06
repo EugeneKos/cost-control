@@ -2,51 +2,58 @@
 
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.CheckBox?>
+<?import javafx.scene.control.ComboBox?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.TextArea?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="359.0" prefWidth="425.0" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.eugene.cost.ui.limit.MoreFXController">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="408.0" prefWidth="467.0" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.eugene.cost.ui.limit.MoreFXController">
    <children>
       <Label layoutX="14.0" layoutY="15.0" text="Введите сумму покупки">
          <font>
             <Font size="18.0" />
          </font>
       </Label>
-      <TextField fx:id="buyPrice" layoutX="229.0" layoutY="14.0" prefHeight="30.0" prefWidth="139.0">
+      <TextField fx:id="buyPrice" layoutX="240.0" layoutY="14.0" prefHeight="30.0" prefWidth="139.0">
          <font>
             <Font size="14.0" />
          </font>
       </TextField>
-      <Label layoutX="377.0" layoutY="15.0" text="Руб.">
+      <Label layoutX="394.0" layoutY="15.0" text="Руб.">
          <font>
             <Font size="18.0" />
          </font>
       </Label>
-      <Button fx:id="addBuy" layoutX="229.0" layoutY="325.0" mnemonicParsing="false" text="Добавить покупку" />
-      <Button fx:id="cancel" layoutX="353.0" layoutY="325.0" mnemonicParsing="false" text="Отмена" />
-      <Label layoutX="40.0" layoutY="54.0" text="Введите магазин или иное место покупки">
+      <Button fx:id="addBuy" layoutX="263.0" layoutY="370.0" mnemonicParsing="false" text="Добавить покупку" />
+      <Button fx:id="cancel" layoutX="394.0" layoutY="370.0" mnemonicParsing="false" text="Отмена" />
+      <Label layoutX="14.0" layoutY="55.0" text="Введите магазин или иное место покупки">
          <font>
             <Font size="18.0" />
          </font>
       </Label>
-      <TextField fx:id="shopOrPlaceBuy" layoutX="40.0" layoutY="89.0" prefHeight="25.0" prefWidth="346.0">
+      <TextField fx:id="shopOrPlaceBuy" layoutX="26.0" layoutY="89.0" prefHeight="29.0" prefWidth="407.0">
          <font>
             <Font size="13.0" />
          </font>
       </TextField>
-      <TextArea fx:id="descriptionBuy" layoutX="29.0" layoutY="152.0" prefHeight="163.0" prefWidth="368.0">
+      <TextArea fx:id="descriptionBuy" layoutX="29.0" layoutY="152.0" prefHeight="163.0" prefWidth="407.0">
          <font>
             <Font size="13.0" />
          </font>
       </TextArea>
-      <Label layoutX="29.0" layoutY="122.0" text="Описание покупки">
+      <Label layoutX="14.0" layoutY="122.0" text="Описание покупки">
          <font>
             <Font size="18.0" />
          </font>
       </Label>
-      <CheckBox fx:id="nonLimited" layoutX="29.0" layoutY="329.0" mnemonicParsing="false" text="Не вносить в лимит" />
+      <CheckBox fx:id="nonLimited" layoutX="29.0" layoutY="375.0" mnemonicParsing="false" text="Не вносить в лимит" />
+      <Label layoutX="14.0" layoutY="327.0" text="Выберите платежную систему">
+         <font>
+            <Font size="18.0" />
+         </font>
+      </Label>
+      <ComboBox fx:id="paymentSystem" layoutX="285.0" layoutY="328.0" prefHeight="25.0" prefWidth="165.0" />
    </children>
 </AnchorPane>

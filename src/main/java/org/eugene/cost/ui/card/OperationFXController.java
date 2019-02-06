@@ -43,8 +43,11 @@ public class OperationFXController {
     private Operations op;
 
     public void initialize(Set<Bank> banks){
-        initPaymentSystems(banks);
-        paymentSystemOne.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> bankOne = newValue);
+        initMainPaymentSystemAndOperations(banks);
+        paymentSystemOne.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
+            bankOne = newValue;
+            initPaymentSystemToTransfer(banks);
+        });
         paymentSystemTwo.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> bankTwo = newValue);
 
         operation.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
@@ -53,6 +56,7 @@ public class OperationFXController {
                 paymentSystemTwo.setVisible(true);
                 paymentSystemTwoInfo.setVisible(true);
                 descriptionOperation.setDisable(true);
+                initPaymentSystemToTransfer(banks);
             } else {
                 paymentSystemTwo.setVisible(false);
                 paymentSystemTwoInfo.setVisible(false);
@@ -72,13 +76,21 @@ public class OperationFXController {
         this.bankFXController = bankFXController;
     }
 
-    private void initPaymentSystems(Set<Bank> banks){
+    private void initMainPaymentSystemAndOperations(Set<Bank> banks){
         for (Bank bank : banks){
             paymentSystemOne.getItems().add(bank);
-            paymentSystemTwo.getItems().add(bank);
         }
         for (Operations operation : Operations.values()){
             this.operation.getItems().add(operation);
+        }
+    }
+
+    private void initPaymentSystemToTransfer(Set<Bank> banks){
+        paymentSystemTwo.getItems().clear();
+        for (Bank bank : banks){
+            if(!bank.equals(bankOne)){
+                paymentSystemTwo.getItems().add(bank);
+            }
         }
     }
 
@@ -112,6 +124,7 @@ public class OperationFXController {
                 break;
         }
         bankFXController.updateBalanceAndHistory();
+        bankFXController.saveBanks();
         stage.close();
     }
 

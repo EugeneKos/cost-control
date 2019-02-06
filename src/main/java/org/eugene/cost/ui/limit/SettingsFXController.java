@@ -102,7 +102,7 @@ public class SettingsFXController {
         sessionRepository.removeSession(currentSessionIntoSessionList);
         sessionList.getItems().remove(currentSessionIntoSessionList);
         updateSessionList();
-        FileManager.save(sessionRepository);
+        FileManager.saveRepository(sessionRepository);
     }
 
     private void updateSessionList() {

@@ -1,4 +1,7 @@
 package org.eugene.cost.logic.model;
 
-public interface Repository {
+import java.io.Serializable;
+
+public interface Repository extends Serializable {
+    String getName();
 }

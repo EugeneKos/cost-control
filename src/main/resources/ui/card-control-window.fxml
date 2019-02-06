@@ -33,12 +33,12 @@
             <Font size="18.0" />
          </font>
       </Label>
-      <Label fx:id="cardBalance" layoutX="129.0" layoutY="225.0" prefHeight="27.0" prefWidth="136.0" text="100000000 Руб.">
+      <Label fx:id="cardBalance" layoutX="129.0" layoutY="225.0" prefHeight="27.0" prefWidth="136.0" text="0 Руб.">
          <font>
             <Font size="18.0" />
          </font>
       </Label>
-      <Label fx:id="cashBalance" layoutX="406.0" layoutY="225.0" prefHeight="27.0" prefWidth="136.0" text="100000000 Руб.">
+      <Label fx:id="cashBalance" layoutX="406.0" layoutY="225.0" prefHeight="27.0" prefWidth="136.0" text="0 Руб.">
          <font>
             <Font size="18.0" />
          </font>

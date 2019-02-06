@@ -1,10 +1,11 @@
 package org.eugene.cost.logic.model.limit;
 
-import java.io.Serializable;
+import org.eugene.cost.logic.model.Repository;
+
 import java.util.ArrayList;
 import java.util.List;
 
-public class SessionRepository implements Serializable {
+public class SessionRepository implements Repository {
     private List<Session> sessions = new ArrayList<>();
 
     public void addSession(Session session){
@@ -21,5 +22,10 @@ public class SessionRepository implements Serializable {
 
     public List<Session> getSessions() {
         return sessions;
+    }
+
+    @Override
+    public String getName() {
+        return "sessions";
     }
 }

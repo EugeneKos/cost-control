@@ -1,6 +1,8 @@
 package org.eugene.cost.logic.model.card.bank;
 
-public class Card extends Bank {
+import java.io.Serializable;
+
+public class Card extends Bank implements Serializable {
     private final String number;
 
     public Card(String balance, String number) {

@@ -6,6 +6,8 @@ import javafx.scene.control.*;
 import javafx.scene.paint.Paint;
 import org.eugene.cost.App;
 import org.eugene.cost.logic.exeption.IncorrectDateException;
+import org.eugene.cost.logic.model.card.bank.Bank;
+import org.eugene.cost.logic.model.card.op.Enrollment;
 import org.eugene.cost.logic.model.limit.Buy;
 import org.eugene.cost.logic.model.limit.Day;
 import org.eugene.cost.logic.model.limit.Session;
@@ -13,9 +15,11 @@ import org.eugene.cost.logic.model.limit.SessionRepository;
 import org.eugene.cost.logic.util.Calculate;
 import org.eugene.cost.logic.util.FileManager;
 import org.eugene.cost.logic.util.StringUtil;
+import org.eugene.cost.ui.card.BankFXController;
 
 import javax.swing.*;
 import java.time.LocalDate;
+import java.util.Set;
 
 public class LimitFXController {
     @FXML
@@ -26,7 +30,7 @@ public class LimitFXController {
     private DatePicker currentDate;
 
     @FXML
-    private ListView<String> buyList;
+    private ListView<Buy> buyList;
 
     @FXML
     private TextField sumLimit;
@@ -68,7 +72,11 @@ public class LimitFXController {
 
     private Day currentDay;
 
-    private int currentBuyIntoBuyList = -1;
+    private Buy currentBuy;
+
+    private Set<Bank> banks;
+
+    private BankFXController bankFXController;
 
 
     private DateCell colorHandleCurrentDate(DatePicker datePicker) {
@@ -128,15 +136,15 @@ public class LimitFXController {
         limitedBuys.setOnAction(this::handleLimitedRB);
         nonLimitedBuys.setOnAction(this::handleNonLimitedRB);
         buyList.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
-            currentBuyIntoBuyList = buyList.getSelectionModel().getSelectedIndex();
-            displayBuyDescription(currentBuyIntoBuyList);
+            currentBuy = newValue;
+            displayBuyDescription();
         });
         loadSessions();
         blockBtnAfterInitSession(true);
     }
 
     private void loadSessions() {
-        sessionRepository = FileManager.loadSessions();
+        sessionRepository = (SessionRepository) FileManager.loadRepository("sessions");
         if (sessionRepository == null) {
             sessionRepository = new SessionRepository();
         }
@@ -144,6 +152,14 @@ public class LimitFXController {
 
     public void setApp(App app) {
         this.app = app;
+    }
+
+    public void setBanks(Set<Bank> banks) {
+        this.banks = banks;
+    }
+
+    public void setBankFXController(BankFXController bankFXController) {
+        this.bankFXController = bankFXController;
     }
 
     private void handleCurrentDate(ActionEvent event) {
@@ -156,17 +172,18 @@ public class LimitFXController {
 
     private void updateBuyList() {
         buyList.getItems().clear();
+        currentBuy = null;
         for (Buy buy : currentDay.getBuyList()) {
             if (limitedBuys.isSelected()) {
                 if (buy.isLimited()) {
-                    buyList.getItems().add(buy.toString());
+                    buyList.getItems().add(buy);
                 }
             } else if (nonLimitedBuys.isSelected()) {
                 if (!buy.isLimited()) {
-                    buyList.getItems().add(buy.toString());
+                    buyList.getItems().add(buy);
                 }
             } else {
-                buyList.getItems().add(buy.toString());
+                buyList.getItems().add(buy);
             }
         }
     }
@@ -232,7 +249,7 @@ public class LimitFXController {
             updateLimitsAndRate();
             blockBtnBeforeInitSession(true);
             blockBtnAfterInitSession(false);
-            FileManager.save(sessionRepository);
+            FileManager.saveRepository(sessionRepository);
         } catch (IncorrectDateException e) {
             JOptionPane.showMessageDialog(null, "Некорректно выставлены начальная и конечная даты сессии!", "Ошибка", JOptionPane.ERROR_MESSAGE);
         }
@@ -243,26 +260,34 @@ public class LimitFXController {
     }
 
     private void handleBtnAddBuy(ActionEvent event) {
-        app.openMore(this, null);
+        app.openMore(this, null, banks, bankFXController);
     }
 
     private void handleBtnRemoveBuy(ActionEvent event) {
-        if (currentBuyIntoBuyList == -1) {
+        if (currentBuy == null) {
             JOptionPane.showMessageDialog(null, "Покупка не выбрана!", "Информация", JOptionPane.INFORMATION_MESSAGE);
             return;
         }
-        currentDay.removeBuy(currentDay.getBuy(currentBuyIntoBuyList), session);
-        buyList.getItems().remove(currentBuyIntoBuyList);
+        currentDay.removeBuy(currentBuy, session);
+        for (Bank bank : banks){
+            if(bank.equals(currentBuy.getPayment())){
+                bank.executeOperation(new Enrollment(currentBuy.getPrice(),
+                        "Отмена списание средств [ "+currentBuy.getShopOrPlaceBuy()+" ]"));
+            }
+        }
+        buyList.getItems().remove(currentBuy);
+        bankFXController.updateBalanceAndHistory();
+        bankFXController.saveBanks();
         updateLimitsAndRate();
-        FileManager.save(sessionRepository);
+        FileManager.saveRepository(sessionRepository);
     }
 
     private void handleBtnMoreAboutBuy(ActionEvent event) {
-        if (currentBuyIntoBuyList == -1) {
+        if (currentBuy == null) {
             JOptionPane.showMessageDialog(null, "Покупка не выбрана!", "Информация", JOptionPane.INFORMATION_MESSAGE);
             return;
         }
-        app.openMore(this, currentDay.getBuy(currentBuyIntoBuyList));
+        app.openMore(this, currentBuy, banks, bankFXController);
     }
 
     private void handleBtnCloseDay(ActionEvent event) {
@@ -270,7 +295,7 @@ public class LimitFXController {
         session.calculateMediumLimit();
         updateLimitsAndRate();
         setButtonOnCloseDay(true);
-        FileManager.save(sessionRepository);
+        FileManager.saveRepository(sessionRepository);
     }
 
     private void handleBtnResumeDay(ActionEvent event) {
@@ -278,7 +303,7 @@ public class LimitFXController {
         session.calculateMediumLimit();
         updateLimitsAndRate();
         setButtonOnCloseDay(false);
-        FileManager.save(sessionRepository);
+        FileManager.saveRepository(sessionRepository);
     }
 
     private void handleLimitedRB(ActionEvent event) {
@@ -305,28 +330,28 @@ public class LimitFXController {
         closeDay.setDisable(isCloseDay);
     }
 
-    private void displayBuyDescription(int buyIndex) {
-        if (buyIndex < 0) {
+    private void displayBuyDescription() {
+        if (currentBuy == null) {
             descriptionBuy.setText("");
             return;
         }
-        if (currentDay.getBuy(buyIndex) == null) return;
-        descriptionBuy.setText(currentDay.getBuy(buyIndex).getDescriptionBuy());
+        descriptionBuy.setText(currentBuy.getDescriptionBuy());
     }
 
     public void addBuyIntoCurrentDay(Buy buy) {
         currentDay.addBuy(buy, session);
         updateBuyList();
         updateLimitsAndRate();
-        FileManager.save(sessionRepository);
+        FileManager.saveRepository(sessionRepository);
     }
 
     public void applyChangeBuyIntoCurrentDay(Buy currentBuy, Buy newBuy) {
         currentDay.removeBuy(currentBuy, session);
-        currentDay.addBuy(currentBuyIntoBuyList, newBuy, session);
+        //currentDay.addBuy(currentBuyIntoBuyList, newBuy, session);
+        currentDay.addBuy(newBuy, session);
         updateBuyList();
         updateLimitsAndRate();
-        FileManager.save(sessionRepository);
+        FileManager.saveRepository(sessionRepository);
     }
 
     public void applySession(Session session) {
@@ -341,7 +366,7 @@ public class LimitFXController {
         currentDay = session.getDay(beginDate.getValue());
         setButtonOnCloseDay(currentDay.isClose());
         updateLimitsAndRate();
-        FileManager.save(sessionRepository);
+        FileManager.saveRepository(sessionRepository);
     }
 
     private void blockBtnBeforeInitSession(boolean disable) {

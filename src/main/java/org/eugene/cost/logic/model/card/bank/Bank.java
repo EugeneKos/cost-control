@@ -2,10 +2,11 @@ package org.eugene.cost.logic.model.card.bank;
 
 import org.eugene.cost.logic.model.card.op.Operation;
 
+import java.io.Serializable;
 import java.util.LinkedList;
 import java.util.List;
 
-public abstract class Bank {
+public abstract class Bank implements Serializable {
     private String balance;
 
     private List<Operation> operationHistory = new LinkedList<>();

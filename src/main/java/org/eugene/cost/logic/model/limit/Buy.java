@@ -1,5 +1,7 @@
 package org.eugene.cost.logic.model.limit;
 
+import org.eugene.cost.logic.model.card.bank.Bank;
+
 import java.io.Serializable;
 
 public class Buy implements Serializable {
@@ -7,28 +9,14 @@ public class Buy implements Serializable {
     private String shopOrPlaceBuy;
     private String descriptionBuy;
     private boolean isLimited;
+    private Bank payment;
 
-    public Buy(String price, String shopOrPlaceBuy, String descriptionBuy, boolean isLimited) {
+    public Buy(String price, String shopOrPlaceBuy, String descriptionBuy, boolean isLimited, Bank payment) {
         this.price = price;
         this.shopOrPlaceBuy = shopOrPlaceBuy;
         this.descriptionBuy = descriptionBuy;
         this.isLimited = isLimited;
-    }
-
-    public void setPrice(String price) {
-        this.price = price;
-    }
-
-    public void setShopOrPlaceBuy(String shopOrPlaceBuy) {
-        this.shopOrPlaceBuy = shopOrPlaceBuy;
-    }
-
-    public void setDescriptionBuy(String descriptionBuy) {
-        this.descriptionBuy = descriptionBuy;
-    }
-
-    public void setLimited(boolean limited) {
-        isLimited = limited;
+        this.payment = payment;
     }
 
     public String getPrice() {
@@ -45,6 +33,10 @@ public class Buy implements Serializable {
 
     public boolean isLimited() {
         return isLimited;
+    }
+
+    public Bank getPayment() {
+        return payment;
     }
 
     private String getLimitedInfo(){
