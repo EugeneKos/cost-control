@@ -92,14 +92,7 @@ public class FinanceFXController {
     }
 
     private void initBankList(){
-        for (Bank bank : bankRepository.getBanks()){
-            if(bank instanceof Card){
-                cards.getItems().add((Card) bank);
-            }
-            if(bank instanceof Cash){
-                cashes.getItems().add((Cash) bank);
-            }
-        }
+        BankFXController.fillList(bankRepository, cards.getItems(), cashes.getItems());
     }
 
     private void handleAddBtn(ActionEvent event){
@@ -111,13 +104,15 @@ public class FinanceFXController {
                     String balance = getBalance(cardBalance);
                     if(balance == null){
                         JOptionPane.showMessageDialog(null,
-                                "Не заполнен баланс новой карты!", "Информация", JOptionPane.INFORMATION_MESSAGE);
+                                "Не заполнен баланс новой карты!",
+                                "Информация", JOptionPane.INFORMATION_MESSAGE);
                         return;
                     }
                     String cardNum = cardNumber.getText();
                     if(!checkCardNum(cardNum)){
                         JOptionPane.showMessageDialog(null,
-                                "Номер карты не заполнен или заполнен неправильно!", "Информация", JOptionPane.INFORMATION_MESSAGE);
+                                "Номер карты не заполнен или заполнен неправильно!",
+                                "Информация", JOptionPane.INFORMATION_MESSAGE);
                         return;
                     }
                     addBank(new Card(balance,cardNum), cards);
@@ -126,12 +121,14 @@ public class FinanceFXController {
                     balance = getBalance(cashBalance);
                     if(balance == null){
                         JOptionPane.showMessageDialog(null,
-                                "Не заполнен баланс наличных!", "Информация", JOptionPane.INFORMATION_MESSAGE);
+                                "Не заполнен баланс наличных!",
+                                "Информация", JOptionPane.INFORMATION_MESSAGE);
                         return;
                     }
                     if(cashDescription.getText().equals("")){
                         JOptionPane.showMessageDialog(null,
-                                "Не заполнено описание наличных!", "Информация", JOptionPane.INFORMATION_MESSAGE);
+                                "Не заполнено описание наличных!",
+                                "Информация", JOptionPane.INFORMATION_MESSAGE);
                         return;
                     }
                     addBank(new Cash(balance,cashDescription.getText()), cashes);
@@ -166,7 +163,8 @@ public class FinanceFXController {
             banks.getItems().add(bank);
         } else {
             JOptionPane.showMessageDialog(null,
-                    "Невозможно добавить новую платежную систему", "Ошибка", JOptionPane.ERROR_MESSAGE);
+                    "Невозможно добавить новую платежную систему",
+                    "Ошибка", JOptionPane.ERROR_MESSAGE);
         }
     }
 

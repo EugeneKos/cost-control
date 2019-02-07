@@ -3,12 +3,12 @@
 <?import javafx.scene.chart.CategoryAxis?>
 <?import javafx.scene.chart.LineChart?>
 <?import javafx.scene.chart.NumberAxis?>
+<?import javafx.scene.control.ListView?>
 <?import javafx.scene.layout.AnchorPane?>
 
-
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="489.0" prefWidth="770.0" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="490.0" prefWidth="875.0" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1">
    <children>
-      <LineChart prefHeight="489.0" prefWidth="770.0">
+      <LineChart layoutX="201.0" layoutY="13.0" prefHeight="477.0" prefWidth="675.0">
         <xAxis>
           <CategoryAxis side="BOTTOM" />
         </xAxis>
@@ -16,5 +16,6 @@
           <NumberAxis side="LEFT" />
         </yAxis>
       </LineChart>
+      <ListView layoutX="14.0" layoutY="13.0" prefHeight="464.0" prefWidth="187.0" />
    </children>
 </AnchorPane>

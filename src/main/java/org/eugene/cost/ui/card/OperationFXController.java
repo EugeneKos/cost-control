@@ -96,15 +96,18 @@ public class OperationFXController {
 
     private void handleOkBtn(ActionEvent event){
         if(bankOne == null) {
-            JOptionPane.showMessageDialog(null,"Платежная система не была выбрана", "Информация", JOptionPane.INFORMATION_MESSAGE);
+            JOptionPane.showMessageDialog(null,
+                    "Платежная система не была выбрана", "Информация", JOptionPane.INFORMATION_MESSAGE);
             return;
         }
         if(op == null){
-            JOptionPane.showMessageDialog(null,"Операция не была выбрана", "Информация", JOptionPane.INFORMATION_MESSAGE);
+            JOptionPane.showMessageDialog(null,
+                    "Операция не была выбрана", "Информация", JOptionPane.INFORMATION_MESSAGE);
             return;
         }
         if(!checkTextPay()){
-            JOptionPane.showMessageDialog(null,"Не заполнена или неправильно заполнена сумма операции", "Ошибка", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(null,
+                    "Не заполнена или неправильно заполнена сумма операции", "Ошибка", JOptionPane.ERROR_MESSAGE);
             return;
         }
         switch (op){
@@ -116,7 +119,8 @@ public class OperationFXController {
                 break;
             case TRANSFER:
                 if(bankTwo == null) {
-                    JOptionPane.showMessageDialog(null,"Платежная система не была выбрана", "Информация", JOptionPane.INFORMATION_MESSAGE);
+                    JOptionPane.showMessageDialog(null,
+                            "Платежная система не была выбрана", "Информация", JOptionPane.INFORMATION_MESSAGE);
                     return;
                 }
                 bankOne.executeOperation(new Debit(StringUtil.deleteSpace(paySum.getText()),"Transfer"));

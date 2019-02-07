@@ -12,12 +12,8 @@ public class SessionRepository implements Repository {
         sessions.add(session);
     }
 
-    public void removeSession(int index){
-        sessions.remove(index);
-    }
-
-    public Session getSession(int index){
-        return sessions.get(index);
+    public void removeSession(Session session){
+        sessions.remove(session);
     }
 
     public List<Session> getSessions() {

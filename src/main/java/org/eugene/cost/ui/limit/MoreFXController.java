@@ -8,6 +8,7 @@ import org.eugene.cost.logic.model.card.bank.Bank;
 import org.eugene.cost.logic.model.card.op.Debit;
 import org.eugene.cost.logic.model.card.op.Enrollment;
 import org.eugene.cost.logic.model.limit.Buy;
+import org.eugene.cost.logic.model.limit.BuyCategories;
 import org.eugene.cost.logic.util.StringUtil;
 import org.eugene.cost.ui.card.BankFXController;
 
@@ -34,6 +35,9 @@ public class MoreFXController {
     @FXML
     private ComboBox<Bank> paymentSystem;
 
+    @FXML
+    private ComboBox<BuyCategories> buyCategories;
+
     private LimitFXController limitFXController;
 
     private Stage stage;
@@ -45,9 +49,12 @@ public class MoreFXController {
     private Set<Bank> banks;
     private Bank currentBank;
 
+    private BuyCategories buyCategory;
+
 
     public void init(){
         initPaymentSystem();
+        initBuyCategories();
         if(currentBuy != null){
             addBuy.setText("Изменить");
             addBuy.setLayoutX(315);
@@ -55,6 +62,7 @@ public class MoreFXController {
             shopOrPlaceBuy.setText(currentBuy.getShopOrPlaceBuy());
             descriptionBuy.setText(currentBuy.getDescriptionBuy());
             nonLimited.setSelected(!currentBuy.isLimited());
+            buyCategories.setValue(currentBuy.getBuyCategories());
             initPaymentSystem(currentBuy.getPayment());
             paymentSystem.setDisable(true);
             currentBank = initCurrentBank(currentBuy.getPayment());
@@ -66,6 +74,7 @@ public class MoreFXController {
             }
         }
         paymentSystem.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> currentBank = newValue);
+        buyCategories.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> buyCategory = newValue);
         addBuy.setOnAction(this::handleAddBuyBtn);
         cancel.setOnAction(this::handleCancelBtn);
     }
@@ -113,6 +122,12 @@ public class MoreFXController {
         return null;
     }
 
+    private void initBuyCategories(){
+        for (BuyCategories buyCategory : BuyCategories.values()){
+            this.buyCategories.getItems().add(buyCategory);
+        }
+    }
+
     private void handleAddBuyBtn(ActionEvent event){
         String price = StringUtil.deleteSpace(buyPrice.getText());
         if(!StringUtil.checkSequence(price)){
@@ -125,7 +140,13 @@ public class MoreFXController {
                     "Платежная система не была выбрана", "Информация", JOptionPane.INFORMATION_MESSAGE);
             return;
         }
-        Buy buy = new Buy(price,shopOrPlaceBuy.getText(),descriptionBuy.getText(),!nonLimited.isSelected(), currentBank);
+        if(buyCategory == null){
+            JOptionPane.showMessageDialog(null,
+                    "Категория покупки не была выбрана", "Информация", JOptionPane.INFORMATION_MESSAGE);
+            return;
+        }
+
+        Buy buy = new Buy(price,shopOrPlaceBuy.getText(),descriptionBuy.getText(),!nonLimited.isSelected(), currentBank, buyCategory);
         if(currentBuy == null){
             limitFXController.addBuyIntoCurrentDay(buy);
         } else {

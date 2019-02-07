@@ -16,10 +16,6 @@ public class BankRepository implements Repository {
         return banks.remove(bank);
     }
 
-    public Bank getBank(){
-        throw new RuntimeException("temporarily not working");
-    }
-
     public Set<Bank> getBanks() {
         return banks;
     }

@@ -131,7 +131,7 @@ public class App extends Application {
         try {
             Stage primaryStage = new Stage();
             FXMLLoader loader = new FXMLLoader();
-            loader.setLocation(getClass().getClassLoader().getResource("ui/settings.fxml"));
+            loader.setLocation(getClass().getClassLoader().getResource("ui/sessions-window.fxml"));
             AnchorPane panel = loader.load();
             SettingsFXController controller = loader.getController();
             controller.setLimitFXController(limitFXController);
@@ -141,7 +141,7 @@ public class App extends Application {
             Scene scene = new Scene(panel);
             primaryStage.initOwner(parent);
             primaryStage.initModality(Modality.APPLICATION_MODAL);
-            primaryStage.setTitle("Настройки");
+            primaryStage.setTitle("Сессии");
             primaryStage.setResizable(false);
             primaryStage.setScene(scene);
             primaryStage.showAndWait();

@@ -11,13 +11,14 @@ import javafx.stage.Stage;
 import org.eugene.cost.logic.model.limit.Session;
 import org.eugene.cost.logic.model.limit.SessionRepository;
 import org.eugene.cost.logic.util.FileManager;
+import org.eugene.cost.ui.chart.BarChartFXController;
 
 import javax.swing.*;
 import java.io.IOException;
 
 public class SettingsFXController {
     @FXML
-    private ListView<String> sessionList;
+    private ListView<Session> sessionList;
 
     @FXML
     private Button applySession;
@@ -25,6 +26,8 @@ public class SettingsFXController {
     private Button moreAboutSession;
     @FXML
     private Button removeSession;
+    @FXML
+    private Button graph;
 
     private LimitFXController limitFXController;
 
@@ -32,20 +35,19 @@ public class SettingsFXController {
 
     private SessionRepository sessionRepository;
 
-    private int currentSessionIntoSessionList = -1;
+    private Session currentSession;
 
     public void init(boolean allowRemove){
         applySession.setOnAction(this::handleApplySessionBtn);
         moreAboutSession.setOnAction(this::handleMoreAboutSessionBtn);
         removeSession.setOnAction(this::handleRemoveSessionBtn);
+        graph.setOnAction(this::handleMoreAboutSessionBtn);
         removeSession.setDisable(!allowRemove);
-        sessionList.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
-            currentSessionIntoSessionList = sessionList.getSelectionModel().getSelectedIndex();
-        });
+        sessionList.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> currentSession = newValue);
         updateSessionList();
     }
 
-    public void openMoreSession(Session session){
+    private void openMoreSession(Session session){
         try {
             Stage primaryStage = new Stage();
             FXMLLoader loader = new FXMLLoader();
@@ -58,6 +60,23 @@ public class SettingsFXController {
             Scene scene = new Scene(panel);
             primaryStage.setTitle(session.getBeginDate()+" - "+session.getFinalDate());
             primaryStage.setResizable(false);
+            primaryStage.setScene(scene);
+            primaryStage.show();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void openBarChart(Session session){
+        try {
+            Stage primaryStage = new Stage();
+            FXMLLoader loader = new FXMLLoader();
+            loader.setLocation(getClass().getClassLoader().getResource("ui/bar-chart.fxml"));
+            AnchorPane panel = loader.load();
+            BarChartFXController controller = loader.getController();
+            controller.initialize(session);
+            Scene scene = new Scene(panel);
+            primaryStage.setTitle(session.getBeginDate()+" - "+session.getFinalDate());
             primaryStage.setScene(scene);
             primaryStage.show();
         } catch (IOException e) {
@@ -78,39 +97,45 @@ public class SettingsFXController {
     }
 
     private void handleApplySessionBtn(ActionEvent event){
-        if (currentSessionIntoSessionList == -1) {
-            JOptionPane.showMessageDialog(null, "Сессия не выбрана!", "Информация", JOptionPane.INFORMATION_MESSAGE);
+        if (currentSession == null) {
+            JOptionPane.showMessageDialog(null, "Сессия не выбрана!",
+                    "Информация", JOptionPane.INFORMATION_MESSAGE);
             return;
         }
-        limitFXController.applySession(sessionRepository.getSession(currentSessionIntoSessionList));
+        limitFXController.applySession(currentSession);
         stage.close();
     }
 
     private void handleMoreAboutSessionBtn(ActionEvent event){
-        if (currentSessionIntoSessionList == -1) {
-            JOptionPane.showMessageDialog(null, "Сессия не выбрана!", "Информация", JOptionPane.INFORMATION_MESSAGE);
+        if (currentSession == null) {
+            JOptionPane.showMessageDialog(null, "Сессия не выбрана!",
+                    "Информация", JOptionPane.INFORMATION_MESSAGE);
             return;
         }
-        openMoreSession(sessionRepository.getSession(currentSessionIntoSessionList));
+        Button btn = (Button) event.getSource();
+        if(btn.getId().equals("graph")){
+            openBarChart(currentSession);
+        } else {
+            openMoreSession(currentSession);
+        }
     }
 
     private void handleRemoveSessionBtn(ActionEvent event){
-        if (currentSessionIntoSessionList == -1) {
-            JOptionPane.showMessageDialog(null, "Сессия не выбрана!", "Информация", JOptionPane.INFORMATION_MESSAGE);
+        if (currentSession == null) {
+            JOptionPane.showMessageDialog(null, "Сессия не выбрана!",
+                    "Информация", JOptionPane.INFORMATION_MESSAGE);
             return;
         }
-        sessionRepository.removeSession(currentSessionIntoSessionList);
-        sessionList.getItems().remove(currentSessionIntoSessionList);
+        sessionRepository.removeSession(currentSession);
+        sessionList.getItems().remove(currentSession);
         updateSessionList();
         FileManager.saveRepository(sessionRepository);
     }
 
     private void updateSessionList() {
         sessionList.getItems().clear();
-        int num = 1;
         for (Session session : sessionRepository.getSessions()) {
-            sessionList.getItems().add("Session number " + num + "               Begin date: "+session.getBeginDate() + "                 Final date: "+session.getFinalDate() + "            is Active: "+session.isActiveSession());
-            num++;
+            sessionList.getItems().add(session);
         }
     }
 }

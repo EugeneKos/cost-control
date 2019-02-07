@@ -10,13 +10,15 @@ public class Buy implements Serializable {
     private String descriptionBuy;
     private boolean isLimited;
     private Bank payment;
+    private BuyCategories buyCategories;
 
-    public Buy(String price, String shopOrPlaceBuy, String descriptionBuy, boolean isLimited, Bank payment) {
+    public Buy(String price, String shopOrPlaceBuy, String descriptionBuy, boolean isLimited, Bank payment, BuyCategories buyCategories) {
         this.price = price;
         this.shopOrPlaceBuy = shopOrPlaceBuy;
         this.descriptionBuy = descriptionBuy;
         this.isLimited = isLimited;
         this.payment = payment;
+        this.buyCategories = buyCategories;
     }
 
     public String getPrice() {
@@ -37,6 +39,10 @@ public class Buy implements Serializable {
 
     public Bank getPayment() {
         return payment;
+    }
+
+    public BuyCategories getBuyCategories() {
+        return buyCategories;
     }
 
     private String getLimitedInfo(){

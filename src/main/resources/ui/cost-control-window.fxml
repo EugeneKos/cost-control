@@ -70,7 +70,7 @@
             <Font size="18.0" />
          </font>
       </Label>
-      <Button fx:id="setting" layoutX="459.0" layoutY="139.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="79.0" text="Настройки" />
+      <Button fx:id="setting" layoutX="459.0" layoutY="139.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="79.0" text="Сессии" />
       <Label layoutX="216.0" layoutY="381.0" text="Остаток лимита">
          <font>
             <Font size="18.0" />

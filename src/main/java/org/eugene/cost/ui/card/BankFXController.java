@@ -1,5 +1,6 @@
 package org.eugene.cost.ui.card;
 
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
@@ -82,12 +83,16 @@ public class BankFXController {
     public void initComboBox(){
         cardBox.getItems().clear();
         cashBox.getItems().clear();
+        fillList(bankRepository, cardBox.getItems(), cashBox.getItems());
+    }
+
+    static void fillList(BankRepository bankRepository, ObservableList<Card> items, ObservableList<Cash> items2) {
         for (Bank bank : bankRepository.getBanks()){
             if(bank instanceof Card){
-                cardBox.getItems().add((Card) bank);
+                items.add((Card) bank);
             }
             if(bank instanceof Cash){
-                cashBox.getItems().add((Cash) bank);
+                items2.add((Cash) bank);
             }
         }
     }

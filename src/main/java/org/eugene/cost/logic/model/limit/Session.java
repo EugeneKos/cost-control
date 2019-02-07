@@ -123,4 +123,9 @@ public class Session implements Serializable {
         }
         calculateMediumLimit();
     }
+
+    @Override
+    public String toString() {
+        return "Limit session: "+limit+"               Begin date: "+beginDate + "                 Final date: "+finalDate + "            is Active: "+isActiveSession();
+    }
 }
