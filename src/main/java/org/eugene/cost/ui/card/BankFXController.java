@@ -3,9 +3,14 @@ package org.eugene.cost.ui.card;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.AnchorPane;
+import javafx.stage.Modality;
+import javafx.stage.Stage;
 import org.eugene.cost.App;
 import org.eugene.cost.logic.model.card.bank.Bank;
 import org.eugene.cost.logic.model.card.bank.BankRepository;
@@ -13,6 +18,7 @@ import org.eugene.cost.logic.model.card.bank.Card;
 import org.eugene.cost.logic.model.card.bank.Cash;
 import org.eugene.cost.logic.model.card.op.Operation;
 import org.eugene.cost.logic.util.FileManager;
+import org.eugene.cost.ui.chart.GraphInitFXController;
 
 public class BankFXController {
     @FXML
@@ -36,6 +42,8 @@ public class BankFXController {
     private ImageView imageCard;
     @FXML
     private ImageView imageCash;
+    @FXML
+    private ImageView imageGraph;
 
     @FXML
     private ComboBox<Card> cardBox;
@@ -67,6 +75,7 @@ public class BankFXController {
         operationControl.setOnAction(this::handleOperationBtn);
         financeControl.setOnAction(this::handleFinanceBtn);
         limitControl.setOnAction(this::handleLimitBtn);
+        imageGraph.setOnMouseClicked(this::handleImageGraph);
     }
 
     private void loadBanks() {
@@ -107,6 +116,26 @@ public class BankFXController {
         bankType.setText("наличных");
         imageAnimation(imageCash);
         updateBalanceAndHistory();
+    }
+
+    private void handleImageGraph(MouseEvent event){
+        try {
+            Stage primaryStage = new Stage();
+            FXMLLoader loader = new FXMLLoader();
+            loader.setLocation(getClass().getClassLoader().getResource("ui/init-graph-window.fxml"));
+            AnchorPane panel = loader.load();
+            GraphInitFXController controller = loader.getController();
+            controller.initialize(bankRepository.getBanks());
+            Scene scene = new Scene(panel);
+            primaryStage.setTitle("Менеджер графиков");
+            primaryStage.setResizable(false);
+            primaryStage.setScene(scene);
+            primaryStage.initOwner(app.getParent());
+            primaryStage.initModality(Modality.APPLICATION_MODAL);
+            primaryStage.showAndWait();
+        } catch (Exception e){
+            e.printStackTrace();
+        }
     }
 
     private void imageAnimation(ImageView image){

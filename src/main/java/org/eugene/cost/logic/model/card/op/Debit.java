@@ -22,8 +22,13 @@ public class Debit implements Operation {
     }
 
     @Override
-    public String getDescription() {
-        return date.format(DateTimeFormatter.ofPattern("dd/MMM/yyyy")) + " Списание " + diff + " Руб. "+description;
+    public String getSum() {
+        return diff;
+    }
+
+    @Override
+    public LocalDate getDate() {
+        return date;
     }
 
     @Override

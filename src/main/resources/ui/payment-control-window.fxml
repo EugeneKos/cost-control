@@ -57,5 +57,11 @@
             <Font size="14.0" />
          </font>
       </Label>
+      <ImageView fx:id="imageGraph" fitHeight="35.0" fitWidth="41.0" layoutX="268.0" layoutY="181.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@../image/graph.png" />
+         </image>
+      </ImageView>
+      <Label layoutX="263.0" layoutY="220.0" text="Графики" />
    </children>
 </AnchorPane>

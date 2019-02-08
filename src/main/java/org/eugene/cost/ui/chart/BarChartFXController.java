@@ -15,13 +15,12 @@ public class BarChartFXController {
     @FXML
     private BarChart<String, Number> barChart;
 
-
     public void initialize(Session session){
-        XYChart.Series<String, Number> xx = new XYChart.Series<>();
+        XYChart.Series<String, Number> barChartSeries = new XYChart.Series<>();
         for (BuyCategories buyCategory : BuyCategories.values()){
-            xx.getData().add(new XYChart.Data<>(buyCategory.getName(),getSumRateOnCategory(buyCategory, session.getDayList())));
+            barChartSeries.getData().add(new XYChart.Data<>(buyCategory.getName(),getSumRateOnCategory(buyCategory, session.getDayList())));
         }
-        barChart.getData().add(xx);
+        barChart.getData().add(barChartSeries);
     }
 
     private int getSumRateOnCategory(BuyCategories buyCategories, List<Day> days){

@@ -232,11 +232,14 @@ public class LimitFXController {
     private void handleBtnStart(ActionEvent event) {
         String limit = StringUtil.deleteSpace(sumLimit.getText());
         if (!StringUtil.checkSequence(limit)) {
-            JOptionPane.showMessageDialog(null, "Ошибка заполнения лимита!", "Ошибка", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(null,
+                    "Ошибка заполнения лимита!", "Ошибка", JOptionPane.ERROR_MESSAGE);
             return;
         }
         if (beginDate.getValue() == null || finalDate.getValue() == null) {
-            JOptionPane.showMessageDialog(null, "Начальная и конечная даты сессии не установлены!", "Ошибка", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(null,
+                    "Начальная и конечная даты сессии не установлены!",
+                    "Ошибка", JOptionPane.ERROR_MESSAGE);
             return;
         }
         try {
@@ -251,7 +254,9 @@ public class LimitFXController {
             blockBtnAfterInitSession(false);
             FileManager.saveRepository(sessionRepository);
         } catch (IncorrectDateException e) {
-            JOptionPane.showMessageDialog(null, "Некорректно выставлены начальная и конечная даты сессии!", "Ошибка", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(null,
+                    "Некорректно выставлены начальная и конечная даты сессии!",
+                    "Ошибка", JOptionPane.ERROR_MESSAGE);
         }
     }
 
@@ -265,7 +270,8 @@ public class LimitFXController {
 
     private void handleBtnRemoveBuy(ActionEvent event) {
         if (currentBuy == null) {
-            JOptionPane.showMessageDialog(null, "Покупка не выбрана!", "Информация", JOptionPane.INFORMATION_MESSAGE);
+            JOptionPane.showMessageDialog(null,
+                    "Покупка не выбрана!", "Информация", JOptionPane.INFORMATION_MESSAGE);
             return;
         }
         currentDay.removeBuy(currentBuy, session);
@@ -284,7 +290,8 @@ public class LimitFXController {
 
     private void handleBtnMoreAboutBuy(ActionEvent event) {
         if (currentBuy == null) {
-            JOptionPane.showMessageDialog(null, "Покупка не выбрана!", "Информация", JOptionPane.INFORMATION_MESSAGE);
+            JOptionPane.showMessageDialog(null,
+                    "Покупка не выбрана!", "Информация", JOptionPane.INFORMATION_MESSAGE);
             return;
         }
         app.openMore(this, currentBuy, banks, bankFXController);

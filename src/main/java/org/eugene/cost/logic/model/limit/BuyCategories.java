@@ -1,34 +1,37 @@
 package org.eugene.cost.logic.model.limit;
 
 public enum  BuyCategories {
-    PRODUCT("Продукты"), ALCOHOL("Алкоголь"), BAR("Бар"),
+    PRODUCT("Продукты", ShortName.P), ALCOHOL("Алкоголь", ShortName.AL), BAR("Бар", ShortName.B),
 
-    RESTAURANT("Ресторан"), CLOTHES("Одежда"), OTHER("Прочее"),
+    RESTAURANT("Ресторан", ShortName.R), CLOTHES("Одежда", ShortName.C), OTHER("Прочее", ShortName.O),
 
-    APPLIANCES("Бытовая техника"), AUTOMOTIVE_TECHNOLOGY("Автомобильная техника");
+    APPLIANCES("Бытовая техника", ShortName.AP), AUTOMOTIVE_TECHNOLOGY("Автомобильная техника", ShortName.AT),
+
+    ENTERTAINMENT("Развлечение", ShortName.E);
 
 
     private String name;
-    private String description;
+    private ShortName shortName;
 
-    BuyCategories(String name) {
+    BuyCategories(String name, ShortName shortName) {
         this.name = name;
+        this.shortName = shortName;
     }
 
     public String getName() {
         return name;
     }
 
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
+    public ShortName getShortName() {
+        return shortName;
     }
 
     @Override
     public String toString() {
         return name;
+    }
+
+    private enum ShortName{
+        P, AL, B, R, C, O, AP, AT, E
     }
 }

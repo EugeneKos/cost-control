@@ -26,7 +26,7 @@ public class App extends Application {
     public void start(Stage primaryStage) throws Exception {
         parent = primaryStage;
         FXMLLoader loader = new FXMLLoader();
-        loader.setLocation(getClass().getClassLoader().getResource("ui/card-control-window.fxml"));
+        loader.setLocation(getClass().getClassLoader().getResource("ui/payment-control-window.fxml"));
         AnchorPane panel = loader.load();
         BankFXController controller = loader.getController();
         controller.setApp(this);
@@ -84,7 +84,7 @@ public class App extends Application {
         try {
             Stage primaryStage = new Stage();
             FXMLLoader loader = new FXMLLoader();
-            loader.setLocation(getClass().getClassLoader().getResource("ui/cost-control-window.fxml"));
+            loader.setLocation(getClass().getClassLoader().getResource("ui/limit-window.fxml"));
             AnchorPane panel = loader.load();
             LimitFXController controller = loader.getController();
             controller.setApp(this);
@@ -93,7 +93,7 @@ public class App extends Application {
             Scene scene = new Scene(panel);
             primaryStage.initOwner(parent);
             primaryStage.initModality(Modality.APPLICATION_MODAL);
-            primaryStage.setTitle("Контроль расходов");
+            primaryStage.setTitle("Управление лимитами");
             primaryStage.setResizable(false);
             primaryStage.setScene(scene);
             primaryStage.showAndWait();
@@ -148,6 +148,10 @@ public class App extends Application {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    public Stage getParent() {
+        return parent;
     }
 
     public static void main(String[] args) {

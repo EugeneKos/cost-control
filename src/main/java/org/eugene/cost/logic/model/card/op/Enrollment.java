@@ -22,8 +22,13 @@ public class Enrollment implements Operation {
     }
 
     @Override
-    public String getDescription() {
-        return date.format(DateTimeFormatter.ofPattern("dd/MMM/yyyy")) + " Зачисление " + diff + " Руб. "+description;
+    public String getSum() {
+        return diff;
+    }
+
+    @Override
+    public LocalDate getDate() {
+        return date;
     }
 
     @Override

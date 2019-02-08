@@ -50,8 +50,12 @@ public class Buy implements Serializable {
         return "[NL] ";
     }
 
+    private String getShortNameCategoryBuy(){
+        return "["+buyCategories.getShortName()+"] ";
+    }
+
     @Override
     public String toString() {
-        return getLimitedInfo() + price +" Руб. "+shopOrPlaceBuy;
+        return getLimitedInfo() + getShortNameCategoryBuy() + price +" Руб. "+shopOrPlaceBuy;
     }
 }
