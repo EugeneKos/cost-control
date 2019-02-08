@@ -27,21 +27,21 @@ public class LineChartFXController {
     public void initialize(Bank bank, LocalDate beginDate, LocalDate finalDate){
         XYChart.Series<String, Number> lineChartSeries = new XYChart.Series<>();
         lineChartSeries.setName("Баланс");
-        for (Map.Entry<LocalDate, Integer> entry : getBalanceOnPeriod(bank, checkBeginDate(bank, beginDate), checkFinalDate(finalDate)).entrySet()){
+        for (Map.Entry<LocalDate, Double> entry : getBalanceOnPeriod(bank, checkBeginDate(bank, beginDate), checkFinalDate(finalDate)).entrySet()){
             lineChartSeries.getData().add(new XYChart.Data<>(entry.getKey().format(DateTimeFormatter.ofPattern("dd.MM")), entry.getValue()));
         }
         lineChart.getData().add(lineChartSeries);
 
         XYChart.Series<String, Number> barChartSeriesRate = new XYChart.Series<>();
         barChartSeriesRate.setName("Расходы");
-        for (Map.Entry<LocalDate, Integer> entry : getRatesOnPeriod(bank, checkBeginDate(bank, beginDate), checkFinalDate(finalDate), Operations.DEBIT).entrySet()){
+        for (Map.Entry<LocalDate, Double> entry : getRatesOnPeriod(bank, checkBeginDate(bank, beginDate), checkFinalDate(finalDate), Operations.DEBIT).entrySet()){
             barChartSeriesRate.getData().add(new XYChart.Data<>(entry.getKey().format(DateTimeFormatter.ofPattern("dd.MM")), entry.getValue()));
         }
         barChartRate.getData().add(barChartSeriesRate);
 
         XYChart.Series<String, Number> barChartSeriesArrival = new XYChart.Series<>();
         barChartSeriesArrival.setName("Поступления");
-        for (Map.Entry<LocalDate, Integer> entry : getRatesOnPeriod(bank, checkBeginDate(bank, beginDate), checkFinalDate(finalDate), Operations.ENROLLMENT).entrySet()){
+        for (Map.Entry<LocalDate, Double> entry : getRatesOnPeriod(bank, checkBeginDate(bank, beginDate), checkFinalDate(finalDate), Operations.ENROLLMENT).entrySet()){
             barChartSeriesArrival.getData().add(new XYChart.Data<>(entry.getKey().format(DateTimeFormatter.ofPattern("dd.MM")), entry.getValue()));
         }
         barChartArrival.getData().add(barChartSeriesArrival);
@@ -55,11 +55,11 @@ public class LineChartFXController {
         return finalDate.isAfter(LocalDate.now()) ? LocalDate.now() : finalDate;
     }
 
-    private Map<LocalDate, Integer> getBalanceOnPeriod(Bank bank, LocalDate beginDate, LocalDate finalDate){
-        Map<LocalDate, Integer> balances = new LinkedHashMap<>();
+    private Map<LocalDate, Double> getBalanceOnPeriod(Bank bank, LocalDate beginDate, LocalDate finalDate){
+        Map<LocalDate, Double> balances = new LinkedHashMap<>();
         LocalDate current = beginDate;
         while (!current.isAfter(finalDate)){
-            balances.put(current, Integer.parseInt(calculateBalanceOnDate(bank, current)));
+            balances.put(current, Double.parseDouble(calculateBalanceOnDate(bank, current)));
             current = current.plusDays(1);
         }
         return balances;
@@ -86,8 +86,8 @@ public class LineChartFXController {
         return balance;
     }
 
-    private Map<LocalDate, Integer> getRatesOnPeriod(Bank bank, LocalDate beginDate, LocalDate finalDate, Operations operations){
-        Map<LocalDate, Integer> rates = new LinkedHashMap<>();
+    private Map<LocalDate, Double> getRatesOnPeriod(Bank bank, LocalDate beginDate, LocalDate finalDate, Operations operations){
+        Map<LocalDate, Double> rates = new LinkedHashMap<>();
         LocalDate current = beginDate;
         while (!current.isAfter(finalDate)){
             String rateOnDay = "0";
@@ -107,7 +107,7 @@ public class LineChartFXController {
                     }
                 }
             }
-            rates.put(current, Integer.parseInt(rateOnDay));
+            rates.put(current, Double.parseDouble(rateOnDay));
             current = current.plusDays(1);
         }
         return rates;

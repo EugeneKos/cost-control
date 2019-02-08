@@ -23,7 +23,7 @@ public class BarChartFXController {
         barChart.getData().add(barChartSeries);
     }
 
-    private int getSumRateOnCategory(BuyCategories buyCategories, List<Day> days){
+    private double getSumRateOnCategory(BuyCategories buyCategories, List<Day> days){
         String sumRate = "0";
         for (Day day : days){
             for (Buy buy : day.getBuyList()){
@@ -32,6 +32,6 @@ public class BarChartFXController {
                 }
             }
         }
-        return Integer.parseInt(sumRate);
+        return Double.parseDouble(sumRate);
     }
 }

@@ -144,23 +144,25 @@ public class BankFXController {
             boolean down = true;
             boolean left = true;
             for (int i=0; i < 27; i++){
-                if(image.getRotate() >= 0 & image.getRotate() < 21 & left){
-                    image.setRotate(image.getRotate()+step);
-                    down = true;
-                } else if(down) {
-                    left = false;
-                    image.setRotate(image.getRotate()-step);
-                }
-                if(image.getRotate() < 0 & image.getRotate() > -21 & !left){
-                    image.setRotate(image.getRotate()-step);
-                    down = false;
-                } else if(!down) {
-                    left = true;
-                    image.setRotate(image.getRotate()+step);
-                }
                 try {
+                    if(image.getRotate() >= 0 & image.getRotate() < 21 & left){
+                        image.setRotate(image.getRotate()+step);
+                        down = true;
+                    } else if(down) {
+                        left = false;
+                        image.setRotate(image.getRotate()-step);
+                    }
+                    if(image.getRotate() < 0 & image.getRotate() > -21 & !left){
+                        image.setRotate(image.getRotate()-step);
+                        down = false;
+                    } else if(!down) {
+                        left = true;
+                        image.setRotate(image.getRotate()+step);
+                    }
                     Thread.sleep(50);
                 } catch (InterruptedException e) {
+                    e.printStackTrace();
+                } catch (Exception e){
                     e.printStackTrace();
                 }
             }
