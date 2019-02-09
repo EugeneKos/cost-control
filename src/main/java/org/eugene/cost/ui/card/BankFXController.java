@@ -1,5 +1,6 @@
 package org.eugene.cost.ui.card;
 
+import javafx.application.Platform;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -144,30 +145,32 @@ public class BankFXController {
             boolean down = true;
             boolean left = true;
             for (int i=0; i < 27; i++){
+                if(image.getRotate() >= 0 & image.getRotate() < 21 & left){
+                    rotate(image, image.getRotate()+step);
+                    down = true;
+                } else if(down) {
+                    left = false;
+                    rotate(image, image.getRotate()-step);
+                }
+                if(image.getRotate() < 0 & image.getRotate() > -21 & !left){
+                    rotate(image, image.getRotate()-step);
+                    down = false;
+                } else if(!down) {
+                    left = true;
+                    rotate(image, image.getRotate()+step);
+                }
                 try {
-                    if(image.getRotate() >= 0 & image.getRotate() < 21 & left){
-                        image.setRotate(image.getRotate()+step);
-                        down = true;
-                    } else if(down) {
-                        left = false;
-                        image.setRotate(image.getRotate()-step);
-                    }
-                    if(image.getRotate() < 0 & image.getRotate() > -21 & !left){
-                        image.setRotate(image.getRotate()-step);
-                        down = false;
-                    } else if(!down) {
-                        left = true;
-                        image.setRotate(image.getRotate()+step);
-                    }
                     Thread.sleep(50);
                 } catch (InterruptedException e) {
-                    e.printStackTrace();
-                } catch (Exception e){
                     e.printStackTrace();
                 }
             }
         });
         thread.start();
+    }
+
+    private void rotate(ImageView image, double rotate){
+        Platform.runLater(()-> image.setRotate(rotate));
     }
 
     private void handleLimitBtn(ActionEvent event){

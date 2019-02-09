@@ -71,9 +71,9 @@ public class LineChartFXController {
             return balance;
         }
         LocalDate current = date.plusDays(1);
-        while (current.isBefore(LocalDate.now())){
+        while (current.isBefore(LocalDate.now()) | current.isEqual(LocalDate.now())){
             for (Operation operation : bank.getOperationHistory()){
-                if(operation.getDate().isBefore(current)){
+                if(operation.getDate().isEqual(current)){
                     if(operation instanceof Enrollment){
                         balance = Calculate.minus(balance, operation.getSum());
                     } else if (operation instanceof Debit){
