@@ -7,7 +7,7 @@ public enum  BuyCategories {
 
     APPLIANCES("Бытовая техника", ShortName.AP), AUTOMOTIVE_TECHNOLOGY("Автомобильная техника", ShortName.AT),
 
-    ENTERTAINMENT("Развлечение", ShortName.E);
+    ENTERTAINMENT("Развлечение", ShortName.E), TOBACCO("Табачные изделия", ShortName.T);
 
 
     private String name;
@@ -32,6 +32,6 @@ public enum  BuyCategories {
     }
 
     private enum ShortName{
-        P, AL, B, R, C, O, AP, AT, E
+        P, AL, B, R, C, O, AP, AT, E, T
     }
 }

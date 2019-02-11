@@ -60,8 +60,10 @@ public class BankFXController {
 
     @FXML
     public void initialize(){
-        loadBanks();
+        loadBankRepository();
         initComboBox();
+        loadCard();
+        loadCash();
         cardBox.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
             currentCard = newValue;
             updateBalanceAndHistory();
@@ -79,10 +81,32 @@ public class BankFXController {
         imageGraph.setOnMouseClicked(this::handleImageGraph);
     }
 
-    private void loadBanks() {
+    private void loadBankRepository() {
         bankRepository = (BankRepository) FileManager.loadRepository("banks");
         if (bankRepository == null) {
             bankRepository = new BankRepository();
+        }
+    }
+
+    private void loadCard(){
+        for (Bank bank : bankRepository.getBanks()){
+            if(bank instanceof Card){
+                cardBox.setValue((Card) bank);
+                currentCard = (Card) bank;
+                updateBalanceAndHistory();
+                return;
+            }
+        }
+    }
+
+    private void loadCash(){
+        for (Bank bank : bankRepository.getBanks()){
+            if(bank instanceof Cash){
+                cashBox.setValue((Cash) bank);
+                currentCash = (Cash) bank;
+                updateBalanceAndHistory();
+                return;
+            }
         }
     }
 
@@ -144,7 +168,7 @@ public class BankFXController {
             int step = 3;
             boolean down = true;
             boolean left = true;
-            for (int i=0; i < 27; i++){
+            for (int i=0; i < 28; i++){
                 if(image.getRotate() >= 0 & image.getRotate() < 21 & left){
                     rotate(image, image.getRotate()+step);
                     down = true;

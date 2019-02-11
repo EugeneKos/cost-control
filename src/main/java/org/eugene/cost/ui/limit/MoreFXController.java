@@ -66,6 +66,7 @@ public class MoreFXController {
             initPaymentSystem(currentBuy.getPayment());
             paymentSystem.setDisable(true);
             currentBank = initCurrentBank(currentBuy.getPayment());
+            buyCategory = currentBuy.getBuyCategories();
             if(currentBank == null){
                 addBuy.setDisable(true);
                 JOptionPane.showMessageDialog(null,
@@ -149,12 +150,15 @@ public class MoreFXController {
         Buy buy = new Buy(price,shopOrPlaceBuy.getText(),descriptionBuy.getText(),!nonLimited.isSelected(), currentBank, buyCategory);
         if(currentBuy == null){
             limitFXController.addBuyIntoCurrentDay(buy);
+            currentBank.executeOperation(new Debit(price, "[ "+buy.getShopOrPlaceBuy()+" ]"));
         } else {
             limitFXController.applyChangeBuyIntoCurrentDay(currentBuy,buy);
-            currentBank.executeOperation(new Enrollment(currentBuy.getPrice(),
-                    "Отмена списание средств [ "+currentBuy.getShopOrPlaceBuy()+" ]"));
+            if(!currentBuy.getPrice().equals(buy.getPrice())){
+                currentBank.executeOperation(new Enrollment(currentBuy.getPrice(),
+                        "Отмена списание средств [ "+currentBuy.getShopOrPlaceBuy()+" ]"));
+                currentBank.executeOperation(new Debit(price, "[ "+buy.getShopOrPlaceBuy()+" ]"));
+            }
         }
-        currentBank.executeOperation(new Debit(price, "[ "+buy.getShopOrPlaceBuy()+" ]"));
         bankFXController.updateBalanceAndHistory();
         bankFXController.saveBanks();
         stage.close();

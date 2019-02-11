@@ -139,11 +139,11 @@ public class LimitFXController {
             currentBuy = newValue;
             displayBuyDescription();
         });
-        loadSessions();
-        blockBtnAfterInitSession(true);
+        loadSessionRepository();
+        disableBtnAfterInitSession(true);
     }
 
-    private void loadSessions() {
+    private void loadSessionRepository() {
         sessionRepository = (SessionRepository) FileManager.loadRepository("sessions");
         if (sessionRepository == null) {
             sessionRepository = new SessionRepository();
@@ -250,8 +250,8 @@ public class LimitFXController {
             currentDay = session.getDay(beginDate.getValue());
             setButtonOnCloseDay(currentDay.isClose());
             updateLimitsAndRate();
-            blockBtnBeforeInitSession(true);
-            blockBtnAfterInitSession(false);
+            disableBtnBeforeInitSession(true);
+            disableBtnAfterInitSession(false);
             FileManager.saveRepository(sessionRepository);
         } catch (IncorrectDateException e) {
             JOptionPane.showMessageDialog(null,
@@ -364,26 +364,31 @@ public class LimitFXController {
     public void applySession(Session session) {
         this.session = session;
         this.session.autoCloseDays();
-        blockBtnBeforeInitSession(true);
-        blockBtnAfterInitSession(false);
+        disableBtnBeforeInitSession(true);
+        disableBtnAfterInitSession(false);
         beginDate.setValue(session.getBeginDate());
         finalDate.setValue(session.getFinalDate());
-        currentDate.setValue(beginDate.getValue());
         sumLimit.setText(session.getLimit());
-        currentDay = session.getDay(beginDate.getValue());
+        if(session.isActiveSession()){
+            currentDate.setValue(LocalDate.now());
+            currentDay = session.getDay(LocalDate.now());
+        } else {
+            currentDate.setValue(beginDate.getValue());
+            currentDay = session.getDay(beginDate.getValue());
+        }
         setButtonOnCloseDay(currentDay.isClose());
         updateLimitsAndRate();
         FileManager.saveRepository(sessionRepository);
     }
 
-    private void blockBtnBeforeInitSession(boolean disable) {
+    private void disableBtnBeforeInitSession(boolean disable) {
         sumLimit.setEditable(!disable);
         beginDate.setDisable(disable);
         finalDate.setDisable(disable);
         start.setDisable(disable);
     }
 
-    private void blockBtnAfterInitSession(boolean disable) {
+    private void disableBtnAfterInitSession(boolean disable) {
         currentDate.setDisable(disable);
         addBuy.setDisable(disable);
         removeBuy.setDisable(disable);
