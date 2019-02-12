@@ -33,6 +33,6 @@ public class Enrollment implements Operation {
 
     @Override
     public String toString() {
-        return date.format(DateTimeFormatter.ofPattern("dd/MMM/yyyy")) + " Зачисление " + diff + " Руб. "+description;
+        return date.format(DateTimeFormatter.ofPattern("dd-MMM-yyyy")) + " Зачисление " + diff + " Руб. "+description;
     }
 }

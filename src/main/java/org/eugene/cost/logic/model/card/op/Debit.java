@@ -33,6 +33,6 @@ public class Debit implements Operation {
 
     @Override
     public String toString() {
-        return date.format(DateTimeFormatter.ofPattern("dd/MMM/yyyy")) + " Списание " + diff + " Руб. "+description;
+        return date.format(DateTimeFormatter.ofPattern("dd-MMM-yyyy")) + " Списание " + diff + " Руб. "+description;
     }
 }

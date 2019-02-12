@@ -68,7 +68,8 @@ public class MoreSessionFXController {
     private void updateDayList(){
         dayList.getItems().clear();
         for (Day day : session.getDayList()){
-            dayList.getItems().add(day.getDate().toString());
+            String date = day.getDate().format(DateTimeFormatter.ofPattern("dd-MMM-yyyy"));
+            dayList.getItems().add(date);
         }
     }
 
@@ -94,7 +95,7 @@ public class MoreSessionFXController {
             }
 
         }
-        currentDay.setText("Траты за " + session.getDayList().get(index).getDate().format(DateTimeFormatter.ofPattern("dd/MMM/yyyy")));
+        currentDay.setText("Траты за " + session.getDayList().get(index).getDate().format(DateTimeFormatter.ofPattern("dd-MMM-yyyy")));
         totalPrice.setText(total + " Руб.");
     }
 

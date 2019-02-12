@@ -12,7 +12,8 @@ public final class FileManager {
              ObjectOutputStream objectOutputStream = new ObjectOutputStream(byteArrayOutputStream)) {
             objectOutputStream.writeObject(repository);
             objectOutputStream.flush();
-            writeFile(byteArrayOutputStream.toByteArray(), repository.getName());
+            byte[] encryptedContent = Security.encrypt(byteArrayOutputStream.toByteArray());
+            writeFile(encryptedContent, repository.getName());
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -43,7 +44,9 @@ public final class FileManager {
         byte[] content = readFile(repositoryName);
         if (content == null) return null;
         if(content.length == 0) return null;
-        try (ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(content);
+        byte[] decryptContent = Security.decrypt(content);
+        if(decryptContent == null) return null;
+        try (ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(decryptContent);
              ObjectInputStream objectInputStream = new ObjectInputStream(byteArrayInputStream)) {
             Object object = objectInputStream.readObject();
             if(object instanceof Repository){

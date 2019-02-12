@@ -15,6 +15,7 @@ import org.eugene.cost.ui.chart.BarChartFXController;
 
 import javax.swing.*;
 import java.io.IOException;
+import java.time.format.DateTimeFormatter;
 
 public class SettingsFXController {
     @FXML
@@ -28,6 +29,8 @@ public class SettingsFXController {
     private Button removeSession;
     @FXML
     private Button graph;
+
+    private DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MMM-yyyy");
 
     private LimitFXController limitFXController;
 
@@ -58,7 +61,7 @@ public class SettingsFXController {
             controller.setSession(session);
             controller.init();
             Scene scene = new Scene(panel);
-            primaryStage.setTitle(session.getBeginDate()+" - "+session.getFinalDate());
+            primaryStage.setTitle(session.getBeginDate().format(formatter)+" - "+session.getFinalDate().format(formatter));
             primaryStage.setResizable(false);
             primaryStage.setScene(scene);
             primaryStage.show();
@@ -76,7 +79,7 @@ public class SettingsFXController {
             BarChartFXController controller = loader.getController();
             controller.initialize(session);
             Scene scene = new Scene(panel);
-            primaryStage.setTitle(session.getBeginDate()+" - "+session.getFinalDate());
+            primaryStage.setTitle(session.getBeginDate().format(formatter)+" - "+session.getFinalDate().format(formatter));
             primaryStage.setScene(scene);
             primaryStage.show();
         } catch (IOException e) {
