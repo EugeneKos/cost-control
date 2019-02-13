@@ -4,13 +4,14 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.stage.Stage;
-import org.eugene.cost.logic.model.card.bank.Bank;
-import org.eugene.cost.logic.model.card.op.Debit;
-import org.eugene.cost.logic.model.card.op.Enrollment;
+import org.eugene.cost.logic.model.limit.Day;
+import org.eugene.cost.logic.model.payment.bank.Bank;
+import org.eugene.cost.logic.model.payment.op.Debit;
+import org.eugene.cost.logic.model.payment.op.Enrollment;
 import org.eugene.cost.logic.model.limit.Buy;
 import org.eugene.cost.logic.model.limit.BuyCategories;
 import org.eugene.cost.logic.util.StringUtil;
-import org.eugene.cost.ui.card.BankFXController;
+import org.eugene.cost.ui.payment.BankFXController;
 
 import javax.swing.*;
 import java.util.Set;
@@ -41,6 +42,8 @@ public class MoreFXController {
     private LimitFXController limitFXController;
 
     private Stage stage;
+
+    private Day currentDay;
 
     private Buy currentBuy;
 
@@ -90,6 +93,10 @@ public class MoreFXController {
 
     public void setCurrentBuy(Buy currentBuy) {
         this.currentBuy = currentBuy;
+    }
+
+    public void setCurrentDay(Day currentDay) {
+        this.currentDay = currentDay;
     }
 
     public void setBanks(Set<Bank> banks) {
@@ -150,13 +157,13 @@ public class MoreFXController {
         Buy buy = new Buy(price,shopOrPlaceBuy.getText(),descriptionBuy.getText(),!nonLimited.isSelected(), currentBank, buyCategory);
         if(currentBuy == null){
             limitFXController.addBuyIntoCurrentDay(buy);
-            currentBank.executeOperation(new Debit(price, "[ "+buy.getShopOrPlaceBuy()+" ]"));
+            currentBank.executeOperation(new Debit(price, "[ "+buy.getShopOrPlaceBuy()+" ] "+buy.getDescriptionBuy(), currentDay.getDate()));
         } else {
             limitFXController.applyChangeBuyIntoCurrentDay(currentBuy,buy);
             if(!currentBuy.getPrice().equals(buy.getPrice())){
                 currentBank.executeOperation(new Enrollment(currentBuy.getPrice(),
-                        "Отмена списание средств [ "+currentBuy.getShopOrPlaceBuy()+" ]"));
-                currentBank.executeOperation(new Debit(price, "[ "+buy.getShopOrPlaceBuy()+" ]"));
+                        "Отмена списание средств [ "+currentBuy.getShopOrPlaceBuy()+" ] "+buy.getDescriptionBuy(), currentDay.getDate()));
+                currentBank.executeOperation(new Debit(price, "[ "+buy.getShopOrPlaceBuy()+" ] "+buy.getDescriptionBuy(), currentDay.getDate()));
             }
         }
         bankFXController.updateBalanceAndHistory();

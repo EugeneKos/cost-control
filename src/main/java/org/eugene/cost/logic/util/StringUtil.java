@@ -1,6 +1,8 @@
 package org.eugene.cost.logic.util;
 
 public final class StringUtil {
+    private StringUtil(){}
+
     public static String deleteSpace(String input){
         StringBuilder stringBuilder = new StringBuilder();
         for (int i = 0; i < input.length(); i++) {

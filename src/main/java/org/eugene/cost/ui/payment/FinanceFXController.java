@@ -1,11 +1,12 @@
-package org.eugene.cost.ui.card;
+package org.eugene.cost.ui.payment;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
+import javafx.scene.control.DatePicker;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TextField;
-import org.eugene.cost.logic.model.card.bank.*;
+import org.eugene.cost.logic.model.payment.bank.*;
 import org.eugene.cost.logic.util.FileManager;
 import org.eugene.cost.logic.util.StringUtil;
 
@@ -37,6 +38,11 @@ public class FinanceFXController {
     @FXML
     private Button removeCash;
 
+    @FXML
+    private DatePicker cardsDate;
+    @FXML
+    private DatePicker cashesDate;
+
     private BankRepository bankRepository;
 
     private BankFXController bankFXController;
@@ -52,23 +58,17 @@ public class FinanceFXController {
 
         cards.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
             currentCard = newValue;
-            if(currentCard == null){
-                cardNumber.setText("");
-                cardBalance.setText("");
-                return;
-            }
+            if (clear(currentCard == null, cardNumber, cardBalance, cardsDate)) return;
             cardNumber.setText(currentCard.getNumber());
             cardBalance.setText(currentCard.getBalance());
+            cardsDate.setValue(currentCard.getDate());
         });
         cashes.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
             currentCash = newValue;
-            if(currentCash == null){
-                cashDescription.setText("");
-                cashBalance.setText("");
-                return;
-            }
+            if (clear(currentCash == null, cashDescription, cashBalance, cashesDate)) return;
             cashDescription.setText(currentCash.getDescription());
             cashBalance.setText(currentCash.getBalance());
+            cashesDate.setValue(currentCash.getDate());
         });
         addCard.setOnAction(this::handleAddBtn);
         addCash.setOnAction(this::handleAddBtn);
@@ -85,6 +85,16 @@ public class FinanceFXController {
             }
             prevLength = length;
         });
+    }
+
+    private boolean clear(boolean condition, TextField description, TextField balance, DatePicker date) {
+        if(condition){
+            description.setText("");
+            balance.setText("");
+            date.setValue(null);
+            return true;
+        }
+        return false;
     }
 
     public void setBankFXController(BankFXController bankFXController) {
@@ -115,7 +125,11 @@ public class FinanceFXController {
                                 "Информация", JOptionPane.INFORMATION_MESSAGE);
                         return;
                     }
-                    addBank(new Card(balance,cardNum), cards);
+                    if(cardsDate.getValue() == null){
+                        addBank(new Card(balance,cardNum), cards);
+                    } else {
+                        addBank(new Card(balance,cardNum, cardsDate.getValue()), cards);
+                    }
                     break;
                 case "addCash":
                     balance = getBalance(cashBalance);
@@ -131,7 +145,11 @@ public class FinanceFXController {
                                 "Информация", JOptionPane.INFORMATION_MESSAGE);
                         return;
                     }
-                    addBank(new Cash(balance,cashDescription.getText()), cashes);
+                    if(cashesDate.getValue() == null){
+                        addBank(new Cash(balance,cashDescription.getText()), cashes);
+                    } else {
+                        addBank(new Cash(balance,cashDescription.getText(), cashesDate.getValue()), cashes);
+                    }
                     break;
             }
             bankFXController.initComboBox();

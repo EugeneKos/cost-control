@@ -6,8 +6,8 @@ import javafx.scene.control.*;
 import javafx.scene.paint.Paint;
 import org.eugene.cost.App;
 import org.eugene.cost.logic.exeption.IncorrectDateException;
-import org.eugene.cost.logic.model.card.bank.Bank;
-import org.eugene.cost.logic.model.card.op.Enrollment;
+import org.eugene.cost.logic.model.payment.bank.Bank;
+import org.eugene.cost.logic.model.payment.op.Enrollment;
 import org.eugene.cost.logic.model.limit.Buy;
 import org.eugene.cost.logic.model.limit.Day;
 import org.eugene.cost.logic.model.limit.Session;
@@ -15,7 +15,7 @@ import org.eugene.cost.logic.model.limit.SessionRepository;
 import org.eugene.cost.logic.util.Calculate;
 import org.eugene.cost.logic.util.FileManager;
 import org.eugene.cost.logic.util.StringUtil;
-import org.eugene.cost.ui.card.BankFXController;
+import org.eugene.cost.ui.payment.BankFXController;
 
 import javax.swing.*;
 import java.time.LocalDate;
@@ -265,7 +265,7 @@ public class LimitFXController {
     }
 
     private void handleBtnAddBuy(ActionEvent event) {
-        app.openMore(this, null, banks, bankFXController);
+        app.openMore(this, null, banks, currentDay, bankFXController);
     }
 
     private void handleBtnRemoveBuy(ActionEvent event) {
@@ -294,7 +294,7 @@ public class LimitFXController {
                     "Покупка не выбрана!", "Информация", JOptionPane.INFORMATION_MESSAGE);
             return;
         }
-        app.openMore(this, currentBuy, banks, bankFXController);
+        app.openMore(this, currentBuy, banks, currentDay, bankFXController);
     }
 
     private void handleBtnCloseDay(ActionEvent event) {

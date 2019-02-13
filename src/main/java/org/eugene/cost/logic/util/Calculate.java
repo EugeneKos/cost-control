@@ -3,6 +3,8 @@ package org.eugene.cost.logic.util;
 import java.math.BigDecimal;
 
 public final class Calculate {
+    private Calculate(){}
+
     public static String plus(String numOne, String numTwo){
         BigDecimal bigDecimalOne = new BigDecimal(numOne);
         BigDecimal bigDecimalTwo = new BigDecimal(numTwo);

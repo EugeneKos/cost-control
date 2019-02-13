@@ -6,13 +6,14 @@ import javafx.scene.Scene;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
-import org.eugene.cost.logic.model.card.bank.Bank;
-import org.eugene.cost.logic.model.card.bank.BankRepository;
+import org.eugene.cost.logic.model.limit.Day;
+import org.eugene.cost.logic.model.payment.bank.Bank;
+import org.eugene.cost.logic.model.payment.bank.BankRepository;
 import org.eugene.cost.logic.model.limit.Buy;
 import org.eugene.cost.logic.model.limit.SessionRepository;
-import org.eugene.cost.ui.card.BankFXController;
-import org.eugene.cost.ui.card.FinanceFXController;
-import org.eugene.cost.ui.card.OperationFXController;
+import org.eugene.cost.ui.payment.BankFXController;
+import org.eugene.cost.ui.payment.FinanceFXController;
+import org.eugene.cost.ui.payment.OperationFXController;
 import org.eugene.cost.ui.limit.LimitFXController;
 import org.eugene.cost.ui.limit.MoreFXController;
 import org.eugene.cost.ui.limit.SettingsFXController;
@@ -102,7 +103,7 @@ public class App extends Application {
         }
     }
 
-    public void openMore(LimitFXController limitFXController, Buy buy, Set<Bank> banks, BankFXController bankFXController) {
+    public void openMore(LimitFXController limitFXController, Buy buy, Set<Bank> banks, Day currentDay, BankFXController bankFXController) {
         try {
             Stage primaryStage = new Stage();
             FXMLLoader loader = new FXMLLoader();
@@ -112,6 +113,7 @@ public class App extends Application {
             controller.setLimitFXController(limitFXController);
             controller.setStage(primaryStage);
             controller.setCurrentBuy(buy);
+            controller.setCurrentDay(currentDay);
             controller.setBanks(banks);
             controller.setBankFXController(bankFXController);
             controller.init();

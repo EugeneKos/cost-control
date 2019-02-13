@@ -1,6 +1,6 @@
-package org.eugene.cost.logic.model.card.bank;
+package org.eugene.cost.logic.model.payment.bank;
 
-import org.eugene.cost.logic.model.card.op.Operation;
+import org.eugene.cost.logic.model.payment.op.Operation;
 
 import java.io.Serializable;
 import java.time.LocalDate;
@@ -9,13 +9,18 @@ import java.util.List;
 
 public abstract class Bank implements Serializable {
     private String balance;
-    private LocalDate date;
+    private final LocalDate date;
 
     private List<Operation> operationHistory = new LinkedList<>();
 
     public Bank(String balance) {
         this.balance = balance;
         this.date = LocalDate.now();
+    }
+
+    public Bank(String balance, LocalDate date) {
+        this.balance = balance;
+        this.date = date;
     }
 
     public String getBalance() {

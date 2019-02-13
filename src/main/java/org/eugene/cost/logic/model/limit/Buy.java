@@ -1,6 +1,6 @@
 package org.eugene.cost.logic.model.limit;
 
-import org.eugene.cost.logic.model.card.bank.Bank;
+import org.eugene.cost.logic.model.payment.bank.Bank;
 
 import java.io.Serializable;
 

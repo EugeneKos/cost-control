@@ -1,4 +1,4 @@
-package org.eugene.cost.logic.model.card.op;
+package org.eugene.cost.logic.model.payment.op;
 
 import org.eugene.cost.logic.util.Calculate;
 
@@ -13,7 +13,13 @@ public class Debit implements Operation {
     public Debit(String diff, String description) {
         this.diff = diff;
         this.description = description;
-        date = LocalDate.now();
+        this.date = LocalDate.now();
+    }
+
+    public Debit(String diff, String description, LocalDate date) {
+        this.diff = diff;
+        this.description = description;
+        this.date = date;
     }
 
     @Override
@@ -29,6 +35,11 @@ public class Debit implements Operation {
     @Override
     public LocalDate getDate() {
         return date;
+    }
+
+    @Override
+    public String getDescription() {
+        return description;
     }
 
     @Override

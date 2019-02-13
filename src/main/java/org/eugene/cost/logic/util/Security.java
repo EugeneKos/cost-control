@@ -7,6 +7,8 @@ import java.security.NoSuchAlgorithmException;
 import java.util.Arrays;
 
 public final class Security {
+    private Security(){}
+
     public static byte[] encrypt(byte[] content){
         try {
             SecretKey secretKey = generateKey();
@@ -35,7 +37,7 @@ public final class Security {
     }
 
     private static SecretKey generateKey(){
-        String key = "";
+        String key = "keY4PasSwoRd9751";
         byte[] keyBytes = Arrays.copyOf(key.getBytes(),16);
         return new SecretKeySpec(keyBytes, "AES");
     }

@@ -1,12 +1,18 @@
-package org.eugene.cost.logic.model.card.bank;
+package org.eugene.cost.logic.model.payment.bank;
 
 import java.io.Serializable;
+import java.time.LocalDate;
 
 public class Card extends Bank implements Serializable {
     private final String number;
 
     public Card(String balance, String number) {
         super(balance);
+        this.number = number;
+    }
+
+    public Card(String balance, String number, LocalDate date) {
+        super(balance, date);
         this.number = number;
     }
 

@@ -1,4 +1,4 @@
-package org.eugene.cost.logic.model.card.bank;
+package org.eugene.cost.logic.model.payment.bank;
 
 import org.eugene.cost.logic.model.Repository;
 
