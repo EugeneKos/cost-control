@@ -162,6 +162,10 @@ public class LimitFXController {
         this.bankFXController = bankFXController;
     }
 
+    public Session getSession() {
+        return session;
+    }
+
     private void handleCurrentDate(ActionEvent event) {
         LocalDate current = currentDate.getValue();
         currentDay = session.getDay(current);

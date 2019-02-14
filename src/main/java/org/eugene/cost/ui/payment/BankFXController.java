@@ -21,6 +21,8 @@ import org.eugene.cost.logic.model.payment.op.Operation;
 import org.eugene.cost.logic.util.FileManager;
 import org.eugene.cost.ui.chart.GraphInitFXController;
 
+import java.util.List;
+
 public class BankFXController {
     @FXML
     private ListView<Operation> operations;
@@ -31,6 +33,8 @@ public class BankFXController {
     private Button financeControl;
     @FXML
     private Button limitControl;
+    @FXML
+    private Button detailHistory;
 
     @FXML
     private Label cashBalance;
@@ -51,6 +55,11 @@ public class BankFXController {
     @FXML
     private ComboBox<Cash> cashBox;
 
+    @FXML
+    private RadioButton increase;
+    @FXML
+    private RadioButton descending;
+
     private App app;
 
     private Card currentCard;
@@ -58,10 +67,13 @@ public class BankFXController {
 
     private BankRepository bankRepository;
 
+    private List<Operation> historyOperations;
+
     @FXML
     public void initialize(){
         loadBankRepository();
         initComboBox();
+        initRB();
         loadCard();
         loadCash();
         cardBox.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
@@ -78,7 +90,10 @@ public class BankFXController {
         operationControl.setOnAction(this::handleOperationBtn);
         financeControl.setOnAction(this::handleFinanceBtn);
         limitControl.setOnAction(this::handleLimitBtn);
+        detailHistory.setOnAction(this::handleDetailHistoryBtn);
         imageGraph.setOnMouseClicked(this::handleImageGraph);
+        increase.setOnAction(this::handleIncreaseRB);
+        descending.setOnAction(this::handleDescendingRB);
     }
 
     private void loadBankRepository() {
@@ -118,6 +133,11 @@ public class BankFXController {
         cardBox.getItems().clear();
         cashBox.getItems().clear();
         fillList(bankRepository, cardBox.getItems(), cashBox.getItems());
+    }
+
+    private void initRB(){
+        increase.setSelected(false);
+        descending.setSelected(true);
     }
 
     static void fillList(BankRepository bankRepository, ObservableList<Card> items, ObservableList<Cash> items2) {
@@ -210,6 +230,43 @@ public class BankFXController {
         app.openFinance(bankRepository,this);
     }
 
+    private void handleDetailHistoryBtn(ActionEvent event){
+        try {
+            Stage primaryStage = new Stage();
+            FXMLLoader loader = new FXMLLoader();
+            loader.setLocation(getClass().getClassLoader().getResource("ui/detailed-history-window.fxml"));
+            AnchorPane panel = loader.load();
+            DetailHistoryFXController controller = loader.getController();
+            controller.initialize(historyOperations);
+            Scene scene = new Scene(panel);
+            primaryStage.setTitle("Подробная история операций");
+            primaryStage.setScene(scene);
+            primaryStage.initOwner(app.getParent());
+            primaryStage.initModality(Modality.APPLICATION_MODAL);
+            primaryStage.showAndWait();
+        } catch (Exception e){
+            e.printStackTrace();
+        }
+    }
+
+    private void handleIncreaseRB(ActionEvent event){
+        if(increase.isSelected()){
+            descending.setSelected(false);
+            updateBalanceAndHistory();
+        } else {
+            increase.setSelected(true);
+        }
+    }
+
+    private void handleDescendingRB(ActionEvent event){
+        if(descending.isSelected()){
+            increase.setSelected(false);
+            updateBalanceAndHistory();
+        } else {
+            descending.setSelected(true);
+        }
+    }
+
     public void updateBalanceAndHistory(){
         if(currentCard != null){
             cardBalance.setText(currentCard.getBalance() + " Руб.");
@@ -232,7 +289,9 @@ public class BankFXController {
 
     private void updateHistory(Bank bank){
         operations.getItems().clear();
-        for (Operation operation : bank.getOperationHistory()){
+        historyOperations = bank.getOperationHistory();
+        DetailHistoryFXController.sortingOperationHistory(historyOperations, increase, descending);
+        for (Operation operation : historyOperations){
             operations.getItems().add(operation);
         }
     }

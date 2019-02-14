@@ -5,6 +5,7 @@ import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.stage.Stage;
 import org.eugene.cost.logic.model.limit.Day;
+import org.eugene.cost.logic.model.limit.Session;
 import org.eugene.cost.logic.model.payment.bank.Bank;
 import org.eugene.cost.logic.model.payment.op.Debit;
 import org.eugene.cost.logic.model.payment.op.Enrollment;
@@ -14,6 +15,7 @@ import org.eugene.cost.logic.util.StringUtil;
 import org.eugene.cost.ui.payment.BankFXController;
 
 import javax.swing.*;
+import java.time.format.DateTimeFormatter;
 import java.util.Set;
 
 public class MoreFXController {
@@ -157,13 +159,13 @@ public class MoreFXController {
         Buy buy = new Buy(price,shopOrPlaceBuy.getText(),descriptionBuy.getText(),!nonLimited.isSelected(), currentBank, buyCategory);
         if(currentBuy == null){
             limitFXController.addBuyIntoCurrentDay(buy);
-            currentBank.executeOperation(new Debit(price, "[ "+buy.getShopOrPlaceBuy()+" ] "+buy.getDescriptionBuy(), currentDay.getDate()));
+            currentBank.executeOperation(new Debit(price, "[ "+buy.getShopOrPlaceBuy()+" ] "+buy.getDescriptionBuy() + getLimitInfo(), currentDay.getDate()));
         } else {
             limitFXController.applyChangeBuyIntoCurrentDay(currentBuy,buy);
             if(!currentBuy.getPrice().equals(buy.getPrice())){
                 currentBank.executeOperation(new Enrollment(currentBuy.getPrice(),
-                        "Отмена списание средств [ "+currentBuy.getShopOrPlaceBuy()+" ] "+buy.getDescriptionBuy(), currentDay.getDate()));
-                currentBank.executeOperation(new Debit(price, "[ "+buy.getShopOrPlaceBuy()+" ] "+buy.getDescriptionBuy(), currentDay.getDate()));
+                        "Отмена списание средств [ "+currentBuy.getShopOrPlaceBuy()+" ] "+buy.getDescriptionBuy() + getLimitInfo(), currentDay.getDate()));
+                currentBank.executeOperation(new Debit(price, "[ "+buy.getShopOrPlaceBuy()+" ] "+buy.getDescriptionBuy() + getLimitInfo(), currentDay.getDate()));
             }
         }
         bankFXController.updateBalanceAndHistory();
@@ -173,5 +175,11 @@ public class MoreFXController {
 
     private void handleCancelBtn(ActionEvent event){
         stage.close();
+    }
+
+    private String getLimitInfo(){
+        Session session = limitFXController.getSession();
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
+        return " [ Limit: "+session.getBeginDate().format(formatter)+" - "+session.getFinalDate().format(formatter)+" ]";
     }
 }
