@@ -8,23 +8,33 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="447.0" prefWidth="631.0" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.eugene.cost.ui.limit.MoreSessionFXController">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="484.0" prefWidth="631.0" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.eugene.cost.ui.limit.MoreSessionFXController">
    <children>
       <ListView fx:id="dayList" layoutX="14.0" layoutY="14.0" prefHeight="353.0" prefWidth="130.0" />
       <ListView fx:id="buyList" layoutX="161.0" layoutY="14.0" prefHeight="353.0" prefWidth="130.0" />
       <Button fx:id="close" layoutX="506.0" layoutY="381.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="108.0" text="Закрыть" />
       <TextArea fx:id="descriptionBuy" editable="false" layoutX="307.0" layoutY="14.0" prefHeight="353.0" prefWidth="307.0" />
-      <Label fx:id="currentDay" layoutX="22.0" layoutY="380.0" prefHeight="27.0" prefWidth="193.0">
+      <Label fx:id="currentDay" layoutX="22.0" layoutY="380.0" prefHeight="27.0" prefWidth="203.0">
          <font>
             <Font size="18.0" />
          </font>
       </Label>
-      <Label fx:id="totalPrice" layoutX="226.0" layoutY="380.0" prefHeight="27.0" prefWidth="130.0">
+      <Label fx:id="totalPrice" layoutX="236.0" layoutY="380.0" prefHeight="27.0" prefWidth="130.0">
          <font>
             <Font size="18.0" />
          </font>
       </Label>
-      <RadioButton fx:id="limitedBuys" layoutX="10.0" layoutY="420.0" mnemonicParsing="false" text="Показать затраты только по лимитным покупкам" />
-      <RadioButton fx:id="nonLimitedBuys" layoutX="310.0" layoutY="420.0" mnemonicParsing="false" text="Показать затраты только по НЕ лимитным покупкам" />
+      <RadioButton fx:id="limitedBuys" layoutX="10.0" layoutY="457.0" mnemonicParsing="false" text="Показать затраты только по лимитным покупкам" />
+      <RadioButton fx:id="nonLimitedBuys" layoutX="310.0" layoutY="457.0" mnemonicParsing="false" text="Показать затраты только по НЕ лимитным покупкам" />
+      <Label layoutX="22.0" layoutY="416.0" prefHeight="27.0" prefWidth="203.0" text="Затраты за весь лимит">
+         <font>
+            <Font size="18.0" />
+         </font>
+      </Label>
+      <Label fx:id="totalLimitPrice" layoutX="236.0" layoutY="416.0" prefHeight="27.0" prefWidth="130.0">
+         <font>
+            <Font size="18.0" />
+         </font>
+      </Label>
    </children>
 </AnchorPane>
