@@ -27,6 +27,8 @@ public class MoreSessionFXController {
     private Label totalPrice;
     @FXML
     private Label currentDay;
+    @FXML
+    private Label totalLimitPrice;
 
     @FXML
     private RadioButton limitedBuys;
@@ -41,6 +43,7 @@ public class MoreSessionFXController {
 
     public void init(){
         updateDayList();
+        displayTotalLimitRate();
         dayList.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
             currentDayIntoDayList = dayList.getSelectionModel().getSelectedIndex();
             updateBuyList(currentDayIntoDayList);
@@ -99,6 +102,14 @@ public class MoreSessionFXController {
         totalPrice.setText(total + " Руб.");
     }
 
+    private void displayTotalLimitRate(){
+        String total = "0";
+        for (Day day : session.getDayList()){
+            total = LimitFXController.calculateRateOnDay(total, day, limitedBuys, nonLimitedBuys);
+        }
+        totalLimitPrice.setText(total + " Руб.");
+    }
+
     private void displayBuyDescription(int index){
         if (index < 0) {
             descriptionBuy.setText("");
@@ -112,6 +123,7 @@ public class MoreSessionFXController {
             nonLimitedBuys.setSelected(false);
         }
         updateBuyList(currentDayIntoDayList);
+        displayTotalLimitRate();
     }
 
     private void handleNonLimitedRB(ActionEvent event){
@@ -119,5 +131,6 @@ public class MoreSessionFXController {
             limitedBuys.setSelected(false);
         }
         updateBuyList(currentDayIntoDayList);
+        displayTotalLimitRate();
     }
 }

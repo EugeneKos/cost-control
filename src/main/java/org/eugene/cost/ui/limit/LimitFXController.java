@@ -217,6 +217,11 @@ public class LimitFXController {
 
     private String calculateLimitedOrNonLimitedBuy() {
         String rate = "0";
+        rate = calculateRateOnDay(rate, currentDay, limitedBuys, nonLimitedBuys);
+        return rate;
+    }
+
+    static String calculateRateOnDay(String rate, Day currentDay, RadioButton limitedBuys, RadioButton nonLimitedBuys) {
         for (Buy buy : currentDay.getBuyList()) {
             if (limitedBuys.isSelected()) {
                 if (buy.isLimited()) {
