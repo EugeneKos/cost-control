@@ -185,36 +185,32 @@ public class BankFXController {
 
     private void imageAnimation(ImageView image){
         Thread thread = new Thread(()->{
-            int step = 3;
+            int step = 1;
             boolean down = true;
             boolean left = true;
-            for (int i=0; i < 28; i++){
+            for (int i=0; i < 83; i++){
                 if(image.getRotate() >= 0 & image.getRotate() < 21 & left){
-                    rotate(image, image.getRotate()+step);
+                    image.setRotate(image.getRotate() + step);
                     down = true;
                 } else if(down) {
                     left = false;
-                    rotate(image, image.getRotate()-step);
+                    image.setRotate(image.getRotate() - step);
                 }
                 if(image.getRotate() < 0 & image.getRotate() > -21 & !left){
-                    rotate(image, image.getRotate()-step);
+                    image.setRotate(image.getRotate() - step);
                     down = false;
                 } else if(!down) {
                     left = true;
-                    rotate(image, image.getRotate()+step);
+                    image.setRotate(image.getRotate() + step);
                 }
                 try {
-                    Thread.sleep(50);
+                    Thread.sleep(15);
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
             }
         });
         thread.start();
-    }
-
-    private void rotate(ImageView image, double rotate){
-        Platform.runLater(()-> image.setRotate(rotate));
     }
 
     private void handleLimitBtn(ActionEvent event){

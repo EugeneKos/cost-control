@@ -57,10 +57,14 @@ public final class FileManager {
     }
 
     private static byte[] readFile(String fileName) {
-        try (BufferedInputStream bufferedInputStream = new BufferedInputStream(new FileInputStream(directory + File.separator + fileName))) {
-            byte[] buffer = new byte[bufferedInputStream.available()];
-            bufferedInputStream.read(buffer);
-            return buffer;
+        try (BufferedInputStream bufferedInputStream = new BufferedInputStream(new FileInputStream(directory + File.separator + fileName));
+                ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream()) {
+            byte[] buffer = new byte[50];
+            int len;
+            while ((len = bufferedInputStream.read(buffer)) != -1){
+                byteArrayOutputStream.write(buffer, 0, len);
+            }
+            return byteArrayOutputStream.toByteArray();
         } catch (FileNotFoundException e) {
             JOptionPane.showMessageDialog(null, "Файл с данными не найден \n" +
                             "0x0000001 [" + fileName + "]",
