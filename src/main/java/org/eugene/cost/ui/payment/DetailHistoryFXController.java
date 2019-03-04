@@ -8,6 +8,7 @@ import javafx.scene.control.ListView;
 import javafx.scene.control.RadioButton;
 import org.eugene.cost.logic.model.payment.op.Operation;
 
+import java.util.Collections;
 import java.util.List;
 
 public class DetailHistoryFXController {
@@ -57,6 +58,7 @@ public class DetailHistoryFXController {
     }
 
     static void sortingOperationHistory(List<Operation> historyOperations, RadioButton increase, RadioButton descending) {
+        Collections.reverse(historyOperations);
         historyOperations.sort((op1, op2) -> {
             if (op1.getDate().isAfter(op2.getDate())) {
                 if(increase.isSelected()){
