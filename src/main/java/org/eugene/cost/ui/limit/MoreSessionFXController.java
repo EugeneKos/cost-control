@@ -10,6 +10,8 @@ import org.eugene.cost.logic.model.limit.Session;
 import org.eugene.cost.logic.util.Calculate;
 
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.List;
 
 public class MoreSessionFXController {
     @FXML
@@ -38,6 +40,8 @@ public class MoreSessionFXController {
     private Stage stage;
 
     private Session session;
+
+    private List<String> buyDescriptionList = new ArrayList<>();
 
     private int currentDayIntoDayList = -1;
 
@@ -79,21 +83,25 @@ public class MoreSessionFXController {
     private void updateBuyList(int index){
         if (index < 0) return;
         buyList.getItems().clear();
+        buyDescriptionList.clear();
         String total = "0";
         for (Buy buy : session.getDayList().get(index).getBuyList()) {
             if(limitedBuys.isSelected()){
                 if(buy.isLimited()){
                     buyList.getItems().add(buy.toString());
+                    buyDescriptionList.add(buy.getDescriptionBuy());
                     total = Calculate.plus(total,buy.getPrice());
                 }
             }
             else if(nonLimitedBuys.isSelected()){
                 if(!buy.isLimited()){
                     buyList.getItems().add(buy.toString());
+                    buyDescriptionList.add(buy.getDescriptionBuy());
                     total = Calculate.plus(total,buy.getPrice());
                 }
             } else {
                 buyList.getItems().add(buy.toString());
+                buyDescriptionList.add(buy.getDescriptionBuy());
                 total = Calculate.plus(total,buy.getPrice());
             }
 
@@ -115,7 +123,7 @@ public class MoreSessionFXController {
             descriptionBuy.setText("");
             return;
         }
-        descriptionBuy.setText(session.getDayList().get(currentDayIntoDayList).getBuyList().get(index).getDescriptionBuy());
+        descriptionBuy.setText(buyDescriptionList.get(index));
     }
 
     private void handleLimitedRB(ActionEvent event){
