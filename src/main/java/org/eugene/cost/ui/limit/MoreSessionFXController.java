@@ -5,6 +5,7 @@ import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.stage.Stage;
 import org.eugene.cost.logic.model.limit.Buy;
+import org.eugene.cost.logic.model.limit.BuyCategories;
 import org.eugene.cost.logic.model.limit.Day;
 import org.eugene.cost.logic.model.limit.Session;
 import org.eugene.cost.logic.util.Calculate;
@@ -37,6 +38,9 @@ public class MoreSessionFXController {
     @FXML
     private RadioButton nonLimitedBuys;
 
+    @FXML
+    private ComboBox<BuyCategories> buyCategories;
+
     private Stage stage;
 
     private Session session;
@@ -45,7 +49,8 @@ public class MoreSessionFXController {
 
     private int currentDayIntoDayList = -1;
 
-    public void init(){
+    public void init() {
+        MoreFXController.initBuyCategories(buyCategories);
         updateDayList();
         displayTotalLimitRate();
         dayList.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
@@ -58,6 +63,7 @@ public class MoreSessionFXController {
         close.setOnAction(this::handleCloseBtn);
         limitedBuys.setOnAction(this::handleLimitedRB);
         nonLimitedBuys.setOnAction(this::handleNonLimitedRB);
+        buyCategories.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> updateBuyListAndRateOnCategories(newValue));
     }
 
     public void setStage(Stage stage) {
@@ -68,57 +74,62 @@ public class MoreSessionFXController {
         this.session = session;
     }
 
-    private void handleCloseBtn(ActionEvent event){
+    private void handleCloseBtn(ActionEvent event) {
         stage.close();
     }
 
-    private void updateDayList(){
+    private void updateDayList() {
         dayList.getItems().clear();
-        for (Day day : session.getDayList()){
+        for (Day day : session.getDayList()) {
             String date = day.getDate().format(DateTimeFormatter.ofPattern("dd-MMM-yyyy"));
             dayList.getItems().add(date);
         }
     }
 
-    private void updateBuyList(int index){
+    private void updateBuyList(int index) {
         if (index < 0) return;
         buyList.getItems().clear();
         buyDescriptionList.clear();
+        buyCategories.setValue(null);
         String total = "0";
         for (Buy buy : session.getDayList().get(index).getBuyList()) {
-            if(limitedBuys.isSelected()){
-                if(buy.isLimited()){
-                    buyList.getItems().add(buy.toString());
-                    buyDescriptionList.add(buy.getDescriptionBuy());
-                    total = Calculate.plus(total,buy.getPrice());
-                }
-            }
-            else if(nonLimitedBuys.isSelected()){
-                if(!buy.isLimited()){
-                    buyList.getItems().add(buy.toString());
-                    buyDescriptionList.add(buy.getDescriptionBuy());
-                    total = Calculate.plus(total,buy.getPrice());
-                }
-            } else {
-                buyList.getItems().add(buy.toString());
-                buyDescriptionList.add(buy.getDescriptionBuy());
-                total = Calculate.plus(total,buy.getPrice());
-            }
+            total = getRateOnDayAndUpdateBuyList(total, buy);
 
         }
         currentDay.setText("Траты за " + session.getDayList().get(index).getDate().format(DateTimeFormatter.ofPattern("dd-MMM-yyyy")));
         totalPrice.setText(total + " Руб.");
     }
 
-    private void displayTotalLimitRate(){
+    private String getRateOnDayAndUpdateBuyList(String total, Buy buy) {
+        if (limitedBuys.isSelected()) {
+            if(buy.isLimited()){
+                total = Calculate.plus(total, buy.getPrice());
+                buyList.getItems().add(buy.toString());
+                buyDescriptionList.add(buy.getDescriptionBuy());
+            }
+        } else if (nonLimitedBuys.isSelected()) {
+            if(!buy.isLimited()){
+                total = Calculate.plus(total, buy.getPrice());
+                buyList.getItems().add(buy.toString());
+                buyDescriptionList.add(buy.getDescriptionBuy());
+            }
+        } else {
+            total = Calculate.plus(total, buy.getPrice());
+            buyList.getItems().add(buy.toString());
+            buyDescriptionList.add(buy.getDescriptionBuy());
+        }
+        return total;
+    }
+
+    private void displayTotalLimitRate() {
         String total = "0";
-        for (Day day : session.getDayList()){
+        for (Day day : session.getDayList()) {
             total = LimitFXController.calculateRateOnDay(total, day, limitedBuys, nonLimitedBuys);
         }
         totalLimitPrice.setText(total + " Руб.");
     }
 
-    private void displayBuyDescription(int index){
+    private void displayBuyDescription(int index) {
         if (index < 0) {
             descriptionBuy.setText("");
             return;
@@ -126,19 +137,42 @@ public class MoreSessionFXController {
         descriptionBuy.setText(buyDescriptionList.get(index));
     }
 
-    private void handleLimitedRB(ActionEvent event){
-        if(limitedBuys.isSelected()){
+    private void handleLimitedRB(ActionEvent event) {
+        if (limitedBuys.isSelected()) {
             nonLimitedBuys.setSelected(false);
         }
-        updateBuyList(currentDayIntoDayList);
+        if(buyCategories.getValue() == null){
+            updateBuyList(currentDayIntoDayList);
+        } else {
+            updateBuyListAndRateOnCategories(buyCategories.getValue());
+        }
         displayTotalLimitRate();
     }
 
-    private void handleNonLimitedRB(ActionEvent event){
-        if(nonLimitedBuys.isSelected()){
+    private void handleNonLimitedRB(ActionEvent event) {
+        if (nonLimitedBuys.isSelected()) {
             limitedBuys.setSelected(false);
         }
-        updateBuyList(currentDayIntoDayList);
+        if(buyCategories.getValue() == null){
+            updateBuyList(currentDayIntoDayList);
+        } else {
+            updateBuyListAndRateOnCategories(buyCategories.getValue());
+        }
         displayTotalLimitRate();
+    }
+
+    private void updateBuyListAndRateOnCategories(BuyCategories category) {
+        buyList.getItems().clear();
+        buyDescriptionList.clear();
+        String total = "0";
+        for (Day day : session.getDayList()) {
+            for (Buy buy : day.getBuyList()) {
+                if (buy.getBuyCategories() == category) {
+                    total = getRateOnDayAndUpdateBuyList(total, buy);
+                }
+            }
+        }
+        currentDay.setText("Траты " + category);
+        totalPrice.setText(total + " Руб.");
     }
 }

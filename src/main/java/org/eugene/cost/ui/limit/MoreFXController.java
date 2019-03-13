@@ -59,7 +59,7 @@ public class MoreFXController {
 
     public void init(){
         initPaymentSystem();
-        initBuyCategories();
+        initBuyCategories(buyCategories);
         if(currentBuy != null){
             addBuy.setText("Изменить");
             addBuy.setLayoutX(315);
@@ -132,9 +132,9 @@ public class MoreFXController {
         return null;
     }
 
-    private void initBuyCategories(){
+    static void initBuyCategories(ComboBox<BuyCategories> buyCategories){
         for (BuyCategories buyCategory : BuyCategories.values()){
-            this.buyCategories.getItems().add(buyCategory);
+            buyCategories.getItems().add(buyCategory);
         }
     }
 
