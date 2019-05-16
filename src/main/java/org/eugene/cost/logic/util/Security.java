@@ -37,7 +37,7 @@ public final class Security {
     }
 
     private static SecretKey generateKey(){
-        String key = "keY4PasSwoRd9751";
+        String key = PropertyLoader.getProperty("secretKey");
         byte[] keyBytes = Arrays.copyOf(key.getBytes(),16);
         return new SecretKeySpec(keyBytes, "AES");
     }

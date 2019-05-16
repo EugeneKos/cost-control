@@ -6,7 +6,7 @@ import javax.swing.JOptionPane;
 import java.io.*;
 
 public final class FileManager {
-    private static final String directory = "save";
+    private static final String DIRECTORY = "save";
 
     private FileManager(){}
 
@@ -24,7 +24,7 @@ public final class FileManager {
     }
 
     private static void writeFile(byte[] content, String fileName) {
-        try (BufferedOutputStream bufferedOutputStream = new BufferedOutputStream(new FileOutputStream(directory + File.separator + fileName))) {
+        try (BufferedOutputStream bufferedOutputStream = new BufferedOutputStream(new FileOutputStream(DIRECTORY + File.separator + fileName))) {
             bufferedOutputStream.write(content);
             bufferedOutputStream.flush();
         } catch (FileNotFoundException e) {
@@ -37,7 +37,7 @@ public final class FileManager {
     }
 
     private static void createFile(String fileName) throws IOException {
-        String dir = directory.contains("\\") ? directory.replace("\\", "/") : directory;
+        String dir = DIRECTORY.contains("\\") ? DIRECTORY.replace("\\", "/") : DIRECTORY;
         String[] folders = dir.split("/");
         String path = folders[0];
         File file = new File(path);
@@ -57,8 +57,8 @@ public final class FileManager {
     }
 
     private static byte[] readFile(String fileName) {
-        try (BufferedInputStream bufferedInputStream = new BufferedInputStream(new FileInputStream(directory + File.separator + fileName));
-                ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream()) {
+        try (BufferedInputStream bufferedInputStream = new BufferedInputStream(new FileInputStream(DIRECTORY + File.separator + fileName));
+             ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream()) {
             byte[] buffer = new byte[50];
             int len;
             while ((len = bufferedInputStream.read(buffer)) != -1){

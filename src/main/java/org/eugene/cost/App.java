@@ -18,24 +18,32 @@ import org.eugene.cost.ui.limit.LimitFXController;
 import org.eugene.cost.ui.limit.MoreFXController;
 import org.eugene.cost.ui.limit.SettingsFXController;
 
+import javax.swing.*;
 import java.io.IOException;
 import java.util.Set;
 
 public class App extends Application {
     private Stage parent;
 
-    public void start(Stage primaryStage) throws Exception {
-        parent = primaryStage;
-        FXMLLoader loader = new FXMLLoader();
-        loader.setLocation(getClass().getClassLoader().getResource("ui/payment-control-window.fxml"));
-        AnchorPane panel = loader.load();
-        BankFXController controller = loader.getController();
-        controller.setApp(this);
-        Scene scene = new Scene(panel);
-        primaryStage.setTitle("Управление финансами");
-        primaryStage.setResizable(false);
-        primaryStage.setScene(scene);
-        primaryStage.show();
+    public void start(Stage primaryStage){
+        try {
+            parent = primaryStage;
+            FXMLLoader loader = new FXMLLoader();
+            loader.setLocation(getClass().getClassLoader().getResource("ui/payment-control-window.fxml"));
+            AnchorPane panel = loader.load();
+            BankFXController controller = loader.getController();
+            controller.setApp(this);
+            Scene scene = new Scene(panel);
+            primaryStage.setTitle("Управление финансами");
+            primaryStage.setResizable(false);
+            primaryStage.setScene(scene);
+            primaryStage.show();
+        } catch (Exception e){
+            JOptionPane.showMessageDialog(null,
+                    e.getMessage(), "Ошибка запуска приложения", JOptionPane.ERROR_MESSAGE);
+
+            System.exit(0);
+        }
     }
 
     public void openOperation(Set<Bank> banks, BankFXController bankFXController){
