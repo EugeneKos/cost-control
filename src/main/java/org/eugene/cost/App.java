@@ -6,6 +6,7 @@ import javafx.scene.Scene;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import org.eugene.cost.logic.exeption.ApplicationError;
 import org.eugene.cost.logic.model.limit.Day;
 import org.eugene.cost.logic.model.payment.bank.Bank;
 import org.eugene.cost.logic.model.payment.bank.BankRepository;
@@ -39,10 +40,7 @@ public class App extends Application {
             primaryStage.setScene(scene);
             primaryStage.show();
         } catch (Exception e){
-            JOptionPane.showMessageDialog(null,
-                    e.getMessage(), "Ошибка запуска приложения", JOptionPane.ERROR_MESSAGE);
-
-            System.exit(0);
+            throw new ApplicationError("Ошибка запуска приложения", e);
         }
     }
 
