@@ -1,4 +1,4 @@
-package org.eugene.cost.logic.model.limit;
+package org.eugene.cost.data;
 
 public enum  BuyCategories {
     PRODUCT("Продукты", ShortName.P), ALCOHOL("Алкоголь", ShortName.AL), BAR("Бар", ShortName.B),

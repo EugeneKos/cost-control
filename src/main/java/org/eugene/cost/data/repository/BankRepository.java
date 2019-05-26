@@ -1,6 +1,7 @@
-package org.eugene.cost.logic.model.payment.bank;
+package org.eugene.cost.data.repository;
 
-import org.eugene.cost.logic.model.Repository;
+import org.eugene.cost.data.model.Bank;
+import org.eugene.cost.data.repository.Repository;
 
 import java.util.HashSet;
 import java.util.Set;

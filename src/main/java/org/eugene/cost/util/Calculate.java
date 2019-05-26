@@ -1,4 +1,4 @@
-package org.eugene.cost.logic.util;
+package org.eugene.cost.util;
 
 import java.math.BigDecimal;
 

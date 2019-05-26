@@ -8,9 +8,9 @@ import javafx.scene.control.Button;
 import javafx.scene.control.ListView;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
-import org.eugene.cost.logic.model.limit.Session;
-import org.eugene.cost.logic.model.limit.SessionRepository;
-import org.eugene.cost.logic.util.FileManager;
+import org.eugene.cost.data.model.Session;
+import org.eugene.cost.data.repository.SessionRepository;
+import org.eugene.cost.util.FileManager;
 import org.eugene.cost.ui.chart.BarChartFXController;
 
 import javax.swing.*;

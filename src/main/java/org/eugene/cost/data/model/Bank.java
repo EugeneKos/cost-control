@@ -1,6 +1,6 @@
-package org.eugene.cost.logic.model.payment.bank;
+package org.eugene.cost.data.model;
 
-import org.eugene.cost.logic.model.payment.op.Operation;
+import org.eugene.cost.service.op.Operation;
 
 import java.io.Serializable;
 import java.time.LocalDate;

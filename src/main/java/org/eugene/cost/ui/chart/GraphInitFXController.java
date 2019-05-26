@@ -9,9 +9,9 @@ import javafx.scene.control.DatePicker;
 import javafx.scene.control.ListView;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
-import org.eugene.cost.logic.model.payment.bank.Bank;
-import org.eugene.cost.logic.model.payment.bank.Card;
-import org.eugene.cost.logic.model.payment.bank.Cash;
+import org.eugene.cost.data.model.Bank;
+import org.eugene.cost.data.model.Card;
+import org.eugene.cost.data.model.Cash;
 
 import javax.swing.*;
 import java.io.IOException;

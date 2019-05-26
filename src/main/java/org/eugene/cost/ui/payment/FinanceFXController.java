@@ -6,9 +6,12 @@ import javafx.scene.control.Button;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TextField;
-import org.eugene.cost.logic.model.payment.bank.*;
-import org.eugene.cost.logic.util.FileManager;
-import org.eugene.cost.logic.util.StringUtil;
+import org.eugene.cost.data.model.Bank;
+import org.eugene.cost.data.model.Card;
+import org.eugene.cost.data.model.Cash;
+import org.eugene.cost.data.repository.BankRepository;
+import org.eugene.cost.util.FileManager;
+import org.eugene.cost.util.StringUtil;
 
 import javax.swing.*;
 

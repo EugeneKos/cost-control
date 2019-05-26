@@ -4,11 +4,11 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.stage.Stage;
-import org.eugene.cost.logic.model.payment.bank.Bank;
-import org.eugene.cost.logic.model.payment.op.Debit;
-import org.eugene.cost.logic.model.payment.op.Enrollment;
-import org.eugene.cost.logic.model.payment.op.Operations;
-import org.eugene.cost.logic.util.StringUtil;
+import org.eugene.cost.data.model.Bank;
+import org.eugene.cost.service.op.Debit;
+import org.eugene.cost.service.op.Enrollment;
+import org.eugene.cost.data.Operations;
+import org.eugene.cost.util.StringUtil;
 
 import javax.swing.*;
 import java.time.LocalDate;

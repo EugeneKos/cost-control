@@ -1,6 +1,5 @@
 package org.eugene.cost.ui.payment;
 
-import javafx.application.Platform;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -13,12 +12,12 @@ import javafx.scene.layout.AnchorPane;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import org.eugene.cost.App;
-import org.eugene.cost.logic.model.payment.bank.Bank;
-import org.eugene.cost.logic.model.payment.bank.BankRepository;
-import org.eugene.cost.logic.model.payment.bank.Card;
-import org.eugene.cost.logic.model.payment.bank.Cash;
-import org.eugene.cost.logic.model.payment.op.Operation;
-import org.eugene.cost.logic.util.FileManager;
+import org.eugene.cost.data.model.Bank;
+import org.eugene.cost.data.repository.BankRepository;
+import org.eugene.cost.data.model.Card;
+import org.eugene.cost.data.model.Cash;
+import org.eugene.cost.service.op.Operation;
+import org.eugene.cost.util.FileManager;
 import org.eugene.cost.ui.chart.GraphInitFXController;
 
 import java.util.List;

@@ -1,6 +1,6 @@
-package org.eugene.cost.logic.model.limit;
+package org.eugene.cost.data.model;
 
-import org.eugene.cost.logic.util.Calculate;
+import org.eugene.cost.util.Calculate;
 
 import java.io.Serializable;
 import java.time.LocalDate;

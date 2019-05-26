@@ -1,6 +1,6 @@
-package org.eugene.cost.logic.model.payment.op;
+package org.eugene.cost.service.op;
 
-import org.eugene.cost.logic.util.Calculate;
+import org.eugene.cost.util.Calculate;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;

@@ -1,4 +1,4 @@
-package org.eugene.cost.logic.model.payment.op;
+package org.eugene.cost.service.op;
 
 import java.io.Serializable;
 import java.time.LocalDate;

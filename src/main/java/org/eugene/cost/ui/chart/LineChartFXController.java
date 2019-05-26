@@ -4,12 +4,12 @@ import javafx.fxml.FXML;
 import javafx.scene.chart.BarChart;
 import javafx.scene.chart.LineChart;
 import javafx.scene.chart.XYChart;
-import org.eugene.cost.logic.model.payment.bank.Bank;
-import org.eugene.cost.logic.model.payment.op.Debit;
-import org.eugene.cost.logic.model.payment.op.Enrollment;
-import org.eugene.cost.logic.model.payment.op.Operation;
-import org.eugene.cost.logic.model.payment.op.Operations;
-import org.eugene.cost.logic.util.Calculate;
+import org.eugene.cost.data.model.Bank;
+import org.eugene.cost.service.op.Debit;
+import org.eugene.cost.service.op.Enrollment;
+import org.eugene.cost.service.op.Operation;
+import org.eugene.cost.data.Operations;
+import org.eugene.cost.util.Calculate;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;

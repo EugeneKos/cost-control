@@ -1,4 +1,4 @@
-package org.eugene.cost.logic.util;
+package org.eugene.cost.util;
 
 import javax.crypto.*;
 import javax.crypto.spec.SecretKeySpec;

@@ -6,7 +6,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.ListView;
 import javafx.scene.control.RadioButton;
-import org.eugene.cost.logic.model.payment.op.Operation;
+import org.eugene.cost.service.op.Operation;
 
 import java.util.Collections;
 import java.util.List;

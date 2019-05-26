@@ -1,4 +1,4 @@
-package org.eugene.cost.logic.exeption;
+package org.eugene.cost.exeption;
 
 public class IncorrectDateException extends Exception {
     public IncorrectDateException(String message) {

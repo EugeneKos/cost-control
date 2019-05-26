@@ -6,12 +6,12 @@ import javafx.scene.Scene;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
-import org.eugene.cost.logic.exeption.ApplicationError;
-import org.eugene.cost.logic.model.limit.Day;
-import org.eugene.cost.logic.model.payment.bank.Bank;
-import org.eugene.cost.logic.model.payment.bank.BankRepository;
-import org.eugene.cost.logic.model.limit.Buy;
-import org.eugene.cost.logic.model.limit.SessionRepository;
+import org.eugene.cost.exeption.ApplicationError;
+import org.eugene.cost.data.model.Day;
+import org.eugene.cost.data.model.Bank;
+import org.eugene.cost.data.repository.BankRepository;
+import org.eugene.cost.data.model.Buy;
+import org.eugene.cost.data.repository.SessionRepository;
 import org.eugene.cost.ui.payment.BankFXController;
 import org.eugene.cost.ui.payment.FinanceFXController;
 import org.eugene.cost.ui.payment.OperationFXController;
@@ -19,7 +19,6 @@ import org.eugene.cost.ui.limit.LimitFXController;
 import org.eugene.cost.ui.limit.MoreFXController;
 import org.eugene.cost.ui.limit.SettingsFXController;
 
-import javax.swing.*;
 import java.io.IOException;
 import java.util.Set;
 

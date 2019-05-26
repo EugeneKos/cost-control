@@ -3,11 +3,11 @@ package org.eugene.cost.ui.chart;
 import javafx.fxml.FXML;
 import javafx.scene.chart.BarChart;
 import javafx.scene.chart.XYChart;
-import org.eugene.cost.logic.model.limit.Buy;
-import org.eugene.cost.logic.model.limit.BuyCategories;
-import org.eugene.cost.logic.model.limit.Day;
-import org.eugene.cost.logic.model.limit.Session;
-import org.eugene.cost.logic.util.Calculate;
+import org.eugene.cost.data.model.Buy;
+import org.eugene.cost.data.BuyCategories;
+import org.eugene.cost.data.model.Day;
+import org.eugene.cost.data.model.Session;
+import org.eugene.cost.util.Calculate;
 
 import java.util.List;
 

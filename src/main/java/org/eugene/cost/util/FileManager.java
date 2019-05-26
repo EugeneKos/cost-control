@@ -1,6 +1,6 @@
-package org.eugene.cost.logic.util;
+package org.eugene.cost.util;
 
-import org.eugene.cost.logic.model.Repository;
+import org.eugene.cost.data.repository.Repository;
 
 import javax.swing.JOptionPane;
 import java.io.*;

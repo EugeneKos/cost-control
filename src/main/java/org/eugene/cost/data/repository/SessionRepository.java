@@ -1,6 +1,7 @@
-package org.eugene.cost.logic.model.limit;
+package org.eugene.cost.data.repository;
 
-import org.eugene.cost.logic.model.Repository;
+import org.eugene.cost.data.model.Session;
+import org.eugene.cost.data.repository.Repository;
 
 import java.util.ArrayList;
 import java.util.List;

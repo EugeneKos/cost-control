@@ -1,4 +1,4 @@
-package org.eugene.cost.logic.model.payment.op;
+package org.eugene.cost.data;
 
 public enum Operations {
     ENROLLMENT, DEBIT, TRANSFER

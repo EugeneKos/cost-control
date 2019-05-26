@@ -1,4 +1,4 @@
-package org.eugene.cost.logic.exeption;
+package org.eugene.cost.exeption;
 
 import javax.swing.*;
 
