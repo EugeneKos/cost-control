@@ -4,11 +4,11 @@ import javafx.fxml.FXML;
 import javafx.scene.chart.BarChart;
 import javafx.scene.chart.LineChart;
 import javafx.scene.chart.XYChart;
+import org.eugene.cost.data.OperationType;
 import org.eugene.cost.data.model.Bank;
 import org.eugene.cost.service.op.Debit;
 import org.eugene.cost.service.op.Enrollment;
 import org.eugene.cost.service.op.Operation;
-import org.eugene.cost.data.Operations;
 import org.eugene.cost.util.Calculate;
 
 import java.time.LocalDate;
@@ -34,14 +34,14 @@ public class LineChartFXController {
 
         XYChart.Series<String, Number> barChartSeriesRate = new XYChart.Series<>();
         barChartSeriesRate.setName("Расходы");
-        for (Map.Entry<LocalDate, Double> entry : getRatesOnPeriod(bank, checkBeginDate(bank, beginDate), checkFinalDate(finalDate), Operations.DEBIT).entrySet()){
+        for (Map.Entry<LocalDate, Double> entry : getRatesOnPeriod(bank, checkBeginDate(bank, beginDate), checkFinalDate(finalDate), OperationType.DEBIT).entrySet()){
             barChartSeriesRate.getData().add(new XYChart.Data<>(entry.getKey().format(DateTimeFormatter.ofPattern("dd.MM")), entry.getValue()));
         }
         barChartRate.getData().add(barChartSeriesRate);
 
         XYChart.Series<String, Number> barChartSeriesArrival = new XYChart.Series<>();
         barChartSeriesArrival.setName("Поступления");
-        for (Map.Entry<LocalDate, Double> entry : getRatesOnPeriod(bank, checkBeginDate(bank, beginDate), checkFinalDate(finalDate), Operations.ENROLLMENT).entrySet()){
+        for (Map.Entry<LocalDate, Double> entry : getRatesOnPeriod(bank, checkBeginDate(bank, beginDate), checkFinalDate(finalDate), OperationType.ENROLLMENT).entrySet()){
             barChartSeriesArrival.getData().add(new XYChart.Data<>(entry.getKey().format(DateTimeFormatter.ofPattern("dd.MM")), entry.getValue()));
         }
         barChartArrival.getData().add(barChartSeriesArrival);
@@ -86,14 +86,14 @@ public class LineChartFXController {
         return balance;
     }
 
-    private Map<LocalDate, Double> getRatesOnPeriod(Bank bank, LocalDate beginDate, LocalDate finalDate, Operations operations){
+    private Map<LocalDate, Double> getRatesOnPeriod(Bank bank, LocalDate beginDate, LocalDate finalDate, OperationType operationType){
         Map<LocalDate, Double> rates = new LinkedHashMap<>();
         LocalDate current = beginDate;
         while (!current.isAfter(finalDate)){
             String rateOnDay = "0";
             for (Operation operation : bank.getOperationHistory()){
                 if(operation.getDate().isEqual(current)){
-                    switch (operations){
+                    switch (operationType){
                         case ENROLLMENT:
                             if(operation instanceof Enrollment){
                                 rateOnDay = Calculate.plus(rateOnDay,operation.getSum());

@@ -2,6 +2,7 @@ package org.eugene.cost.data.model;
 
 import java.io.Serializable;
 import java.time.LocalDate;
+import java.util.Objects;
 
 public class Cash extends Bank implements Serializable {
     private final String description;
@@ -27,7 +28,7 @@ public class Cash extends Bank implements Serializable {
 
         Cash cash = (Cash) o;
 
-        return description != null ? description.equals(cash.description) : cash.description == null;
+        return Objects.equals(description, cash.description);
     }
 
     @Override

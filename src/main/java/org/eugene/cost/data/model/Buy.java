@@ -12,7 +12,13 @@ public class Buy implements Serializable {
     private Bank payment;
     private BuyCategories buyCategories;
 
-    public Buy(String price, String shopOrPlaceBuy, String descriptionBuy, boolean isLimited, Bank payment, BuyCategories buyCategories) {
+    public Buy(String price,
+               String shopOrPlaceBuy,
+               String descriptionBuy,
+               boolean isLimited,
+               Bank payment,
+               BuyCategories buyCategories) {
+
         this.price = price;
         this.shopOrPlaceBuy = shopOrPlaceBuy;
         this.descriptionBuy = descriptionBuy;

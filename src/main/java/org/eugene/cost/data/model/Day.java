@@ -11,11 +11,15 @@ public class Day implements Serializable {
     private final LocalDate date;
     private String limit;
     private String rate = "0";
-    private boolean isClose;
+    private boolean close;
     private List<Buy> buyList = new ArrayList<>();
 
     public Day(LocalDate date) {
         this.date = date;
+    }
+
+    public LocalDate getDate() {
+        return date;
     }
 
     public void setLimit(String limit) {
@@ -28,14 +32,6 @@ public class Day implements Serializable {
         this.limit = Calculate.minus(limit, limitedRate);
     }
 
-    public void setClose(boolean close) {
-        isClose = close;
-    }
-
-    public LocalDate getDate() {
-        return date;
-    }
-
     public String getLimit() {
         return limit;
     }
@@ -44,8 +40,16 @@ public class Day implements Serializable {
         return rate;
     }
 
+    public void setRate(String rate) {
+        this.rate = rate;
+    }
+
+    public void setClose(boolean close) {
+        this.close = close;
+    }
+
     public boolean isClose() {
-        return isClose;
+        return close;
     }
 
     public void addBuy(Buy buy, Session session) {
@@ -84,5 +88,9 @@ public class Day implements Serializable {
 
     public List<Buy> getBuyList() {
         return buyList;
+    }
+
+    public void setBuyList(List<Buy> buyList) {
+        this.buyList = buyList;
     }
 }

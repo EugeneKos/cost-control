@@ -1,5 +1,5 @@
 package org.eugene.cost.data;
 
-public enum Operations {
+public enum OperationType {
     ENROLLMENT, DEBIT, TRANSFER
 }

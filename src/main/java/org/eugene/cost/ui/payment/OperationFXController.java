@@ -4,10 +4,10 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.stage.Stage;
+import org.eugene.cost.data.OperationType;
 import org.eugene.cost.data.model.Bank;
 import org.eugene.cost.service.op.Debit;
 import org.eugene.cost.service.op.Enrollment;
-import org.eugene.cost.data.Operations;
 import org.eugene.cost.util.StringUtil;
 
 import javax.swing.*;
@@ -20,7 +20,7 @@ public class OperationFXController {
     @FXML
     private ComboBox<Bank> paymentSystemTwo;
     @FXML
-    private ComboBox<Operations> operation;
+    private ComboBox<OperationType> operation;
     @FXML
     private Label paymentSystemTwoInfo;
 
@@ -44,7 +44,7 @@ public class OperationFXController {
     private Bank bankOne;
     private Bank bankTwo;
 
-    private Operations op;
+    private OperationType op;
 
     public void initialize(Set<Bank> banks){
         initMainPaymentSystemAndOperations(banks);
@@ -56,7 +56,7 @@ public class OperationFXController {
 
         operation.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
             op = newValue;
-            if(op == Operations.TRANSFER){
+            if(op == OperationType.TRANSFER){
                 paymentSystemTwo.setVisible(true);
                 paymentSystemTwoInfo.setVisible(true);
                 descriptionOperation.setDisable(true);
@@ -84,7 +84,7 @@ public class OperationFXController {
         for (Bank bank : banks){
             paymentSystemOne.getItems().add(bank);
         }
-        for (Operations operation : Operations.values()){
+        for (OperationType operation : OperationType.values()){
             this.operation.getItems().add(operation);
         }
     }

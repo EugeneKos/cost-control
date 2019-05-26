@@ -2,6 +2,7 @@ package org.eugene.cost.data.model;
 
 import java.io.Serializable;
 import java.time.LocalDate;
+import java.util.Objects;
 
 public class Card extends Bank implements Serializable {
     private final String number;
@@ -27,7 +28,7 @@ public class Card extends Bank implements Serializable {
 
         Card card = (Card) o;
 
-        return number != null ? number.equals(card.number) : card.number == null;
+        return Objects.equals(number, card.number);
     }
 
     @Override
