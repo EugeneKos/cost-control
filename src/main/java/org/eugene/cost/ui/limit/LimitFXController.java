@@ -2,7 +2,7 @@ package org.eugene.cost.ui.limit;
 
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
-import org.eugene.cost.data.model.limit.Buy;
+import org.eugene.cost.data.Buy;
 
 public class LimitFXController {
     @FXML

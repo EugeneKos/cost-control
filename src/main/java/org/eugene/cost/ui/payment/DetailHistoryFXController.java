@@ -5,7 +5,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.ListView;
 import javafx.scene.control.RadioButton;
-import org.eugene.cost.data.model.payment.Operation;
+import org.eugene.cost.data.Operation;
 
 public class DetailHistoryFXController {
     @FXML

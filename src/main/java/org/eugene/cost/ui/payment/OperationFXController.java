@@ -3,7 +3,7 @@ package org.eugene.cost.ui.payment;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import org.eugene.cost.data.OperationType;
-import org.eugene.cost.data.model.payment.Bank;
+import org.eugene.cost.data.Bank;
 
 public class OperationFXController {
     @FXML

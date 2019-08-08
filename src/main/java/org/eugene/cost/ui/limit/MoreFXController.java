@@ -2,7 +2,7 @@ package org.eugene.cost.ui.limit;
 
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
-import org.eugene.cost.data.model.payment.Bank;
+import org.eugene.cost.data.Bank;
 import org.eugene.cost.data.BuyCategories;
 
 public class MoreFXController {

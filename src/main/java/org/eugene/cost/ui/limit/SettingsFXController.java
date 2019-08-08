@@ -3,7 +3,7 @@ package org.eugene.cost.ui.limit;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.ListView;
-import org.eugene.cost.data.model.limit.Session;
+import org.eugene.cost.data.Session;
 
 public class SettingsFXController {
     @FXML

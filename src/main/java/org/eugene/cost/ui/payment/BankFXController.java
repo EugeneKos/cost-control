@@ -3,9 +3,9 @@ package org.eugene.cost.ui.payment;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.image.ImageView;
-import org.eugene.cost.data.model.payment.Operation;
-import org.eugene.cost.data.model.payment.Card;
-import org.eugene.cost.data.model.payment.Cash;
+import org.eugene.cost.data.Operation;
+import org.eugene.cost.data.Card;
+import org.eugene.cost.data.Cash;
 
 public class BankFXController {
     @FXML

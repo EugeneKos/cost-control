@@ -5,8 +5,8 @@ import javafx.scene.control.Button;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TextField;
-import org.eugene.cost.data.model.payment.Card;
-import org.eugene.cost.data.model.payment.Cash;
+import org.eugene.cost.data.Card;
+import org.eugene.cost.data.Cash;
 
 public class FinanceFXController {
     @FXML
