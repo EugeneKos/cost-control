@@ -1,22 +1,21 @@
 package org.eugene.cost.util;
 
-import org.eugene.cost.data.repository.Repository;
-
 import javax.swing.JOptionPane;
 import java.io.*;
 
+//todo: rewriting code
 public final class FileManager {
     private static final String DIRECTORY = "save";
 
     private FileManager(){}
 
-    public static void saveRepository(Repository repository) {
+    public static void saveRepository(Object repository) {
         try (ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
              ObjectOutputStream objectOutputStream = new ObjectOutputStream(byteArrayOutputStream)) {
             objectOutputStream.writeObject(repository);
             objectOutputStream.flush();
             byte[] encryptedContent = Security.encrypt(byteArrayOutputStream.toByteArray());
-            writeFile(encryptedContent, repository.getName());
+            writeFile(encryptedContent, "");
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -80,7 +79,7 @@ public final class FileManager {
         return null;
     }
 
-    public static Repository loadRepository(String repositoryName) {
+    public static Object loadRepository(String repositoryName) {
         byte[] content = readFile(repositoryName);
         if (content == null) return null;
         if (content.length == 0) return null;
@@ -89,9 +88,9 @@ public final class FileManager {
         try (ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(decryptContent);
              ObjectInputStream objectInputStream = new ObjectInputStream(byteArrayInputStream)) {
             Object object = objectInputStream.readObject();
-            if (object instanceof Repository) {
+            /*if (object instanceof Repository) {
                 return (Repository) object;
-            }
+            }*/
         } catch (IOException | ClassNotFoundException e) {
             e.printStackTrace();
         }

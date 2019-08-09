@@ -1,18 +1,17 @@
-package org.eugene.cost.data.model;
-
-import org.eugene.cost.util.Calculate;
+package org.eugene.cost.data;
 
 import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
+// todo: delete comment code
 public class Day implements Serializable {
     private final LocalDate date;
     private String limit;
-    private String rate = "0";
+    private String rate;
     private boolean close;
-    private List<Buy> buyList = new ArrayList<>();
+    private List<Buy> buys = new ArrayList<>();
 
     public Day(LocalDate date) {
         this.date = date;
@@ -22,18 +21,22 @@ public class Day implements Serializable {
         return date;
     }
 
-    public void setLimit(String limit) {
+    /*public void setLimit(String limit) {
         String limitedRate = "0";
-        for (Buy buy : buyList){
+        for (Buy buy : buys){
             if(buy.isLimited()){
                 limitedRate = Calculate.plus(limitedRate,buy.getPrice());
             }
         }
         this.limit = Calculate.minus(limit, limitedRate);
-    }
+    }*/
 
     public String getLimit() {
         return limit;
+    }
+
+    public void setLimit(String limit) {
+        this.limit = limit;
     }
 
     public String getRate() {
@@ -44,16 +47,16 @@ public class Day implements Serializable {
         this.rate = rate;
     }
 
-    public void setClose(boolean close) {
-        this.close = close;
-    }
-
     public boolean isClose() {
         return close;
     }
 
-    public void addBuy(Buy buy, Session session) {
-        if (buyList.add(buy)) {
+    public void setClose(boolean close) {
+        this.close = close;
+    }
+
+    /*public void addBuy(Buy buy, Session session) {
+        if (buys.add(buy)) {
             rate = Calculate.plus(rate, buy.getPrice());
             if(buy.isLimited()){
                 limit = Calculate.minus(limit, buy.getPrice());
@@ -63,7 +66,7 @@ public class Day implements Serializable {
     }
 
     public void addBuy(int index, Buy buy, Session session) {
-        buyList.add(index, buy);
+        buys.add(index, buy);
         rate = Calculate.plus(rate, buy.getPrice());
         if(buy.isLimited()){
             limit = Calculate.minus(limit, buy.getPrice());
@@ -73,7 +76,7 @@ public class Day implements Serializable {
     }
 
     public void removeBuy(Buy buy, Session session) {
-        if (buyList.remove(buy)) {
+        if (buys.remove(buy)) {
             rate = Calculate.minus(rate, buy.getPrice());
             if(buy.isLimited()){
                 limit = Calculate.plus(limit, buy.getPrice());
@@ -83,14 +86,14 @@ public class Day implements Serializable {
     }
 
     public Buy getBuy(int index) {
-        return buyList.get(index);
+        return buys.get(index);
+    }*/
+
+    public List<Buy> getBuys() {
+        return buys;
     }
 
-    public List<Buy> getBuyList() {
-        return buyList;
-    }
-
-    public void setBuyList(List<Buy> buyList) {
-        this.buyList = buyList;
+    public void setBuys(List<Buy> buys) {
+        this.buys = buys;
     }
 }

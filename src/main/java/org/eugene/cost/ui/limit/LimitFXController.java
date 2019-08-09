@@ -13,7 +13,7 @@ public class LimitFXController {
     private DatePicker currentDate;
 
     @FXML
-    private ListView<Buy> buyList;
+    private ListView<Buy> buys;
 
     @FXML
     private TextField sumLimit;

@@ -1,6 +1,4 @@
-package org.eugene.cost.data.model;
-
-import org.eugene.cost.data.BuyCategories;
+package org.eugene.cost.data;
 
 import java.io.Serializable;
 
@@ -8,22 +6,19 @@ public class Buy implements Serializable {
     private String price;
     private String shopOrPlaceBuy;
     private String descriptionBuy;
-    private boolean isLimited;
-    private Bank payment;
+    private boolean limited;
     private BuyCategories buyCategories;
 
     public Buy(String price,
                String shopOrPlaceBuy,
                String descriptionBuy,
-               boolean isLimited,
-               Bank payment,
+               boolean limited,
                BuyCategories buyCategories) {
 
         this.price = price;
         this.shopOrPlaceBuy = shopOrPlaceBuy;
         this.descriptionBuy = descriptionBuy;
-        this.isLimited = isLimited;
-        this.payment = payment;
+        this.limited = limited;
         this.buyCategories = buyCategories;
     }
 
@@ -40,28 +35,15 @@ public class Buy implements Serializable {
     }
 
     public boolean isLimited() {
-        return isLimited;
-    }
-
-    public Bank getPayment() {
-        return payment;
+        return limited;
     }
 
     public BuyCategories getBuyCategories() {
         return buyCategories;
     }
 
-    private String getLimitedInfo(){
-        if(isLimited) return "[L] ";
-        return "[NL] ";
-    }
-
-    private String getShortNameCategoryBuy(){
-        return "["+buyCategories.getShortName()+"] ";
-    }
-
     @Override
     public String toString() {
-        return getLimitedInfo() + getShortNameCategoryBuy() + price +" Руб. "+shopOrPlaceBuy;
+        return limited ? "[L] " : "[NL] " + "[" + buyCategories.getShortName() + "]";
     }
 }

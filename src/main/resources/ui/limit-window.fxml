@@ -13,7 +13,7 @@
 <AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="525.0" prefWidth="559.0" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.eugene.cost.ui.limit.LimitFXController">
    <children>
       <DatePicker fx:id="beginDate" editable="false" layoutX="214.0" layoutY="61.0" prefHeight="25.0" prefWidth="131.0" />
-      <ListView fx:id="buyList" layoutX="30.0" layoutY="143.0" prefHeight="341.0" prefWidth="173.0" />
+      <ListView fx:id="buys" layoutX="30.0" layoutY="143.0" prefHeight="341.0" prefWidth="173.0" />
       <TextField fx:id="sumLimit" layoutX="224.0" layoutY="20.0" prefHeight="30.0" prefWidth="141.0">
          <font>
             <Font size="14.0" />

@@ -8,7 +8,7 @@ public class MoreSessionFXController {
     @FXML
     private ListView<String> dayList;
     @FXML
-    private ListView<String> buyList;
+    private ListView<String> buys;
 
     @FXML
     private TextArea descriptionBuy;

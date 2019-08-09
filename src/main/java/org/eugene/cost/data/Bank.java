@@ -1,6 +1,4 @@
-package org.eugene.cost.data.model;
-
-import org.eugene.cost.service.op.Operation;
+package org.eugene.cost.data;
 
 import java.io.Serializable;
 import java.time.LocalDate;
@@ -11,7 +9,7 @@ public abstract class Bank implements Serializable {
     private String balance;
     private final LocalDate date;
 
-    private List<Operation> operationHistory = new LinkedList<>();
+    private List<Operation> operations = new LinkedList<>();
 
     public Bank(String balance) {
         this.balance = balance;
@@ -27,16 +25,19 @@ public abstract class Bank implements Serializable {
         return balance;
     }
 
+    public void setBalance(String balance) {
+        this.balance = balance;
+    }
+
     public LocalDate getDate() {
         return date;
     }
 
-    public List<Operation> getOperationHistory() {
-        return operationHistory;
+    public List<Operation> getOperations() {
+        return operations;
     }
 
-    public void executeOperation(Operation operation){
-        balance = operation.execute(balance);
-        operationHistory.add(operation);
+    public void setOperations(List<Operation> operations) {
+        this.operations = operations;
     }
 }

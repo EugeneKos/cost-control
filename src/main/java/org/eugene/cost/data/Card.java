@@ -1,4 +1,4 @@
-package org.eugene.cost.data.model;
+package org.eugene.cost.data;
 
 import java.io.Serializable;
 import java.time.LocalDate;
