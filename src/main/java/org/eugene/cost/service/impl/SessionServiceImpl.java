@@ -12,7 +12,6 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 @Service
@@ -35,6 +34,7 @@ public class SessionServiceImpl implements ISessionService {
         }
         Session session = new Session(limit, beginDate, finalDate, initDays(beginDate, finalDate));
         sessionCache.addSession(session);
+        calculateMediumLimit(session);
         return session;
     }
 
@@ -58,18 +58,20 @@ public class SessionServiceImpl implements ISessionService {
 
     @Override
     public void calculateMediumLimit(Session session) {
-        int numOpenDays = dayService.getNumOpenDays(session);
-        List<Day> days = session.getDays();
-        String rateByNonLimitBuys = buyService.getRateByNonLimitBuys(days);
-        String diff = Calculate.minus(session.getLimit(), rateByNonLimitBuys);
-        String mediumLimit = Calculate.divide(diff, String.valueOf(numOpenDays));
-        days.forEach(day -> setMediumLimit(day, mediumLimit));
+        List<Day> openDays = dayService.getAllDays(session, false);
+        if(openDays.isEmpty()){
+            return;
+        }
+        List<Day> closeDays = dayService.getAllDays(session, true);
+        String costsBuysByCloseDays = buyService.getCostsBuys(closeDays, true);
+        String diff = Calculate.minus(session.getLimit(), costsBuysByCloseDays);
+        String mediumLimit = Calculate.divide(diff, String.valueOf(openDays.size()));
+        openDays.forEach(day -> setMediumLimit(day, mediumLimit));
     }
 
     private void setMediumLimit(Day day, String mediumLimit){
-        if(!day.isClose()){
-            day.setLimit(mediumLimit);
-        }
+        mediumLimit = Calculate.minus(mediumLimit, buyService.getCostsBuys(day, true));
+        day.setLimit(mediumLimit);
     }
 
     @Override
@@ -81,10 +83,5 @@ public class SessionServiceImpl implements ISessionService {
             }
         }
         calculateMediumLimit(session);
-    }
-
-    @Override
-    public List<String> getAllSessionNames() {
-        return Collections.emptyList();
     }
 }

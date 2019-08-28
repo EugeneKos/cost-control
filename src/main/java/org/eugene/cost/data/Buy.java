@@ -44,6 +44,9 @@ public class Buy implements Serializable {
 
     @Override
     public String toString() {
-        return limited ? "[L] " : "[NL] " + "[" + buyCategories.getShortName() + "]";
+        return (limited ? "[L] " : "[NL] ")
+                + "[" + buyCategories.getShortName() + "] "
+                + price + " Руб. "
+                + shopOrPlaceBuy;
     }
 }

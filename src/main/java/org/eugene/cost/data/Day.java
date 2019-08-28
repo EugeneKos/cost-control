@@ -8,7 +8,7 @@ import java.util.List;
 public class Day implements Serializable {
     private final LocalDate date;
     private String limit;
-    private String rate;
+    private String rate = "0";
     private boolean close;
     private List<Buy> buys = new ArrayList<>();
 

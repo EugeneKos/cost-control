@@ -6,14 +6,11 @@ import org.eugene.cost.service.IDayService;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class DayServiceImpl implements IDayService {
-    @Override
-    public int getNumOpenDays(Session session) {
-        return (int) session.getDays().stream().filter(day -> !day.isClose()).count();
-    }
-
     @Override
     public Day getDayByDate(Session session, LocalDate date) {
         for (Day day : session.getDays()){
@@ -22,6 +19,18 @@ public class DayServiceImpl implements IDayService {
             }
         }
         return null;
+    }
+
+    @Override
+    public List<Day> getAllDays(Session session) {
+        return session.getDays();
+    }
+
+    @Override
+    public List<Day> getAllDays(Session session, boolean closeDay) {
+        return session.getDays().stream()
+                .filter(day -> day.isClose() == closeDay)
+                .collect(Collectors.toList());
     }
 
     @Override

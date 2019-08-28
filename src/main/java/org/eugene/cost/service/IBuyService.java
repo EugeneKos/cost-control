@@ -8,8 +8,10 @@ import org.eugene.cost.data.Session;
 import java.util.List;
 
 public interface IBuyService {
-    String getRateByNonLimitBuys(Day day);
-    String getRateByNonLimitBuys(List<Day> days);
+    String getCostsBuys(Day day);
+
+    String getCostsBuys(Day day, boolean limited);
+    String getCostsBuys(List<Day> days, boolean limited);
 
     List<Buy> getAllBuysByDay(Day day);
 
