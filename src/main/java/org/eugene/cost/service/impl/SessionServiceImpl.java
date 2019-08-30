@@ -1,6 +1,7 @@
 package org.eugene.cost.service.impl;
 
 import org.eugene.cost.cache.SessionCache;
+import org.eugene.cost.data.BuyFilter;
 import org.eugene.cost.data.Day;
 import org.eugene.cost.data.Session;
 import org.eugene.cost.file.FileManager;
@@ -100,7 +101,10 @@ public class SessionServiceImpl implements ISessionService {
             return;
         }
         List<Day> closeDays = dayService.getAllDays(session, true);
-        String costsBuysByCloseDays = buyService.getCostsBuys(closeDays, true);
+
+        String costsBuysByCloseDays = buyService.getCostsBuys(closeDays,
+                new BuyFilter(null, BuyFilter.Limit.YES));
+
         String diff = Calculate.minus(session.getLimit(), costsBuysByCloseDays);
         String mediumLimit = Calculate.divide(diff, String.valueOf(openDays.size()));
         openDays.forEach(day -> setMediumLimit(day, mediumLimit));
@@ -108,7 +112,9 @@ public class SessionServiceImpl implements ISessionService {
     }
 
     private void setMediumLimit(Day day, String mediumLimit){
-        mediumLimit = Calculate.minus(mediumLimit, buyService.getCostsBuys(day, true));
+        mediumLimit = Calculate.minus(mediumLimit, buyService.getCostsBuys(day,
+                new BuyFilter(null, BuyFilter.Limit.YES)));
+
         day.setLimit(mediumLimit);
     }
 

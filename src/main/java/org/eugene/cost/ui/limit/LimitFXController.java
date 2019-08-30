@@ -14,6 +14,7 @@ import javafx.stage.Stage;
 
 import org.eugene.cost.config.SpringContext;
 import org.eugene.cost.data.Buy;
+import org.eugene.cost.data.BuyFilter;
 import org.eugene.cost.data.Day;
 import org.eugene.cost.data.Session;
 import org.eugene.cost.data.SessionDetail;
@@ -290,10 +291,15 @@ public class LimitFXController {
 
     private void displayCostOnDay(){
         if(!limitedBuys.isSelected() && !nonLimitedBuys.isSelected()){
-            currentRateDay.setText(buyService.getCostsBuys(currentDay) + UIUtils.RUB);
+            currentRateDay.setText(buyService.getCostsBuys(currentDay,
+                    new BuyFilter(null, BuyFilter.Limit.ALL)) + UIUtils.RUB);
+
             return;
         }
-        currentRateDay.setText(buyService.getCostsBuys(currentDay, limitedBuys.isSelected()) + UIUtils.RUB);
+        currentRateDay.setText(buyService.getCostsBuys(currentDay,
+                new BuyFilter(null,
+                        (limitedBuys.isSelected() ? BuyFilter.Limit.YES : BuyFilter.Limit.NO)))
+                + UIUtils.RUB);
     }
 
     private void displayLabel(Label label, String text, boolean condition){
@@ -307,13 +313,17 @@ public class LimitFXController {
 
     void displayBuyList() {
         buys.getItems().clear();
-        if(limitedBuys.isSelected()){
-            buys.getItems().addAll(buyService.getAllLimitedBuysByDay(currentDay));
-        } else if(nonLimitedBuys.isSelected()){
-            buys.getItems().addAll(buyService.getAllNonLimitedBuysByDay(currentDay));
-        } else {
-            buys.getItems().addAll(buyService.getAllBuysByDay(currentDay));
+        if(!limitedBuys.isSelected() && !nonLimitedBuys.isSelected()){
+            buys.getItems().addAll(buyService.getAllBuysByDay(currentDay,
+                    new BuyFilter(null, BuyFilter.Limit.ALL)));
+
+            return;
         }
+        buys.getItems().addAll(buyService.getAllBuysByDay(currentDay,
+                new BuyFilter(null,
+                        (limitedBuys.isSelected() ? BuyFilter.Limit.YES : BuyFilter.Limit.NO)
+                )
+        ));
     }
 
     private void displayBuyDescription(){

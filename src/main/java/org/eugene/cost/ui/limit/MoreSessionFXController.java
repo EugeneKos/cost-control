@@ -12,6 +12,7 @@ import javafx.stage.Stage;
 import org.eugene.cost.config.SpringContext;
 import org.eugene.cost.data.Buy;
 import org.eugene.cost.data.BuyCategories;
+import org.eugene.cost.data.BuyFilter;
 import org.eugene.cost.data.Day;
 import org.eugene.cost.data.Session;
 import org.eugene.cost.service.IBuyService;
@@ -50,6 +51,8 @@ public class MoreSessionFXController {
     @FXML
     private ComboBox<BuyCategories> buyCategories;
 
+    private BuyCategories currentBuyCategory;
+
     private Stage primaryStage;
 
     private IDayService dayService;
@@ -63,6 +66,11 @@ public class MoreSessionFXController {
         buyService = SpringContext.getBean(IBuyService.class);
 
         buyCategories.getItems().addAll(BuyCategories.values());
+        buyCategories.getSelectionModel().selectedItemProperty()
+                .addListener((observable, oldValue, newValue) -> {
+                            currentBuyCategory = newValue;
+                            handleComboBoxCategories();
+                });
 
         displayAllDays();
         displayTotalLimitPrice();
@@ -93,6 +101,12 @@ public class MoreSessionFXController {
         currentDateOfDay.setText(dateOfDay);
         displayCostOnDay();
         displayBuyList();
+    }
+
+    private void handleComboBoxCategories(){
+        displayCostOnDay();
+        displayBuyList();
+        displayTotalLimitPrice();
     }
 
     private void handleLimitedBuys() {
@@ -133,10 +147,16 @@ public class MoreSessionFXController {
             return;
         }
         if(!limitedBuys.isSelected() && !nonLimitedBuys.isSelected()){
-            totalPrice.setText(buyService.getCostsBuys(currentDay) + UIUtils.RUB);
+            totalPrice.setText(buyService.getCostsBuys(currentDay,
+                    new BuyFilter(currentBuyCategory, BuyFilter.Limit.ALL)) + UIUtils.RUB
+            );
+
             return;
         }
-        totalPrice.setText(buyService.getCostsBuys(currentDay, limitedBuys.isSelected()) + UIUtils.RUB);
+        totalPrice.setText(buyService.getCostsBuys(currentDay,
+                new BuyFilter(currentBuyCategory,
+                        (limitedBuys.isSelected() ? BuyFilter.Limit.YES : BuyFilter.Limit.NO))
+        ) + UIUtils.RUB);
     }
 
     private void displayBuyList(){
@@ -146,13 +166,16 @@ public class MoreSessionFXController {
         buys.getItems().clear();
 
         if(!limitedBuys.isSelected() && !nonLimitedBuys.isSelected()){
-            buys.getItems().addAll(buyService.getAllBuysByDay(currentDay));
+            buys.getItems().addAll(buyService.getAllBuysByDay(currentDay,
+                    new BuyFilter(currentBuyCategory, BuyFilter.Limit.ALL)));
+
+            return;
         }
-        else if(limitedBuys.isSelected()){
-            buys.getItems().addAll(buyService.getAllLimitedBuysByDay(currentDay));
-        } else {
-            buys.getItems().addAll(buyService.getAllNonLimitedBuysByDay(currentDay));
-        }
+        buys.getItems().addAll(buyService.getAllBuysByDay(currentDay,
+                new BuyFilter(currentBuyCategory,
+                        (limitedBuys.isSelected() ? BuyFilter.Limit.YES : BuyFilter.Limit.NO)
+                )
+        ));
     }
 
     private void displayDescriptionBuy(Buy buy){
@@ -166,9 +189,17 @@ public class MoreSessionFXController {
     private void displayTotalLimitPrice(){
         List<Day> allDays = dayService.getAllDays(currentSession);
         if(!limitedBuys.isSelected() && !nonLimitedBuys.isSelected()){
-            totalLimitPrice.setText(buyService.getCostsBuys(allDays) + UIUtils.RUB);
+            totalLimitPrice.setText(
+                    buyService.getCostsBuys(
+                            allDays, new BuyFilter(currentBuyCategory, BuyFilter.Limit.ALL)
+                    ) + UIUtils.RUB
+            );
+
             return;
         }
-        totalLimitPrice.setText(buyService.getCostsBuys(allDays, limitedBuys.isSelected()) + UIUtils.RUB);
+        totalLimitPrice.setText(buyService.getCostsBuys(
+                allDays, new BuyFilter(currentBuyCategory,
+                        (limitedBuys.isSelected() ? BuyFilter.Limit.YES : BuyFilter.Limit.NO))
+        ) + UIUtils.RUB);
     }
 }
