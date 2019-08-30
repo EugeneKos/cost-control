@@ -10,6 +10,7 @@ import org.eugene.cost.service.ISessionService;
 import org.eugene.cost.service.util.SessionUtils;
 import org.eugene.cost.service.util.Calculate;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -25,8 +26,8 @@ public class SessionServiceImpl implements ISessionService {
     private FileManager<Session> fileManager;
 
     @Autowired
-    public SessionServiceImpl(SessionCache sessionCache, IDayService dayService,
-                              IBuyService buyService, FileManager<Session> fileManager) {
+    public SessionServiceImpl(SessionCache sessionCache, IDayService dayService, IBuyService buyService,
+                              @Qualifier("basicFileManager") FileManager<Session> fileManager) {
 
         this.sessionCache = sessionCache;
         this.dayService = dayService;
