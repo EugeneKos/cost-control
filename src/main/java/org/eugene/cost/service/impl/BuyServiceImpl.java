@@ -24,6 +24,15 @@ public class BuyServiceImpl implements IBuyService {
     }
 
     @Override
+    public String getCostsBuys(List<Day> days) {
+        String rateOnDays = "0";
+        for (Day day : days){
+            rateOnDays = Calculate.plus(rateOnDays, getCostsBuys(day));
+        }
+        return rateOnDays;
+    }
+
+    @Override
     public String getCostsBuys(Day day, boolean limited) {
         String rateOnDay = "0";
         List<Buy> buys = day.getBuys();

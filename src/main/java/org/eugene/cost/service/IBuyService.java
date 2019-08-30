@@ -7,8 +7,10 @@ import org.eugene.cost.data.Session;
 
 import java.util.List;
 
+// todo: Требуется добавить поиск затрат и покупок по фильтру.
 public interface IBuyService {
     String getCostsBuys(Day day);
+    String getCostsBuys(List<Day> days);
 
     String getCostsBuys(Day day, boolean limited);
     String getCostsBuys(List<Day> days, boolean limited);

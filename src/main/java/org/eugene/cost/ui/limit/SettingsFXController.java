@@ -8,6 +8,7 @@ import org.eugene.cost.data.SessionDetail;
 import org.eugene.cost.config.SpringContext;
 import org.eugene.cost.data.Session;
 import org.eugene.cost.service.ISessionService;
+import org.eugene.cost.ui.common.UIStarter;
 
 public class SettingsFXController {
     @FXML
@@ -41,6 +42,7 @@ public class SettingsFXController {
 
         applySession.setOnAction(event -> handleBtnApplySession());
         removeSession.setOnAction(event -> handleBtnRemoveSession());
+        moreAboutSession.setOnAction(event -> handleBtnMoreAboutSession());
     }
 
     void setLimitFXController(LimitFXController limitFXController) {
@@ -77,5 +79,20 @@ public class SettingsFXController {
         }
         sessionService.delete(currentSession);
         sessionList.getItems().remove(currentSession);
+    }
+
+    private void handleBtnMoreAboutSession(){
+        if(currentSession == null){
+            return;
+        }
+        UIStarter<MoreSessionFXController> moreSessionFXControllerUIStarter = new UIStarter<MoreSessionFXController>() {
+            @Override
+            public void controllerSetting(MoreSessionFXController controller, Stage primaryStage) {
+                controller.setPrimaryStage(primaryStage);
+                controller.setCurrentSession(currentSession);
+                controller.init();
+            }
+        };
+        moreSessionFXControllerUIStarter.start("more-session.fxml", "Детализация о лимите");
     }
 }
