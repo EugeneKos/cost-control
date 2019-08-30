@@ -6,6 +6,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Day implements Serializable {
+    private static final long serialVersionUID = -6549566912724502730L;
+
     private final LocalDate date;
     private String limit;
     private String rate = "0";

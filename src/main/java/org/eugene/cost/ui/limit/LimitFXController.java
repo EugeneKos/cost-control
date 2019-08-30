@@ -97,6 +97,10 @@ public class LimitFXController {
         disableBtnBeforeChooseSession(true);
     }
 
+    void setCurrentSession(Session currentSession) {
+        this.currentSession = currentSession;
+    }
+
     private DateCell colorHandleBeginDate() {
         return new DateCell(){
             @Override
@@ -153,6 +157,7 @@ public class LimitFXController {
         nonLimitedBuys.setOnAction(event -> handleNonLimitedRB());
         closeDay.setOnAction(event -> handleBtnCloseDay());
         resumeDay.setOnAction(event -> handleBtnResumeDay());
+        setting.setOnAction(event -> handleBtnSetting());
     }
 
     private void handleBtnStart(){
@@ -164,16 +169,7 @@ public class LimitFXController {
             return;
         }
         currentSession = sessionService.create(sumLimit.getText(), beginDate.getValue(), finalDate.getValue());
-        currentDate.setValue(beginDate.getValue());
-        currentDay = dayService.getDayByDate(currentSession, beginDate.getValue());
-        sumLimit.setEditable(false);
-        beginDate.setDisable(true);
-        finalDate.setDisable(true);
-        start.setDisable(true);
-        displayLimitsAndCost();
-        displayBuyList();
-        disableBtnBeforeChooseSession(false);
-        disableBtnAfterCloseDay(currentDay.isClose());
+        afterApplySession(false);
     }
 
     private void handleLimitedRB() {
@@ -238,6 +234,37 @@ public class LimitFXController {
         sessionService.calculateMediumLimit(currentSession);
         displayLimitsAndCost();
         disableBtnAfterCloseDay(false);
+    }
+
+    private void handleBtnSetting(){
+        LimitFXController limitFXController = this;
+        UIStarter<SettingsFXController> settingsFXControllerUIStarter = new UIStarter<SettingsFXController>() {
+            @Override
+            public void controllerSetting(SettingsFXController controller, Stage primaryStage) {
+                controller.setLimitFXController(limitFXController);
+                controller.setPrimaryStage(primaryStage);
+                controller.init();
+            }
+        };
+        settingsFXControllerUIStarter.start("sessions-window.fxml", "Управление лимитами");
+    }
+
+    void afterApplySession(boolean loadedSession){
+        if(loadedSession){
+            sumLimit.setText(currentSession.getLimit());
+            beginDate.setValue(currentSession.getBeginDate());
+            finalDate.setValue(currentSession.getFinalDate());
+        }
+        currentDate.setValue(currentSession.getBeginDate());
+        currentDay = dayService.getDayByDate(currentSession, currentSession.getBeginDate());
+        sumLimit.setEditable(false);
+        beginDate.setDisable(true);
+        finalDate.setDisable(true);
+        start.setDisable(true);
+        displayLimitsAndCost();
+        displayBuyList();
+        disableBtnBeforeChooseSession(false);
+        disableBtnAfterCloseDay(currentDay.isClose());
     }
 
     void displayLimitsAndCost() {

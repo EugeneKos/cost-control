@@ -35,6 +35,10 @@ public class SessionCache {
         return sessionCache.get(detail);
     }
 
+    public Collection<Session> getAllSessions(){
+        return sessionCache.values();
+    }
+
     @PostConstruct
     private void initialize(){
         Collection<Session> sessions = fileManager.loadAll(SessionUtils.SESSION_REGEXP, Session.class).stream()

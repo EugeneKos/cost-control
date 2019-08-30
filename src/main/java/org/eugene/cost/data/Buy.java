@@ -3,6 +3,8 @@ package org.eugene.cost.data;
 import java.io.Serializable;
 
 public class Buy implements Serializable {
+    private static final long serialVersionUID = -432701262098123832L;
+
     private String price;
     private String shopOrPlaceBuy;
     private String descriptionBuy;

@@ -1,10 +1,11 @@
 package org.eugene.cost.data;
 
-import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.Objects;
 
-public class Card extends Bank implements Serializable {
+public class Card extends Bank {
+    private static final long serialVersionUID = -4944827059978387082L;
+
     private final String number;
 
     public Card(String balance, String number) {

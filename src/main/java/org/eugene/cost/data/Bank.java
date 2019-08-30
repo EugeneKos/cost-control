@@ -6,6 +6,8 @@ import java.util.LinkedList;
 import java.util.List;
 
 public abstract class Bank implements Serializable {
+    private static final long serialVersionUID = -4401576950880140962L;
+
     private String balance;
     private final LocalDate date;
 

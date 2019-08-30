@@ -8,7 +8,7 @@ import org.eugene.cost.service.IBuyService;
 import org.eugene.cost.service.IDayService;
 import org.eugene.cost.service.ISessionService;
 import org.eugene.cost.service.util.SessionUtils;
-import org.eugene.cost.util.Calculate;
+import org.eugene.cost.service.util.Calculate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -58,6 +58,11 @@ public class SessionServiceImpl implements ISessionService {
         LocalDate finalDate = session.getFinalDate();
         String limit = session.getLimit();
         fileManager.save(session, SessionUtils.getSessionFileName(limit, beginDate, finalDate));
+    }
+
+    @Override
+    public List<Session> getAll() {
+        return new ArrayList<>(sessionCache.getAllSessions());
     }
 
     private boolean checkDates(LocalDate beginDate, LocalDate finalDate){

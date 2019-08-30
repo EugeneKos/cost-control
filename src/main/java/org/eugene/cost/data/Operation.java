@@ -1,8 +1,11 @@
 package org.eugene.cost.data;
 
+import java.io.Serializable;
 import java.time.LocalDate;
 
-public class Operation {
+public class Operation implements Serializable {
+    private static final long serialVersionUID = 159101818276084917L;
+
     private String sum;
     private String description;
     private OperationType type;

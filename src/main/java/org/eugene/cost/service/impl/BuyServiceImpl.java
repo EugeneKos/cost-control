@@ -5,7 +5,7 @@ import org.eugene.cost.data.BuyCategories;
 import org.eugene.cost.data.Day;
 import org.eugene.cost.data.Session;
 import org.eugene.cost.service.IBuyService;
-import org.eugene.cost.util.Calculate;
+import org.eugene.cost.service.util.Calculate;
 import org.springframework.stereotype.Service;
 
 import java.util.List;

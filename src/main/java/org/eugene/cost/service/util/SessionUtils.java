@@ -13,6 +13,12 @@ public final class SessionUtils {
                 + "_" + dateToString(beginDate) + "_" + dateToString(finalDate);
     }
 
+    public static String getSessionDescription(String limit, LocalDate beginDate, LocalDate finalDate){
+        return String.format("%-20s%-10s%-20s%-15s%-20s%-15s%s", "Session", "Limit:",limit,
+                "Begin Date:",dateToString(beginDate),
+                "Final Date:",dateToString(finalDate));
+    }
+
     private static String dateToString(LocalDate localDate){
         return localDate.format(DateTimeFormatter.ofPattern("dd.MM.yyyy"));
     }
