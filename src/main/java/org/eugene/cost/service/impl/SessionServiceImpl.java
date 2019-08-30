@@ -3,9 +3,11 @@ package org.eugene.cost.service.impl;
 import org.eugene.cost.cache.SessionCache;
 import org.eugene.cost.data.Day;
 import org.eugene.cost.data.Session;
+import org.eugene.cost.file.FileManager;
 import org.eugene.cost.service.IBuyService;
 import org.eugene.cost.service.IDayService;
 import org.eugene.cost.service.ISessionService;
+import org.eugene.cost.service.util.SessionUtils;
 import org.eugene.cost.util.Calculate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -20,11 +22,16 @@ public class SessionServiceImpl implements ISessionService {
     private IDayService dayService;
     private IBuyService buyService;
 
+    private FileManager<Session> fileManager;
+
     @Autowired
-    public SessionServiceImpl(SessionCache sessionCache, IDayService dayService, IBuyService buyService) {
+    public SessionServiceImpl(SessionCache sessionCache, IDayService dayService,
+                              IBuyService buyService, FileManager<Session> fileManager) {
+
         this.sessionCache = sessionCache;
         this.dayService = dayService;
         this.buyService = buyService;
+        this.fileManager = fileManager;
     }
 
     @Override
@@ -32,10 +39,25 @@ public class SessionServiceImpl implements ISessionService {
         if(!checkDates(beginDate, finalDate)){
             return null;
         }
-        Session session = new Session(limit, beginDate, finalDate, initDays(beginDate, finalDate));
+        Session session = sessionCache.getSession(limit, beginDate, finalDate);
+        if(session != null){
+            autoCloseDays(session);
+            return session;
+        }
+
+        session = new Session(limit, beginDate, finalDate, initDays(beginDate, finalDate));
         sessionCache.addSession(session);
         calculateMediumLimit(session);
+        update(session);
         return session;
+    }
+
+    @Override
+    public void update(Session session) {
+        LocalDate beginDate = session.getBeginDate();
+        LocalDate finalDate = session.getFinalDate();
+        String limit = session.getLimit();
+        fileManager.save(session, SessionUtils.getSessionFileName(limit, beginDate, finalDate));
     }
 
     private boolean checkDates(LocalDate beginDate, LocalDate finalDate){
@@ -67,6 +89,7 @@ public class SessionServiceImpl implements ISessionService {
         String diff = Calculate.minus(session.getLimit(), costsBuysByCloseDays);
         String mediumLimit = Calculate.divide(diff, String.valueOf(openDays.size()));
         openDays.forEach(day -> setMediumLimit(day, mediumLimit));
+        update(session);
     }
 
     private void setMediumLimit(Day day, String mediumLimit){

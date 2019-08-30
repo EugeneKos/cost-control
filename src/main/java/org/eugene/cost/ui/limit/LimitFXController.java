@@ -171,6 +171,7 @@ public class LimitFXController {
         finalDate.setDisable(true);
         start.setDisable(true);
         displayLimitsAndCost();
+        displayBuyList();
         disableBtnBeforeChooseSession(false);
         disableBtnAfterCloseDay(currentDay.isClose());
     }
@@ -220,6 +221,7 @@ public class LimitFXController {
             return;
         }
         buyService.removeBuy(currentBuy, currentDay, currentSession);
+        sessionService.update(currentSession);
         displayLimitsAndCost();
         displayBuyList();
     }

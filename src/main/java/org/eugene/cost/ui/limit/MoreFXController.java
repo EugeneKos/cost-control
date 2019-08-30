@@ -14,6 +14,7 @@ import org.eugene.cost.data.BuyCategories;
 import org.eugene.cost.data.Day;
 import org.eugene.cost.data.Session;
 import org.eugene.cost.service.IBuyService;
+import org.eugene.cost.service.ISessionService;
 import org.eugene.cost.ui.common.UIUtils;
 
 public class MoreFXController {
@@ -43,6 +44,7 @@ public class MoreFXController {
 
     private LimitFXController limitFXController;
 
+    private ISessionService sessionService;
     private IBuyService buyService;
 
     private Session currentSession;
@@ -80,6 +82,7 @@ public class MoreFXController {
 
     void init(){
         buyService = SpringContext.getBean(IBuyService.class);
+        sessionService = SpringContext.getBean(ISessionService.class);
 
         buyCategories.getItems().addAll(BuyCategories.values());
         buyCategories.getSelectionModel().selectedItemProperty()
@@ -114,6 +117,7 @@ public class MoreFXController {
             return;
         }
         addBuy();
+        sessionService.update(currentSession);
         primaryStage.close();
     }
 
@@ -123,6 +127,7 @@ public class MoreFXController {
         }
         buyService.removeBuy(currentBuy, currentDay, currentSession);
         addBuy();
+        sessionService.update(currentSession);
         primaryStage.close();
     }
 
