@@ -1,6 +1,10 @@
 package org.eugene.cost.file;
 
 import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
@@ -27,4 +31,13 @@ public interface FileManager<T> {
     T load(String fileName, Class<T> clazz);
 
     void save(T object, String fileName);
+
+    default void delete(String fileName){
+        Path path = Paths.get(WORK_DIRECTORY + File.separator + fileName);
+        try {
+            Files.delete(path);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 }

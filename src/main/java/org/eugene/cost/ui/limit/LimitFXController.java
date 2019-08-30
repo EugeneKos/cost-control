@@ -16,6 +16,7 @@ import org.eugene.cost.config.SpringContext;
 import org.eugene.cost.data.Buy;
 import org.eugene.cost.data.Day;
 import org.eugene.cost.data.Session;
+import org.eugene.cost.data.SessionDetail;
 import org.eugene.cost.service.IBuyService;
 import org.eugene.cost.service.IDayService;
 import org.eugene.cost.service.ISessionService;
@@ -243,6 +244,11 @@ public class LimitFXController {
             public void controllerSetting(SettingsFXController controller, Stage primaryStage) {
                 controller.setLimitFXController(limitFXController);
                 controller.setPrimaryStage(primaryStage);
+                if(currentSession != null){
+                    controller.setSessionDetail(new SessionDetail(
+                            currentSession.getLimit(), currentSession.getBeginDate(), currentSession.getFinalDate()
+                    ));
+                }
                 controller.init();
             }
         };

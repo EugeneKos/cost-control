@@ -10,6 +10,8 @@ public interface ISessionService {
 
     void update(Session session);
 
+    void delete(Session session);
+
     List<Session> getAll();
 
     void calculateMediumLimit(Session session);

@@ -1,6 +1,7 @@
 package org.eugene.cost.cache;
 
 import org.eugene.cost.data.Session;
+import org.eugene.cost.data.SessionDetail;
 import org.eugene.cost.file.FileManager;
 import org.eugene.cost.service.util.SessionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,6 +36,11 @@ public class SessionCache {
         return sessionCache.get(detail);
     }
 
+    public void deleteSession(Session session){
+        SessionDetail detail = new SessionDetail(session.getLimit(), session.getBeginDate(), session.getFinalDate());
+        sessionCache.remove(detail);
+    }
+
     public Collection<Session> getAllSessions(){
         return sessionCache.values();
     }
@@ -45,44 +51,5 @@ public class SessionCache {
                 .filter(Objects::nonNull).collect(Collectors.toList());
 
         sessions.forEach(this::addSession);
-    }
-
-    private class SessionDetail {
-        private final String limit;
-        private final LocalDate beginDate;
-        private final LocalDate finalDate;
-
-        SessionDetail(String limit, LocalDate beginDate, LocalDate finalDate) {
-            this.limit = limit;
-            this.beginDate = beginDate;
-            this.finalDate = finalDate;
-        }
-
-        public String getLimit() {
-            return limit;
-        }
-
-        public LocalDate getBeginDate() {
-            return beginDate;
-        }
-
-        public LocalDate getFinalDate() {
-            return finalDate;
-        }
-
-        @Override
-        public boolean equals(Object o) {
-            if (this == o) return true;
-            if (o == null || getClass() != o.getClass()) return false;
-            SessionDetail detail = (SessionDetail) o;
-            return Objects.equals(limit, detail.limit) &&
-                    Objects.equals(beginDate, detail.beginDate) &&
-                    Objects.equals(finalDate, detail.finalDate);
-        }
-
-        @Override
-        public int hashCode() {
-            return Objects.hash(limit, beginDate, finalDate);
-        }
     }
 }

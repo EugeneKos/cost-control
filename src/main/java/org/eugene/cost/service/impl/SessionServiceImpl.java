@@ -61,6 +61,15 @@ public class SessionServiceImpl implements ISessionService {
     }
 
     @Override
+    public void delete(Session session) {
+        LocalDate beginDate = session.getBeginDate();
+        LocalDate finalDate = session.getFinalDate();
+        String limit = session.getLimit();
+        fileManager.delete(SessionUtils.getSessionFileName(limit, beginDate, finalDate));
+        sessionCache.deleteSession(session);
+    }
+
+    @Override
     public List<Session> getAll() {
         return new ArrayList<>(sessionCache.getAllSessions());
     }
