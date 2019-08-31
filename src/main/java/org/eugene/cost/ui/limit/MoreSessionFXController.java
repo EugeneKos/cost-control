@@ -21,10 +21,15 @@ import org.eugene.cost.ui.common.UIUtils;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
 public class MoreSessionFXController {
+    private static final String EMPTY_CATEGORY = "Не выбрано";
+
     @FXML
     private ListView<String> dayList;
     @FXML
@@ -49,7 +54,7 @@ public class MoreSessionFXController {
     private RadioButton nonLimitedBuys;
 
     @FXML
-    private ComboBox<BuyCategories> buyCategories;
+    private ComboBox<String> buyCategories;
 
     private BuyCategories currentBuyCategory;
 
@@ -65,10 +70,11 @@ public class MoreSessionFXController {
         dayService = SpringContext.getBean(IDayService.class);
         buyService = SpringContext.getBean(IBuyService.class);
 
-        buyCategories.getItems().addAll(BuyCategories.values());
+        buyCategories.getItems().addAll(getStringsBuyCategories());
+        buyCategories.setValue(EMPTY_CATEGORY);
         buyCategories.getSelectionModel().selectedItemProperty()
                 .addListener((observable, oldValue, newValue) -> {
-                            currentBuyCategory = newValue;
+                            currentBuyCategory = BuyCategories.getBuyCategoriesByName(newValue);
                             handleComboBoxCategories();
                 });
 
@@ -92,6 +98,15 @@ public class MoreSessionFXController {
 
     void setCurrentSession(Session currentSession) {
         this.currentSession = currentSession;
+    }
+
+    private List<String> getStringsBuyCategories(){
+        List<String> stringsBuyCategories = new ArrayList<>(Arrays.asList(BuyCategories.values())).stream()
+                .map(BuyCategories::getName)
+                .collect(Collectors.toList());
+
+        stringsBuyCategories.add(EMPTY_CATEGORY);
+        return stringsBuyCategories;
     }
 
     private void handleDayList(String dateOfDay){
@@ -146,17 +161,7 @@ public class MoreSessionFXController {
         if(currentDay == null){
             return;
         }
-        if(!limitedBuys.isSelected() && !nonLimitedBuys.isSelected()){
-            totalPrice.setText(buyService.getCostsBuys(currentDay,
-                    new BuyFilter(currentBuyCategory, BuyFilter.Limit.ALL)) + UIUtils.RUB
-            );
-
-            return;
-        }
-        totalPrice.setText(buyService.getCostsBuys(currentDay,
-                new BuyFilter(currentBuyCategory,
-                        (limitedBuys.isSelected() ? BuyFilter.Limit.YES : BuyFilter.Limit.NO))
-        ) + UIUtils.RUB);
+        displayPrice(totalPrice, Collections.singletonList(currentDay));
     }
 
     private void displayBuyList(){
@@ -188,17 +193,22 @@ public class MoreSessionFXController {
 
     private void displayTotalLimitPrice(){
         List<Day> allDays = dayService.getAllDays(currentSession);
+        displayPrice(totalLimitPrice, allDays);
+    }
+
+    private void displayPrice(Label label, List<Day> days){
         if(!limitedBuys.isSelected() && !nonLimitedBuys.isSelected()){
-            totalLimitPrice.setText(
+            label.setText(
                     buyService.getCostsBuys(
-                            allDays, new BuyFilter(currentBuyCategory, BuyFilter.Limit.ALL)
+                            days, new BuyFilter(currentBuyCategory, BuyFilter.Limit.ALL)
                     ) + UIUtils.RUB
             );
 
             return;
         }
-        totalLimitPrice.setText(buyService.getCostsBuys(
-                allDays, new BuyFilter(currentBuyCategory,
+
+        label.setText(buyService.getCostsBuys(
+                days, new BuyFilter(currentBuyCategory,
                         (limitedBuys.isSelected() ? BuyFilter.Limit.YES : BuyFilter.Limit.NO))
         ) + UIUtils.RUB);
     }

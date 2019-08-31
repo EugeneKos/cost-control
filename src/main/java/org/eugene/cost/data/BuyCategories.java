@@ -26,6 +26,15 @@ public enum  BuyCategories {
         return shortName;
     }
 
+    public static BuyCategories getBuyCategoriesByName(String name){
+        for (BuyCategories buyCategories : BuyCategories.values()){
+            if(buyCategories.name.equals(name)){
+                return buyCategories;
+            }
+        }
+        return null;
+    }
+
     @Override
     public String toString() {
         return name;
