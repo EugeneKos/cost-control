@@ -17,28 +17,28 @@ import org.eugene.cost.service.IBuyService;
 import org.eugene.cost.service.ISessionService;
 import org.eugene.cost.ui.common.UIUtils;
 
-public class MoreFXController {
+public class BuyFXController {
     @FXML
     private TextField buyPrice;
     @FXML
     private TextField shopOrPlaceBuy;
 
     @FXML
-    private TextArea descriptionBuy;
+    private TextArea buyDescription;
 
     @FXML
-    private Button addBuy;
+    private Button addBuyBtn;
     @FXML
-    private Button cancel;
+    private Button cancelBtn;
 
     @FXML
-    private CheckBox nonLimited;
+    private CheckBox nonLimitedCB;
 
     @FXML
     private ComboBox<Bank> paymentSystem;
 
     @FXML
-    private ComboBox<BuyCategories> buyCategories;
+    private ComboBox<BuyCategories> buyCategoriesCB;
 
     private Stage primaryStage;
 
@@ -84,8 +84,8 @@ public class MoreFXController {
         buyService = SpringContext.getBean(IBuyService.class);
         sessionService = SpringContext.getBean(ISessionService.class);
 
-        buyCategories.getItems().addAll(BuyCategories.values());
-        buyCategories.getSelectionModel().selectedItemProperty()
+        buyCategoriesCB.getItems().addAll(BuyCategories.values());
+        buyCategoriesCB.getSelectionModel().selectedItemProperty()
                 .addListener((observable, oldValue, newValue) -> buyCategory = newValue);
 
         initBtnHandles();
@@ -93,23 +93,23 @@ public class MoreFXController {
 
     private void initBtnHandles(){
         if(changeBuy){
-            addBuy.setText("Изменить");
-            addBuy.setLayoutX(315);
-            addBuy.setOnAction(event -> handleChangeBuyBtn());
+            addBuyBtn.setText("Изменить");
+            addBuyBtn.setLayoutX(315);
+            addBuyBtn.setOnAction(event -> handleChangeBuyBtn());
             displayCurrentBuy();
         } else {
-            addBuy.setOnAction(event -> handleAddBuyBtn());
+            addBuyBtn.setOnAction(event -> handleAddBuyBtn());
         }
 
-        cancel.setOnAction(event -> handleCancelBtn());
+        cancelBtn.setOnAction(event -> handleCancelBtn());
     }
 
     private void displayCurrentBuy(){
         buyPrice.setText(currentBuy.getPrice());
         shopOrPlaceBuy.setText(currentBuy.getShopOrPlaceBuy());
-        descriptionBuy.setText(currentBuy.getDescriptionBuy());
-        nonLimited.setSelected(!currentBuy.isLimited());
-        buyCategories.setValue(currentBuy.getBuyCategories());
+        buyDescription.setText(currentBuy.getDescriptionBuy());
+        nonLimitedCB.setSelected(!currentBuy.isLimited());
+        buyCategoriesCB.setValue(currentBuy.getBuyCategories());
     }
 
     private void handleAddBuyBtn(){
@@ -136,15 +136,15 @@ public class MoreFXController {
     }
 
     private void addBuy(){
-        buyService.addBuy(buyPrice.getText(), shopOrPlaceBuy.getText(), descriptionBuy.getText(),
-                !nonLimited.isSelected(), buyCategory, currentDay, currentSession);
+        buyService.addBuy(buyPrice.getText(), shopOrPlaceBuy.getText(), buyDescription.getText(),
+                !nonLimitedCB.isSelected(), buyCategory, currentDay, currentSession);
 
         limitFXController.displayLimitsAndCost();
         limitFXController.displayBuyList();
     }
 
     private boolean isNonValidated(){
-        if(UIUtils.isNull(buyPrice.getText(), shopOrPlaceBuy.getText(), descriptionBuy.getText())
+        if(UIUtils.isNull(buyPrice.getText(), shopOrPlaceBuy.getText(), buyDescription.getText())
                 || buyCategory == null){
             return true;
         }

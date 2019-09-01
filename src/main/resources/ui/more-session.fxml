@@ -11,38 +11,38 @@
 
 <AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="484.0"
             prefWidth="631.0" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1"
-            fx:controller="org.eugene.cost.ui.limit.MoreSessionFXController">
+            fx:controller="org.eugene.cost.ui.limit.SessionInfoFXController">
    <ListView fx:id="dayList" layoutX="14.0" layoutY="14.0" prefHeight="353.0" prefWidth="169.0"/>
-   <ListView fx:id="buys" layoutX="206.0" layoutY="14.0" prefHeight="175.0" prefWidth="403.0"/>
-   <Button fx:id="close" layoutX="506.0" layoutY="381.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="108.0"
+   <ListView fx:id="buyList" layoutX="206.0" layoutY="14.0" prefHeight="175.0" prefWidth="403.0"/>
+   <Button fx:id="closeBtn" layoutX="506.0" layoutY="381.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="108.0"
            text="Закрыть"/>
-   <TextArea fx:id="descriptionBuy" editable="false" layoutX="207.0" layoutY="204.0" prefHeight="163.0"
+   <TextArea fx:id="buyDescription" editable="false" layoutX="207.0" layoutY="204.0" prefHeight="163.0"
              prefWidth="403.0"/>
    <Label fx:id="currentDateOfDay" layoutX="22.0" layoutY="380.0" prefHeight="27.0" prefWidth="203.0">
       <font>
          <Font size="18.0"/>
       </font>
    </Label>
-   <Label fx:id="totalPrice" layoutX="236.0" layoutY="380.0" prefHeight="27.0" prefWidth="130.0">
+   <Label fx:id="costsPerDay" layoutX="236.0" layoutY="380.0" prefHeight="27.0" prefWidth="130.0">
       <font>
          <Font size="18.0"/>
       </font>
    </Label>
-   <RadioButton fx:id="limitedBuys" layoutX="10.0" layoutY="457.0" mnemonicParsing="false"
+   <RadioButton fx:id="limitedBuysRB" layoutX="10.0" layoutY="457.0" mnemonicParsing="false"
                 text="Показать затраты только по лимитным покупкам"/>
-   <RadioButton fx:id="nonLimitedBuys" layoutX="310.0" layoutY="457.0" mnemonicParsing="false"
+   <RadioButton fx:id="nonLimitedBuysRB" layoutX="310.0" layoutY="457.0" mnemonicParsing="false"
                 text="Показать затраты только по НЕ лимитным покупкам"/>
    <Label layoutX="22.0" layoutY="416.0" prefHeight="27.0" prefWidth="203.0" text="Затраты за весь лимит">
       <font>
          <Font size="18.0"/>
       </font>
    </Label>
-   <Label fx:id="totalLimitPrice" layoutX="236.0" layoutY="416.0" prefHeight="27.0" prefWidth="130.0">
+   <Label fx:id="costsPerLimit" layoutX="236.0" layoutY="416.0" prefHeight="27.0" prefWidth="130.0">
       <font>
          <Font size="18.0"/>
       </font>
    </Label>
-   <ComboBox fx:id="buyCategories" layoutX="457.0" layoutY="420.0" prefHeight="25.0" prefWidth="158.0"/>
+   <ComboBox fx:id="buyCategoriesCB" layoutX="457.0" layoutY="420.0" prefHeight="25.0" prefWidth="158.0"/>
    <Label layoutX="384.0" layoutY="410.0" text="Категория">
       <font>
          <Font size="14.0"/>

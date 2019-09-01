@@ -10,16 +10,16 @@ import org.eugene.cost.data.Session;
 import org.eugene.cost.service.ISessionService;
 import org.eugene.cost.ui.common.UIStarter;
 
-public class SettingsFXController {
+public class SessionsFXController {
     @FXML
     private ListView<Session> sessionList;
 
     @FXML
-    private Button applySession;
+    private Button applySessionBtn;
     @FXML
-    private Button moreAboutSession;
+    private Button moreAboutSessionBtn;
     @FXML
-    private Button removeSession;
+    private Button removeSessionBtn;
     @FXML
     private Button graph;
 
@@ -40,9 +40,9 @@ public class SettingsFXController {
         sessionList.getSelectionModel().selectedItemProperty()
                 .addListener((observable, oldValue, newValue) -> currentSession = newValue);
 
-        applySession.setOnAction(event -> handleBtnApplySession());
-        removeSession.setOnAction(event -> handleBtnRemoveSession());
-        moreAboutSession.setOnAction(event -> handleBtnMoreAboutSession());
+        applySessionBtn.setOnAction(event -> handleApplySessionBtn());
+        removeSessionBtn.setOnAction(event -> handleRemoveSessionBtn());
+        moreAboutSessionBtn.setOnAction(event -> handleMoreAboutSessionBtn());
     }
 
     void setLimitFXController(LimitFXController limitFXController) {
@@ -57,7 +57,7 @@ public class SettingsFXController {
         this.primaryStage = primaryStage;
     }
 
-    private void handleBtnApplySession(){
+    private void handleApplySessionBtn(){
         if(currentSession == null){
             return;
         }
@@ -66,7 +66,7 @@ public class SettingsFXController {
         primaryStage.close();
     }
 
-    private void handleBtnRemoveSession(){
+    private void handleRemoveSessionBtn(){
         if(currentSession == null){
             return;
         }
@@ -81,18 +81,18 @@ public class SettingsFXController {
         sessionList.getItems().remove(currentSession);
     }
 
-    private void handleBtnMoreAboutSession(){
+    private void handleMoreAboutSessionBtn(){
         if(currentSession == null){
             return;
         }
-        UIStarter<MoreSessionFXController> moreSessionFXControllerUIStarter = new UIStarter<MoreSessionFXController>() {
+        UIStarter<SessionInfoFXController> sessionInfoFXControllerUIStarter = new UIStarter<SessionInfoFXController>() {
             @Override
-            public void controllerSetting(MoreSessionFXController controller, Stage primaryStage) {
+            public void controllerSetting(SessionInfoFXController controller, Stage primaryStage) {
                 controller.setPrimaryStage(primaryStage);
                 controller.setCurrentSession(currentSession);
                 controller.init();
             }
         };
-        moreSessionFXControllerUIStarter.start("more-session.fxml", "Детализация о лимите");
+        sessionInfoFXControllerUIStarter.start("more-session.fxml", "Детализация о лимите");
     }
 }
