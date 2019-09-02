@@ -204,7 +204,7 @@ public class LimitFXController {
                 controller.init();
             }
         };
-        moreFXControllerUIStarter.start("more.fxml", "Управление покупками");
+        moreFXControllerUIStarter.start("buy-window.fxml", "Управление покупками");
     }
 
     private void handleMoreAboutBuyBtn(){

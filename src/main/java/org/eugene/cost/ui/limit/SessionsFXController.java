@@ -93,6 +93,6 @@ public class SessionsFXController {
                 controller.init();
             }
         };
-        sessionInfoFXControllerUIStarter.start("more-session.fxml", "Детализация о лимите");
+        sessionInfoFXControllerUIStarter.start("sessions-info-window.fxml", "Детализация о лимите");
     }
 }
