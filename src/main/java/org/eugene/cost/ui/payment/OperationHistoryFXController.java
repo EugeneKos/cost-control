@@ -5,22 +5,23 @@ import javafx.scene.control.Button;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.ListView;
 import javafx.scene.control.RadioButton;
+
 import org.eugene.cost.data.Operation;
 
-public class DetailHistoryFXController {
+public class OperationHistoryFXController {
     @FXML
-    private ListView<Operation> operations;
+    private ListView<Operation> operationList;
 
     @FXML
-    private DatePicker beginDate;
+    private DatePicker beginHistoriesDate;
     @FXML
-    private DatePicker finalDate;
+    private DatePicker finalHistoriesDate;
 
     @FXML
-    private Button showHistory;
+    private Button showHistoryBtn;
 
     @FXML
-    private RadioButton increase;
+    private RadioButton increaseRB;
     @FXML
-    private RadioButton descending;
+    private RadioButton descendingRB;
 }

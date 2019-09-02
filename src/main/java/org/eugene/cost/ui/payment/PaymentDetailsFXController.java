@@ -5,14 +5,15 @@ import javafx.scene.control.Button;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TextField;
+
 import org.eugene.cost.data.Card;
 import org.eugene.cost.data.Cash;
 
-public class FinanceFXController {
+public class PaymentDetailsFXController {
     @FXML
-    private ListView<Card> cards;
+    private ListView<Card> cardList;
     @FXML
-    private ListView<Cash> cashes;
+    private ListView<Cash> cashList;
 
     @FXML
     private TextField cardNumber;
@@ -25,17 +26,17 @@ public class FinanceFXController {
     private TextField cashBalance;
 
     @FXML
-    private Button addCard;
+    private Button addCardBtn;
     @FXML
-    private Button removeCard;
+    private Button removeCardBtn;
 
     @FXML
-    private Button addCash;
+    private Button addCashBtn;
     @FXML
-    private Button removeCash;
+    private Button removeCashBtn;
 
     @FXML
-    private DatePicker cardsDate;
+    private DatePicker createCardDate;
     @FXML
-    private DatePicker cashesDate;
+    private DatePicker createCashDate;
 }

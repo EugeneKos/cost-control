@@ -12,7 +12,7 @@ public class App extends Application {
     public void start(Stage primaryStage){
         try {
             FXMLLoader loader = new FXMLLoader();
-            loader.setLocation(getClass().getClassLoader().getResource("ui/limit-window.fxml"));
+            loader.setLocation(getClass().getClassLoader().getResource("ui/payment-window.fxml"));
             AnchorPane panel = loader.load();
             Scene scene = new Scene(panel);
             primaryStage.setTitle("Управление финансами");

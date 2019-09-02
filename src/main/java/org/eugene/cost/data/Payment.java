@@ -5,7 +5,7 @@ import java.time.LocalDate;
 import java.util.LinkedList;
 import java.util.List;
 
-public abstract class Bank implements Serializable {
+public abstract class Payment implements Serializable {
     private static final long serialVersionUID = -4401576950880140962L;
 
     private String balance;
@@ -13,12 +13,12 @@ public abstract class Bank implements Serializable {
 
     private List<Operation> operations = new LinkedList<>();
 
-    public Bank(String balance) {
+    public Payment(String balance) {
         this.balance = balance;
         this.date = LocalDate.now();
     }
 
-    public Bank(String balance, LocalDate date) {
+    public Payment(String balance, LocalDate date) {
         this.balance = balance;
         this.date = date;
     }

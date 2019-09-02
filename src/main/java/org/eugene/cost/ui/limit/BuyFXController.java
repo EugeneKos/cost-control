@@ -8,7 +8,7 @@ import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 import org.eugene.cost.config.SpringContext;
-import org.eugene.cost.data.Bank;
+import org.eugene.cost.data.Payment;
 import org.eugene.cost.data.Buy;
 import org.eugene.cost.data.BuyCategories;
 import org.eugene.cost.data.Day;
@@ -35,7 +35,7 @@ public class BuyFXController {
     private CheckBox nonLimitedCB;
 
     @FXML
-    private ComboBox<Bank> paymentSystem;
+    private ComboBox<Payment> paymentTypeCB;
 
     @FXML
     private ComboBox<BuyCategories> buyCategoriesCB;

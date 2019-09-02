@@ -3,7 +3,7 @@ package org.eugene.cost.data;
 import java.time.LocalDate;
 import java.util.Objects;
 
-public class Card extends Bank {
+public class Card extends Payment {
     private static final long serialVersionUID = -4944827059978387082L;
 
     private final String number;

@@ -1,30 +1,36 @@
 package org.eugene.cost.ui.payment;
 
 import javafx.fxml.FXML;
-import javafx.scene.control.*;
+import javafx.scene.control.Button;
+import javafx.scene.control.ComboBox;
+import javafx.scene.control.DatePicker;
+import javafx.scene.control.Label;
+import javafx.scene.control.TextArea;
+import javafx.scene.control.TextField;
+
 import org.eugene.cost.data.OperationType;
-import org.eugene.cost.data.Bank;
+import org.eugene.cost.data.Payment;
 
 public class OperationFXController {
     @FXML
-    private ComboBox<Bank> paymentSystemOne;
+    private ComboBox<Payment> paymentOne;
     @FXML
-    private ComboBox<Bank> paymentSystemTwo;
+    private ComboBox<Payment> paymentTwo;
     @FXML
-    private ComboBox<OperationType> operation;
+    private ComboBox<OperationType> operationTypeCB;
     @FXML
-    private Label paymentSystemTwoInfo;
+    private Label paymentTwoInfo;
 
     @FXML
-    private TextField paySum;
+    private TextField transactionAmount;
     @FXML
-    private TextArea descriptionOperation;
+    private TextArea operationDescription;
 
     @FXML
-    private Button ok;
+    private Button okBtn;
     @FXML
-    private Button cancel;
+    private Button cancelBtn;
 
     @FXML
-    private DatePicker datePicker;
+    private DatePicker dateOfOperation;
 }
