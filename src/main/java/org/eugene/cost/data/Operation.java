@@ -6,17 +6,17 @@ import java.time.LocalDate;
 public class Operation implements Serializable {
     private static final long serialVersionUID = 159101818276084917L;
 
-    private String sum;
+    private String transactionAmount;
     private String description;
     private OperationType type;
     private LocalDate date;
 
-    public String getSum() {
-        return sum;
+    public String getTransactionAmount() {
+        return transactionAmount;
     }
 
-    public void setSum(String sum) {
-        this.sum = sum;
+    public void setTransactionAmount(String transactionAmount) {
+        this.transactionAmount = transactionAmount;
     }
 
     public String getDescription() {

@@ -10,8 +10,7 @@ import javafx.scene.image.ImageView;
 
 import javafx.stage.Stage;
 import org.eugene.cost.data.Operation;
-import org.eugene.cost.data.Card;
-import org.eugene.cost.data.Cash;
+import org.eugene.cost.data.Payment;
 import org.eugene.cost.ui.common.UIStarter;
 import org.eugene.cost.ui.limit.LimitFXController;
 
@@ -43,9 +42,9 @@ public class PaymentFXController {
     private ImageView imageGraph;
 
     @FXML
-    private ComboBox<Card> cardBox;
+    private ComboBox<Payment> cardBox;
     @FXML
-    private ComboBox<Cash> cashBox;
+    private ComboBox<Payment> cashBox;
 
     @FXML
     private RadioButton increaseRB;

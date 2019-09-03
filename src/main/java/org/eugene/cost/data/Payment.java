@@ -4,23 +4,36 @@ import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Objects;
 
-public abstract class Payment implements Serializable {
+public class Payment implements Serializable {
     private static final long serialVersionUID = -4401576950880140962L;
 
+    private String identify;
     private String balance;
-    private final LocalDate date;
+
+    private PaymentType paymentType;
+
+    private final LocalDate dateOfCreation;
 
     private List<Operation> operations = new LinkedList<>();
 
-    public Payment(String balance) {
+    public Payment(String identify, String balance, PaymentType paymentType) {
+        this.identify = identify;
         this.balance = balance;
-        this.date = LocalDate.now();
+        this.paymentType = paymentType;
+        this.dateOfCreation = LocalDate.now();
     }
 
-    public Payment(String balance, LocalDate date) {
+    public Payment(String identify, String balance, PaymentType paymentType, LocalDate dateOfCreation) {
+        this.identify = identify;
         this.balance = balance;
-        this.date = date;
+        this.paymentType = paymentType;
+        this.dateOfCreation = dateOfCreation;
+    }
+
+    public String getIdentify() {
+        return identify;
     }
 
     public String getBalance() {
@@ -31,8 +44,12 @@ public abstract class Payment implements Serializable {
         this.balance = balance;
     }
 
-    public LocalDate getDate() {
-        return date;
+    public PaymentType getPaymentType() {
+        return paymentType;
+    }
+
+    public LocalDate getDateOfCreation() {
+        return dateOfCreation;
     }
 
     public List<Operation> getOperations() {
@@ -41,5 +58,23 @@ public abstract class Payment implements Serializable {
 
     public void setOperations(List<Operation> operations) {
         this.operations = operations;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Payment payment = (Payment) o;
+        return Objects.equals(identify, payment.identify);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(identify);
+    }
+
+    @Override
+    public String toString() {
+        return identify;
     }
 }

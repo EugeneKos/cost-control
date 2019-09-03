@@ -6,14 +6,13 @@ import javafx.scene.control.DatePicker;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TextField;
 
-import org.eugene.cost.data.Card;
-import org.eugene.cost.data.Cash;
+import org.eugene.cost.data.Payment;
 
 public class PaymentDetailsFXController {
     @FXML
-    private ListView<Card> cardList;
+    private ListView<Payment> cardList;
     @FXML
-    private ListView<Cash> cashList;
+    private ListView<Payment> cashList;
 
     @FXML
     private TextField cardNumber;
