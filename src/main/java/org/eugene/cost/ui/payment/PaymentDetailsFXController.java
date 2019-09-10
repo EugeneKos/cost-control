@@ -10,6 +10,8 @@ import org.eugene.cost.config.SpringContext;
 import org.eugene.cost.data.Payment;
 import org.eugene.cost.data.PaymentType;
 import org.eugene.cost.service.IPaymentService;
+import org.eugene.cost.service.util.PaymentUtils;
+import org.eugene.cost.ui.common.UIUtils;
 
 import java.time.LocalDate;
 
@@ -44,26 +46,125 @@ public class PaymentDetailsFXController {
     @FXML
     private DatePicker createCashDate;
 
+    private PaymentFXController paymentFXController;
+
     private IPaymentService paymentService;
+
+    private Payment currentCard;
+    private Payment currentCash;
 
     void init(){
         paymentService = SpringContext.getBean(IPaymentService.class);
 
-        cardList.getItems().addAll(paymentService.getAllByType(PaymentType.CARD));
-        cashList.getItems().addAll(paymentService.getAllByType(PaymentType.CASH));
+        updateCardList();
+        updateCashList();
+
+        cardList.getSelectionModel().selectedItemProperty()
+                .addListener((observable, oldValue, newValue) -> {
+                    currentCard = newValue;
+                    displayCardOrCashInformation(newValue, cardNumber, cardBalance, createCardDate);
+                });
+
+        cashList.getSelectionModel().selectedItemProperty()
+                .addListener((observable, oldValue, newValue) -> {
+                    currentCash = newValue;
+                    displayCardOrCashInformation(newValue, cashDescription, cashBalance, createCashDate);
+                });
 
         addCardBtn.setOnAction(event -> handleAddCardBtn());
+        addCashBtn.setOnAction(event -> handleAddCashBtn());
+
+        removeCardBtn.setOnAction(event -> handleRemoveCardBtn());
+        removeCashBtn.setOnAction(event -> handleRemoveCashBtn());
+    }
+
+    void setPaymentFXController(PaymentFXController paymentFXController) {
+        this.paymentFXController = paymentFXController;
+    }
+
+    private void updateCardList(){
+        cardList.getItems().clear();
+        cardList.getItems().addAll(paymentService.getAllByType(PaymentType.CARD));
+    }
+
+    private void updateCashList(){
+        cashList.getItems().clear();
+        cashList.getItems().addAll(paymentService.getAllByType(PaymentType.CASH));
     }
 
     private void handleAddCardBtn(){
-        // todo: Сделать проверку всех полей
         String cardNumberText = cardNumber.getText();
         String cardBalanceText = cardBalance.getText();
         LocalDate date = createCardDate.getValue();
-        if(date == null){
-            paymentService.create(cardNumberText, cardBalanceText, PaymentType.CARD);
+        Payment payment = createPayment(cardNumberText, cardBalanceText, PaymentType.CARD, date);
+        if(payment == null){
+            return;
+        }
+        if(cardList.getItems().contains(payment)){
+            return;
+        }
+        updateCardList();
+        paymentFXController.updateAllAfterUpdatePayments();
+    }
+
+    private void handleAddCashBtn(){
+        String cashDescriptionText = cashDescription.getText();
+        String cashBalanceText = cashBalance.getText();
+        LocalDate date = createCashDate.getValue();
+        Payment payment = createPayment(cashDescriptionText, cashBalanceText, PaymentType.CASH, date);
+        if(payment == null){
+            return;
+        }
+        if(cashList.getItems().contains(payment)){
+            return;
+        }
+        updateCashList();
+        paymentFXController.updateAllAfterUpdatePayments();
+    }
+
+    private void handleRemoveCardBtn(){
+        if(currentCard == null){
+            return;
+        }
+        paymentService.delete(currentCard);
+        updateCardList();
+        paymentFXController.updateAllAfterUpdatePayments();
+    }
+
+    private void handleRemoveCashBtn(){
+        if(currentCash == null){
+            return;
+        }
+        paymentService.delete(currentCash);
+        updateCashList();
+        paymentFXController.updateAllAfterUpdatePayments();
+    }
+
+    private void displayCardOrCashInformation(Payment payment, TextField paymentIdentify,
+                                              TextField balanceLabel, DatePicker dateOfCreate){
+        if(payment == null){
+            paymentIdentify.setText("");
+            balanceLabel.setText("");
+            dateOfCreate.setValue(null);
         } else {
-            paymentService.create(cardNumberText, cardBalanceText, PaymentType.CARD, date);
+            paymentIdentify.setText(payment.getIdentify());
+            balanceLabel.setText(payment.getBalance());
+            dateOfCreate.setValue(payment.getDateOfCreation());
+        }
+    }
+
+    private Payment createPayment(String identify, String balance, PaymentType paymentType, LocalDate createDate){
+        if(!PaymentUtils.isValidIdentify(identify)){
+            return null;
+        }
+        balance = UIUtils.deleteSpace(balance);
+        if(!UIUtils.isContainsNumbers(balance)){
+            return null;
+        }
+        if(createDate == null){
+            return paymentService.create(identify, balance, paymentType);
+        } else {
+            return paymentService.create(identify, balance, paymentType, createDate);
         }
     }
 }

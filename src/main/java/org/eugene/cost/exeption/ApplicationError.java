@@ -3,6 +3,8 @@ package org.eugene.cost.exeption;
 import javax.swing.*;
 
 public class ApplicationError extends RuntimeException {
+    private static final long serialVersionUID = 3529662667558935458L;
+
     public ApplicationError(String message) {
         showOptionPane(message);
         closeApplication();

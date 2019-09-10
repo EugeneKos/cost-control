@@ -1,7 +1,8 @@
 package org.eugene.cost.service.util;
 
 import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
+
+import static org.eugene.cost.service.util.DateUtils.dateToString;
 
 public final class SessionUtils {
     public static final String SESSION_REGEXP = "session_\\d+_\\d{1,2}\\.\\d{1,2}\\.\\d{4}_\\d{1,2}\\.\\d{1,2}\\.\\d{4}";
@@ -17,9 +18,5 @@ public final class SessionUtils {
         return String.format("%-20s%-10s%-20s%-15s%-20s%-15s%s", "Session", "Limit:",limit,
                 "Begin Date:",dateToString(beginDate),
                 "Final Date:",dateToString(finalDate));
-    }
-
-    private static String dateToString(LocalDate localDate){
-        return localDate.format(DateTimeFormatter.ofPattern("dd.MM.yyyy"));
     }
 }
