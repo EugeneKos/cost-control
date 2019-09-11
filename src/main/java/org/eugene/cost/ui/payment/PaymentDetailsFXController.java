@@ -95,8 +95,7 @@ public class PaymentDetailsFXController {
     private void handleAddCardBtn(){
         String cardNumberText = cardNumber.getText();
         String cardBalanceText = cardBalance.getText();
-        LocalDate date = createCardDate.getValue();
-        Payment payment = createPayment(cardNumberText, cardBalanceText, PaymentType.CARD, date);
+        Payment payment = createPayment(cardNumberText, cardBalanceText, PaymentType.CARD);
         if(payment == null){
             return;
         }
@@ -110,8 +109,7 @@ public class PaymentDetailsFXController {
     private void handleAddCashBtn(){
         String cashDescriptionText = cashDescription.getText();
         String cashBalanceText = cashBalance.getText();
-        LocalDate date = createCashDate.getValue();
-        Payment payment = createPayment(cashDescriptionText, cashBalanceText, PaymentType.CASH, date);
+        Payment payment = createPayment(cashDescriptionText, cashBalanceText, PaymentType.CASH);
         if(payment == null){
             return;
         }
@@ -153,7 +151,7 @@ public class PaymentDetailsFXController {
         }
     }
 
-    private Payment createPayment(String identify, String balance, PaymentType paymentType, LocalDate createDate){
+    private Payment createPayment(String identify, String balance, PaymentType paymentType){
         if(!PaymentUtils.isValidIdentify(identify)){
             return null;
         }
@@ -161,10 +159,6 @@ public class PaymentDetailsFXController {
         if(!UIUtils.isContainsNumbers(balance)){
             return null;
         }
-        if(createDate == null){
-            return paymentService.create(identify, balance, paymentType);
-        } else {
-            return paymentService.create(identify, balance, paymentType, createDate);
-        }
+        return paymentService.create(identify, balance, paymentType);
     }
 }

@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class OperationServiceImpl implements IOperationService {
@@ -39,8 +40,9 @@ public class OperationServiceImpl implements IOperationService {
 
     @Override
     public List<Operation> getOperationsByPayment(Payment payment, boolean isIncrease) {
-        //todo: Добавить упорядочивание.
-        return payment.getOperations();
+        return payment.getOperations().stream()
+                .sorted((op1, op2) -> compareOperations(op1, op2, isIncrease))
+                .collect(Collectors.toList());
     }
 
     private void createOperation(PaymentOperation paymentOperation, String transactionAmount, String description,
@@ -109,5 +111,20 @@ public class OperationServiceImpl implements IOperationService {
                     + ": Недостаточно средсв на " + payment.getIdentify());
         }
         return debit;
+    }
+
+    private int compareOperations(Operation one, Operation two, boolean isIncrease){
+        if(one.getDate().isBefore(two.getDate())){
+            if(isIncrease){
+                return -1;
+            } else {
+                return 1;
+            }
+        }
+        if(isIncrease){
+            return one.getDate().isEqual(two.getDate()) ? 0 : 1;
+        } else {
+            return one.getDate().isEqual(two.getDate()) ? 0 : -1;
+        }
     }
 }

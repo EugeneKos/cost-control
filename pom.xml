@@ -27,11 +27,11 @@
                 <artifactId>maven-assembly-plugin</artifactId>
                 <version>3.0.0</version>
                 <configuration>
-                    <finalName>cost-control-v.1.0</finalName>
+                    <finalName>cost-control-ui-v.1.0</finalName>
                     <appendAssemblyId>false</appendAssemblyId>
                     <archive>
                         <manifest>
-                            <mainClass>org.eugene.cost.App</mainClass>
+                            <mainClass>org.eugene.cost.ui.AppUI</mainClass>
                         </manifest>
                     </archive>
                     <descriptorRefs>

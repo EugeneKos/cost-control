@@ -8,73 +8,67 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="487.0"
-            prefWidth="504.0" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1"
-            fx:controller="org.eugene.cost.ui.payment.PaymentDetailsFXController">
-   <ListView fx:id="cardList" layoutX="33.0" layoutY="45.0" prefHeight="261.0" prefWidth="200.0"/>
-   <ListView fx:id="cashList" layoutX="273.0" layoutY="45.0" prefHeight="261.0" prefWidth="200.0"/>
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="487.0" prefWidth="504.0" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.eugene.cost.ui.payment.PaymentDetailsFXController">
+   <ListView fx:id="cardList" layoutX="33.0" layoutY="45.0" prefHeight="261.0" prefWidth="200.0" />
+   <ListView fx:id="cashList" layoutX="273.0" layoutY="45.0" prefHeight="261.0" prefWidth="200.0" />
    <Label layoutX="32.0" layoutY="14.0" text="Список банковских карт">
       <font>
-         <Font size="18.0"/>
+         <Font size="18.0" />
       </font>
    </Label>
    <Label layoutX="287.0" layoutY="14.0" text="Список наличностей">
       <font>
-         <Font size="18.0"/>
+         <Font size="18.0" />
       </font>
    </Label>
    <Label layoutX="19.0" layoutY="324.0" text="Номер карты">
       <font>
-         <Font size="14.0"/>
+         <Font size="14.0" />
       </font>
    </Label>
    <Label layoutX="273.0" layoutY="324.0" text="Описание">
       <font>
-         <Font size="14.0"/>
+         <Font size="14.0" />
       </font>
    </Label>
    <Label layoutX="19.0" layoutY="361.0" text="Баланс">
       <font>
-         <Font size="14.0"/>
+         <Font size="14.0" />
       </font>
    </Label>
    <Label layoutX="273.0" layoutY="361.0" text="Баланс">
       <font>
-         <Font size="14.0"/>
+         <Font size="14.0" />
       </font>
    </Label>
-   <TextField fx:id="cardNumber" layoutX="118.0" layoutY="322.0" prefHeight="25.0" prefWidth="135.0"/>
-   <TextField fx:id="cashDescription" layoutX="346.0" layoutY="322.0" prefHeight="25.0" prefWidth="135.0"/>
-   <TextField fx:id="cardBalance" layoutX="73.0" layoutY="358.0" prefHeight="25.0" prefWidth="107.0"/>
-   <TextField fx:id="cashBalance" layoutX="328.0" layoutY="358.0" prefHeight="25.0" prefWidth="107.0"/>
+   <TextField fx:id="cardNumber" layoutX="118.0" layoutY="322.0" prefHeight="25.0" prefWidth="135.0" />
+   <TextField fx:id="cashDescription" layoutX="346.0" layoutY="322.0" prefHeight="25.0" prefWidth="135.0" />
+   <TextField fx:id="cardBalance" layoutX="73.0" layoutY="358.0" prefHeight="25.0" prefWidth="107.0" />
+   <TextField fx:id="cashBalance" layoutX="328.0" layoutY="358.0" prefHeight="25.0" prefWidth="107.0" />
    <Label layoutX="186.0" layoutY="361.0" text="Руб.">
       <font>
-         <Font size="14.0"/>
+         <Font size="14.0" />
       </font>
    </Label>
    <Label layoutX="441.0" layoutY="361.0" text="Руб.">
       <font>
-         <Font size="14.0"/>
+         <Font size="14.0" />
       </font>
    </Label>
-   <Button fx:id="addCardBtn" layoutX="19.0" layoutY="442.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="99.0"
-           text="Добавить"/>
-   <Button fx:id="addCashBtn" layoutX="273.0" layoutY="442.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="99.0"
-           text="Добавить"/>
-   <Button fx:id="removeCardBtn" layoutX="127.0" layoutY="442.0" mnemonicParsing="false" prefHeight="25.0"
-           prefWidth="99.0" text="Удалить"/>
-   <Button fx:id="removeCashBtn" layoutX="384.0" layoutY="442.0" mnemonicParsing="false" prefHeight="25.0"
-           prefWidth="99.0" text="Удалить"/>
+   <Button fx:id="addCardBtn" layoutX="19.0" layoutY="442.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="99.0" text="Добавить" />
+   <Button fx:id="addCashBtn" layoutX="273.0" layoutY="442.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="99.0" text="Добавить" />
+   <Button fx:id="removeCardBtn" layoutX="127.0" layoutY="442.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="99.0" text="Удалить" />
+   <Button fx:id="removeCashBtn" layoutX="384.0" layoutY="442.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="99.0" text="Удалить" />
    <Label layoutX="19.0" layoutY="398.0" text="Дата">
       <font>
-         <Font size="14.0"/>
+         <Font size="14.0" />
       </font>
    </Label>
-   <DatePicker fx:id="createCardDate" layoutX="66.0" layoutY="396.0" prefHeight="11.0" prefWidth="125.0"/>
+   <DatePicker fx:id="createCardDate" editable="false" layoutX="66.0" layoutY="396.0" prefHeight="11.0" prefWidth="125.0" />
    <Label layoutX="273.0" layoutY="398.0" text="Дата">
       <font>
-         <Font size="14.0"/>
+         <Font size="14.0" />
       </font>
    </Label>
-   <DatePicker fx:id="createCashDate" layoutX="320.0" layoutY="396.0" prefHeight="11.0" prefWidth="125.0"/>
+   <DatePicker fx:id="createCashDate" editable="false" layoutX="320.0" layoutY="396.0" prefHeight="11.0" prefWidth="125.0" />
 </AnchorPane>

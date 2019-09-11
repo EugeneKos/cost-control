@@ -98,9 +98,7 @@ public class PaymentFXController {
     private void handleLimitControlBtn(){
         UIStarter<LimitFXController> limitFXControllerUIStarter = new UIStarter<LimitFXController>() {
             @Override
-            public void controllerSetting(LimitFXController controller, Stage primaryStage) {
-
-            }
+            public void controllerSetting(LimitFXController controller, Stage primaryStage) {}
         };
         limitFXControllerUIStarter.start("limit-window.fxml", "Управление лимитами");
     }

@@ -3,6 +3,7 @@ package org.eugene.cost.ui.payment;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
+import javafx.scene.control.DateCell;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
@@ -59,16 +60,26 @@ public class OperationFXController {
         paymentService = SpringContext.getBean(IPaymentService.class);
         operationService = SpringContext.getBean(IOperationService.class);
 
+        dateOfOperation.setDayCellFactory(param -> colorHandleDateOfOperation());
+
         paymentOne.getItems().addAll(paymentService.getAll());
 
         paymentOne.getSelectionModel().selectedItemProperty()
-                .addListener((observable, oldValue, newValue) -> initPaymentTwo(newValue));
+                .addListener((observable, oldValue, newValue) -> {
+                    initPaymentTwo(newValue);
+                    dateOfOperation.setValue(null);
+                });
+
+        paymentTwo.getSelectionModel().selectedItemProperty()
+                .addListener((observable, oldValue, newValue) -> dateOfOperation.setValue(null));
 
         operationTypeCB.getItems().addAll(OperationType.values());
 
         operationTypeCB.getSelectionModel().selectedItemProperty()
-                .addListener((observable, oldValue, newValue) ->
-                        transferSelected(newValue == OperationType.TRANSFER));
+                .addListener((observable, oldValue, newValue) -> {
+                    transferSelected(newValue == OperationType.TRANSFER);
+                    dateOfOperation.setValue(null);
+                });
 
         okBtn.setOnAction(event -> handleOkBtn());
         cancelBtn.setOnAction(event -> handleCancelBtn());
@@ -81,6 +92,40 @@ public class OperationFXController {
 
     void setPaymentFXController(PaymentFXController paymentFXController) {
         this.paymentFXController = paymentFXController;
+    }
+
+    private DateCell colorHandleDateOfOperation() {
+        return new DateCell() {
+            @Override
+            public void updateItem(LocalDate item, boolean empty) {
+                OperationType operationTypeCBValue = operationTypeCB.getValue();
+
+                if(operationTypeCBValue == null
+                        || (operationTypeCBValue == OperationType.TRANSFER && paymentTwo.getValue() == null)
+                        || paymentOne.getValue() == null){
+
+                    setDisable(true);
+                    setStyle(UIUtils.RED_COLOR);
+                    return;
+                }
+
+                LocalDate startDate;
+
+                if(operationTypeCBValue != OperationType.TRANSFER){
+                    startDate = paymentOne.getValue().getDateOfCreation();
+                } else {
+                    startDate = paymentOne.getValue().getDateOfCreation()
+                            .isAfter(paymentTwo.getValue().getDateOfCreation())
+                            ? paymentOne.getValue().getDateOfCreation()
+                            : paymentTwo.getValue().getDateOfCreation();
+                }
+
+                if (item.isBefore(startDate) || item.isAfter(LocalDate.now())) {
+                    setDisable(true);
+                    setStyle(UIUtils.RED_COLOR);
+                }
+            }
+        };
     }
 
     private void handleOkBtn(){
