@@ -18,7 +18,7 @@ public final class PaymentUtils {
     }
 
     public static String operationToString(LocalDate date, OperationType type, String transactionAmount, String description){
-        return dateToString(date) + ": " + type + "  " + transactionAmount + "Руб.  " + description;
+        return dateToString(date) + ": " + type + "  " + transactionAmount + " Руб.  " + description;
     }
 
     public static boolean isValidIdentify(String identify){

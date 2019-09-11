@@ -88,10 +88,10 @@ public class OperationServiceImpl implements IOperationService {
         second.setBalance(Calculate.plus(second.getBalance(), transactionAmount));
 
         Operation operationForFirstPayment = new Operation(operation);
-        operationForFirstPayment.setDescription(OperationType.TRANSFER.toString() + ": Списание средств.");
+        operationForFirstPayment.setDescription("Перевод средств --> " + second.getIdentify());
 
         Operation operationForSecondPayment = new Operation(operation);
-        operationForSecondPayment.setDescription(OperationType.TRANSFER.toString() + ": Зачисление средств.");
+        operationForSecondPayment.setDescription("Зачисление средств от: " + first.getIdentify());
 
         saveOperation(first, operationForFirstPayment);
         saveOperation(second, operationForSecondPayment);
