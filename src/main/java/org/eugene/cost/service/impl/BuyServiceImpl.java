@@ -58,9 +58,9 @@ public class BuyServiceImpl implements IBuyService {
 
     @Override
     public Buy addBuy(String price, String shopOrPlaceBuy, String descriptionBuy, boolean limited,
-                      BuyCategories buyCategories, Day day, Session session) {
+                      BuyCategories buyCategories, String paymentIdentify, Day day, Session session) {
 
-        Buy buy = new Buy(price, shopOrPlaceBuy, descriptionBuy, limited, buyCategories);
+        Buy buy = new Buy(price, shopOrPlaceBuy, descriptionBuy, limited, buyCategories, paymentIdentify);
         List<Buy> buys = day.getBuys();
         buys.add(buy);
         day.setBuys(buys);

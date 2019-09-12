@@ -12,14 +12,21 @@ import javafx.scene.control.TextField;
 import javafx.scene.paint.Paint;
 import javafx.stage.Stage;
 
+import org.apache.log4j.Logger;
 import org.eugene.cost.config.SpringContext;
 import org.eugene.cost.data.Buy;
 import org.eugene.cost.data.BuyFilter;
 import org.eugene.cost.data.Day;
+import org.eugene.cost.data.OperationType;
+import org.eugene.cost.data.Payment;
+import org.eugene.cost.data.PaymentOperation;
 import org.eugene.cost.data.Session;
 import org.eugene.cost.data.SessionDetail;
+import org.eugene.cost.exeption.NotEnoughMoneyException;
 import org.eugene.cost.service.IBuyService;
 import org.eugene.cost.service.IDayService;
+import org.eugene.cost.service.IOperationService;
+import org.eugene.cost.service.IPaymentService;
 import org.eugene.cost.service.ISessionService;
 import org.eugene.cost.ui.common.UIStarter;
 import org.eugene.cost.ui.common.UIUtils;
@@ -27,6 +34,8 @@ import org.eugene.cost.ui.common.UIUtils;
 import java.time.LocalDate;
 
 public class LimitFXController {
+    private static Logger LOGGER = Logger.getLogger(LimitFXController.class);
+
     @FXML
     private DatePicker beginDate;
     @FXML
@@ -73,6 +82,9 @@ public class LimitFXController {
     private IDayService dayService;
     private IBuyService buyService;
 
+    private IPaymentService paymentService;
+    private IOperationService operationService;
+
     private Session currentSession;
     private Day currentDay;
     private Buy currentBuy;
@@ -82,6 +94,9 @@ public class LimitFXController {
         sessionService = SpringContext.getBean(ISessionService.class);
         dayService = SpringContext.getBean(IDayService.class);
         buyService = SpringContext.getBean(IBuyService.class);
+
+        paymentService = SpringContext.getBean(IPaymentService.class);
+        operationService = SpringContext.getBean(IOperationService.class);
 
         buyList.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
             currentBuy = newValue;
@@ -216,6 +231,20 @@ public class LimitFXController {
 
     private void handleRemoveBuyBtn() {
         if (currentBuy == null) {
+            return;
+        }
+        Payment payment = paymentService.getByIdentify(currentBuy.getPaymentIdentify());
+        if(payment == null){
+            return;
+        }
+        try {
+            operationService.create(new PaymentOperation(payment, null), currentBuy.getPrice(),
+                    "Отмена покупки. " + currentBuy.getShopOrPlaceBuy()
+                            + ": " + currentBuy.getDescriptionBuy(),
+                    OperationType.ENROLLMENT);
+
+        } catch (NotEnoughMoneyException e) {
+            LOGGER.error(e);
             return;
         }
         buyService.removeBuy(currentBuy, currentDay, currentSession);

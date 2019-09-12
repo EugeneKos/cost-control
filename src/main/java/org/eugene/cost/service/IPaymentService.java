@@ -12,6 +12,8 @@ public interface IPaymentService {
 
     void update(Payment payment);
 
+    Payment getByIdentify(String identify);
+
     Set<Payment> getAll();
     Set<Payment> getAllByType(PaymentType paymentType);
 

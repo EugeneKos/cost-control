@@ -60,6 +60,11 @@ public class PaymentServiceImpl implements IPaymentService {
     }
 
     @Override
+    public Payment getByIdentify(String identify) {
+        return paymentCache.getPayment(identify);
+    }
+
+    @Override
     public Set<Payment> getAll() {
         return new HashSet<>(paymentCache.getAllPayments());
     }

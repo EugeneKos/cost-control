@@ -10,18 +10,21 @@ public class Buy implements Serializable {
     private String descriptionBuy;
     private boolean limited;
     private BuyCategories buyCategories;
+    private String paymentIdentify;
 
     public Buy(String price,
                String shopOrPlaceBuy,
                String descriptionBuy,
                boolean limited,
-               BuyCategories buyCategories) {
+               BuyCategories buyCategories,
+               String paymentIdentify) {
 
         this.price = price;
         this.shopOrPlaceBuy = shopOrPlaceBuy;
         this.descriptionBuy = descriptionBuy;
         this.limited = limited;
         this.buyCategories = buyCategories;
+        this.paymentIdentify = paymentIdentify;
     }
 
     public String getPrice() {
@@ -42,6 +45,10 @@ public class Buy implements Serializable {
 
     public BuyCategories getBuyCategories() {
         return buyCategories;
+    }
+
+    public String getPaymentIdentify() {
+        return paymentIdentify;
     }
 
     @Override

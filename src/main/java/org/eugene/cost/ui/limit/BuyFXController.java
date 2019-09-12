@@ -7,17 +7,26 @@ import javafx.scene.control.ComboBox;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
+
+import org.apache.log4j.Logger;
 import org.eugene.cost.config.SpringContext;
+import org.eugene.cost.data.OperationType;
 import org.eugene.cost.data.Payment;
 import org.eugene.cost.data.Buy;
 import org.eugene.cost.data.BuyCategories;
 import org.eugene.cost.data.Day;
+import org.eugene.cost.data.PaymentOperation;
 import org.eugene.cost.data.Session;
+import org.eugene.cost.exeption.NotEnoughMoneyException;
 import org.eugene.cost.service.IBuyService;
+import org.eugene.cost.service.IOperationService;
+import org.eugene.cost.service.IPaymentService;
 import org.eugene.cost.service.ISessionService;
 import org.eugene.cost.ui.common.UIUtils;
 
 public class BuyFXController {
+    private static Logger LOGGER = Logger.getLogger(BuyFXController.class);
+
     @FXML
     private TextField buyPrice;
     @FXML
@@ -46,6 +55,9 @@ public class BuyFXController {
 
     private ISessionService sessionService;
     private IBuyService buyService;
+
+    private IPaymentService paymentService;
+    private IOperationService operationService;
 
     private Session currentSession;
     private Day currentDay;
@@ -84,6 +96,11 @@ public class BuyFXController {
         buyService = SpringContext.getBean(IBuyService.class);
         sessionService = SpringContext.getBean(ISessionService.class);
 
+        paymentService = SpringContext.getBean(IPaymentService.class);
+        operationService = SpringContext.getBean(IOperationService.class);
+
+        paymentTypeCB.getItems().addAll(paymentService.getAll());
+
         buyCategoriesCB.getItems().addAll(BuyCategories.values());
         buyCategoriesCB.getSelectionModel().selectedItemProperty()
                 .addListener((observable, oldValue, newValue) -> buyCategory = newValue);
@@ -110,13 +127,20 @@ public class BuyFXController {
         buyDescription.setText(currentBuy.getDescriptionBuy());
         nonLimitedCB.setSelected(!currentBuy.isLimited());
         buyCategoriesCB.setValue(currentBuy.getBuyCategories());
+
+        Payment payment = paymentService.getByIdentify(currentBuy.getPaymentIdentify());
+        if(payment == null){
+            addBuyBtn.setDisable(true);
+            return;
+        }
+        paymentTypeCB.setValue(payment);
     }
 
     private void handleAddBuyBtn(){
         if(isNonValidated()){
             return;
         }
-        addBuy();
+        addBuy(paymentTypeCB.getValue());
         sessionService.update(currentSession);
         primaryStage.close();
     }
@@ -125,8 +149,23 @@ public class BuyFXController {
         if(isNonValidated()){
             return;
         }
+        Payment currentPayment = paymentService.getByIdentify(currentBuy.getPaymentIdentify());
+        if(currentPayment == null){
+            return;
+        }
+
+        try {
+            operationService.create(new PaymentOperation(currentPayment, null), currentBuy.getPrice(),
+                    "Отмена покупки. " + currentBuy.getShopOrPlaceBuy()
+                            + ": " + currentBuy.getDescriptionBuy(),
+                    OperationType.ENROLLMENT);
+
+        } catch (NotEnoughMoneyException e) {
+            LOGGER.error(e);
+            return;
+        }
         buyService.removeBuy(currentBuy, currentDay, currentSession);
-        addBuy();
+        addBuy(paymentTypeCB.getValue());
         sessionService.update(currentSession);
         primaryStage.close();
     }
@@ -135,9 +174,21 @@ public class BuyFXController {
         primaryStage.close();
     }
 
-    private void addBuy(){
+    private void addBuy(Payment currentPayment){
+        try {
+            operationService.create(new PaymentOperation(currentPayment, null), buyPrice.getText(),
+                    "Покупка. " + shopOrPlaceBuy.getText()
+                            + ": " + buyDescription.getText(),
+                    OperationType.DEBIT);
+
+        } catch (NotEnoughMoneyException e) {
+            LOGGER.error(e);
+            return;
+        }
+
         buyService.addBuy(buyPrice.getText(), shopOrPlaceBuy.getText(), buyDescription.getText(),
-                !nonLimitedCB.isSelected(), buyCategory, currentDay, currentSession);
+                !nonLimitedCB.isSelected(), buyCategory, currentPayment.getIdentify(),
+                currentDay, currentSession);
 
         limitFXController.displayLimitsAndCost();
         limitFXController.displayBuyList();
@@ -145,7 +196,7 @@ public class BuyFXController {
 
     private boolean isNonValidated(){
         if(UIUtils.isNull(buyPrice.getText(), shopOrPlaceBuy.getText(), buyDescription.getText())
-                || buyCategory == null){
+                || buyCategory == null || paymentTypeCB.getValue() == null){
             return true;
         }
         buyPrice.setText(UIUtils.deleteSpace(buyPrice.getText()));
