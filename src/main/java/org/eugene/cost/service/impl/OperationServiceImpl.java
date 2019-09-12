@@ -1,6 +1,7 @@
 package org.eugene.cost.service.impl;
 
 import org.eugene.cost.data.Operation;
+import org.eugene.cost.data.OperationFilter;
 import org.eugene.cost.data.OperationType;
 import org.eugene.cost.data.Payment;
 import org.eugene.cost.data.PaymentOperation;
@@ -36,13 +37,6 @@ public class OperationServiceImpl implements IOperationService {
                             OperationType operationType) throws NotEnoughMoneyException {
 
         createOperation(paymentOperation, transactionAmount, description, operationType, null);
-    }
-
-    @Override
-    public List<Operation> getOperationsByPayment(Payment payment, boolean isIncrease) {
-        return payment.getOperations().stream()
-                .sorted((op1, op2) -> compareOperations(op1, op2, isIncrease))
-                .collect(Collectors.toList());
     }
 
     private void createOperation(PaymentOperation paymentOperation, String transactionAmount, String description,
@@ -113,6 +107,22 @@ public class OperationServiceImpl implements IOperationService {
         return debit;
     }
 
+    @Override
+    public List<Operation> getOperationsByPayment(Payment payment, OperationFilter filter) {
+        LocalDate beginDate = filter.getBeginOperationsDate() == null
+                ? payment.getDateOfCreation()
+                : filter.getBeginOperationsDate();
+
+        LocalDate finalDate = filter.getFinalOperationsDate() == null
+                ? LocalDate.now()
+                : filter.getFinalOperationsDate();
+
+        return payment.getOperations().stream()
+                .filter(operation -> dateFilter(operation, beginDate, finalDate))
+                .sorted((op1, op2) -> compareOperations(op1, op2, filter.isIncrease()))
+                .collect(Collectors.toList());
+    }
+
     private int compareOperations(Operation one, Operation two, boolean isIncrease){
         if(one.getDate().isBefore(two.getDate())){
             if(isIncrease){
@@ -126,5 +136,12 @@ public class OperationServiceImpl implements IOperationService {
         } else {
             return one.getDate().isEqual(two.getDate()) ? 0 : -1;
         }
+    }
+
+    private boolean dateFilter(Operation operation, LocalDate beginDate, LocalDate finalDate){
+        LocalDate operationDate = operation.getDate();
+        boolean conditionByBeginDate = operationDate.isAfter(beginDate) || operationDate.isEqual(beginDate);
+        boolean conditionByFinalDate = operationDate.isBefore(finalDate) || operationDate.isEqual(finalDate);
+        return conditionByBeginDate && conditionByFinalDate;
     }
 }

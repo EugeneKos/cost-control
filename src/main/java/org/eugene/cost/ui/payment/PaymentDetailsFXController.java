@@ -13,8 +13,6 @@ import org.eugene.cost.service.IPaymentService;
 import org.eugene.cost.service.util.PaymentUtils;
 import org.eugene.cost.ui.common.UIUtils;
 
-import java.time.LocalDate;
-
 public class PaymentDetailsFXController {
     @FXML
     private ListView<Payment> cardList;

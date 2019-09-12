@@ -11,6 +11,7 @@ import javafx.scene.image.ImageView;
 import javafx.stage.Stage;
 import org.eugene.cost.config.SpringContext;
 import org.eugene.cost.data.Operation;
+import org.eugene.cost.data.OperationFilter;
 import org.eugene.cost.data.Payment;
 import org.eugene.cost.data.PaymentType;
 import org.eugene.cost.service.IOperationService;
@@ -93,6 +94,7 @@ public class PaymentFXController {
         limitControlBtn.setOnAction(event -> handleLimitControlBtn());
         financeControlBtn.setOnAction(event -> handleFinanceControlBtn());
         operationsControlBtn.setOnAction(event -> handleOperationsControlBtn());
+        operationHistoryBtn.setOnAction(event -> handleOperationHistoryBtn());
     }
 
     private void handleLimitControlBtn(){
@@ -126,6 +128,24 @@ public class PaymentFXController {
             }
         };
         operationFXControllerUIStarter.start("operation-window.fxml", "Управление операциями");
+    }
+
+    private void handleOperationHistoryBtn(){
+        Payment paymentForOperationHistory = getPaymentForOperationHistory();
+        if(paymentForOperationHistory == null){
+            return;
+        }
+
+        UIStarter<OperationHistoryFXController> operationHistoryFXControllerUIStarter = new UIStarter<OperationHistoryFXController>() {
+            @Override
+            public void controllerSetting(OperationHistoryFXController controller, Stage primaryStage) {
+                controller.setPrimaryStage(primaryStage);
+                controller.setPayment(paymentForOperationHistory);
+                controller.init();
+            }
+        };
+        operationHistoryFXControllerUIStarter.start("operation-history-window.fxml",
+                "История операций: " + paymentForOperationHistory.getIdentify());
     }
 
     private void handleIncreaseRB(){
@@ -176,9 +196,9 @@ public class PaymentFXController {
     private void displayOperations(Payment payment, String paymentTypeText){
         paymentType.setText(paymentTypeText);
         operationList.getItems().clear();
+        OperationFilter filter = new OperationFilter(increaseRB.isSelected(), null, null);
         if(payment != null){
-            operationList.getItems()
-                    .addAll(operationService.getOperationsByPayment(payment, increaseRB.isSelected()));
+            operationList.getItems().addAll(operationService.getOperationsByPayment(payment, filter));
         }
     }
 
@@ -200,5 +220,13 @@ public class PaymentFXController {
     void updateAllAfterUpdatePayments(){
         updateCardAndCashCB();
         updateAllAfterOperation();
+    }
+
+    private Payment getPaymentForOperationHistory(){
+        if(CARD_TEXT.equals(paymentType.getText())){
+            return cardBox.getValue();
+        } else {
+            return cashBox.getValue();
+        }
     }
 }
