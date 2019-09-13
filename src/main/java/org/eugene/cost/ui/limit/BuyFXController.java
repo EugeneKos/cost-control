@@ -22,6 +22,7 @@ import org.eugene.cost.service.IBuyService;
 import org.eugene.cost.service.IOperationService;
 import org.eugene.cost.service.IPaymentService;
 import org.eugene.cost.service.ISessionService;
+import org.eugene.cost.ui.common.MessageType;
 import org.eugene.cost.ui.common.UIUtils;
 
 public class BuyFXController {
@@ -131,6 +132,8 @@ public class BuyFXController {
         Payment payment = paymentService.getByIdentify(currentBuy.getPaymentIdentify());
         if(payment == null){
             addBuyBtn.setDisable(true);
+            UIUtils.showOptionPane("Платежная система данной покупки не найдена. \n"
+                    + "Изменение покупки невозможно!", "Предупреждение", MessageType.WARNING);
             return;
         }
         paymentTypeCB.setValue(payment);
@@ -138,19 +141,25 @@ public class BuyFXController {
 
     private void handleAddBuyBtn(){
         if(isNonValidated()){
+            UIUtils.showOptionPane("Заполнены не все обязательные поля! \n"
+                    + "Пожалуйста заполните все обязательные поля.",
+                    "Предупреждение", MessageType.WARNING);
             return;
         }
         addBuy(paymentTypeCB.getValue());
-        sessionService.update(currentSession);
-        primaryStage.close();
     }
 
     private void handleChangeBuyBtn(){
         if(isNonValidated()){
+            UIUtils.showOptionPane("Заполнены не все обязательные поля! \n"
+                            + "Пожалуйста заполните все обязательные поля.",
+                    "Предупреждение", MessageType.WARNING);
             return;
         }
         Payment currentPayment = paymentService.getByIdentify(currentBuy.getPaymentIdentify());
         if(currentPayment == null){
+            UIUtils.showOptionPane("Платежная система данной покупки не найдена. \n"
+                    + "Изменение покупки невозможно!", "Предупреждение", MessageType.WARNING);
             return;
         }
 
@@ -166,8 +175,6 @@ public class BuyFXController {
         }
         buyService.removeBuy(currentBuy, currentDay, currentSession);
         addBuy(paymentTypeCB.getValue());
-        sessionService.update(currentSession);
-        primaryStage.close();
     }
 
     private void handleCancelBtn(){
@@ -182,6 +189,9 @@ public class BuyFXController {
                     OperationType.DEBIT);
 
         } catch (NotEnoughMoneyException e) {
+            UIUtils.showOptionPane("Невозможно совершить данную операцию! \n"
+                            + "На выбранной платежной системе недостаточно средств.",
+                    "Ошибка", MessageType.ERROR);
             LOGGER.error(e);
             return;
         }
@@ -192,6 +202,9 @@ public class BuyFXController {
 
         limitFXController.displayLimitsAndCost();
         limitFXController.displayBuyList();
+
+        sessionService.update(currentSession);
+        primaryStage.close();
     }
 
     private boolean isNonValidated(){

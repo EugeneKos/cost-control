@@ -28,6 +28,7 @@ import org.eugene.cost.service.IDayService;
 import org.eugene.cost.service.IOperationService;
 import org.eugene.cost.service.IPaymentService;
 import org.eugene.cost.service.ISessionService;
+import org.eugene.cost.ui.common.MessageType;
 import org.eugene.cost.ui.common.UIStarter;
 import org.eugene.cost.ui.common.UIUtils;
 
@@ -179,10 +180,16 @@ public class LimitFXController {
 
     private void handleStartBtn(){
         if(UIUtils.isNull(limitAmount.getText()) || beginDate.getValue() == null || finalDate.getValue() == null){
+            UIUtils.showOptionPane("Невозможно создать новый лимит! \n"
+                            + "Для создания нового лимита заполните все необходимые поля.",
+                    "Ошибка", MessageType.ERROR);
             return;
         }
         limitAmount.setText(UIUtils.deleteSpace(limitAmount.getText()));
         if(!UIUtils.isContainsNumbers(limitAmount.getText())){
+            UIUtils.showOptionPane("Невозможно создать новый лимит! \n"
+                            + "Сумма лимита указана некорректно.",
+                    "Ошибка", MessageType.ERROR);
             return;
         }
         currentSession = sessionService.create(limitAmount.getText(), beginDate.getValue(), finalDate.getValue());
@@ -224,6 +231,8 @@ public class LimitFXController {
 
     private void handleMoreAboutBuyBtn(){
         if(currentBuy == null){
+            UIUtils.showOptionPane("Покупка не выбрана!",
+                    "Информация", MessageType.INFORMATION);
             return;
         }
         handleAddBuyBtn(true);
@@ -235,6 +244,8 @@ public class LimitFXController {
         }
         Payment payment = paymentService.getByIdentify(currentBuy.getPaymentIdentify());
         if(payment == null){
+            UIUtils.showOptionPane("Платежная система данной покупки не найдена. \n"
+                    + "Удаление покупки невозможно!", "Ошибка", MessageType.ERROR);
             return;
         }
         try {

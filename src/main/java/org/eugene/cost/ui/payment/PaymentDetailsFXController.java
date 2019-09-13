@@ -11,6 +11,7 @@ import org.eugene.cost.data.Payment;
 import org.eugene.cost.data.PaymentType;
 import org.eugene.cost.service.IPaymentService;
 import org.eugene.cost.service.util.PaymentUtils;
+import org.eugene.cost.ui.common.MessageType;
 import org.eugene.cost.ui.common.UIUtils;
 
 public class PaymentDetailsFXController {
@@ -120,6 +121,8 @@ public class PaymentDetailsFXController {
 
     private void handleRemoveCardBtn(){
         if(currentCard == null){
+            UIUtils.showOptionPane("Карта для удаления не выбрана!",
+                    "Предупреждение", MessageType.WARNING);
             return;
         }
         paymentService.delete(currentCard);
@@ -129,6 +132,8 @@ public class PaymentDetailsFXController {
 
     private void handleRemoveCashBtn(){
         if(currentCash == null){
+            UIUtils.showOptionPane("Наличные для удаления не выбраны!",
+                    "Предупреждение", MessageType.WARNING);
             return;
         }
         paymentService.delete(currentCash);
@@ -151,10 +156,16 @@ public class PaymentDetailsFXController {
 
     private Payment createPayment(String identify, String balance, PaymentType paymentType){
         if(!PaymentUtils.isValidIdentify(identify)){
+            UIUtils.showOptionPane("Ошибка создания платежной системы. \n"
+                            + "Идентификатор платежной системы не соответсвует правилам!",
+                    "Ошибка", MessageType.ERROR);
             return null;
         }
         balance = UIUtils.deleteSpace(balance);
         if(!UIUtils.isContainsNumbers(balance)){
+            UIUtils.showOptionPane("Ошибка создания платежной системы. \n"
+                            + "Баланс платежной системы заполнен некорректно!",
+                    "Ошибка", MessageType.ERROR);
             return null;
         }
         return paymentService.create(identify, balance, paymentType);

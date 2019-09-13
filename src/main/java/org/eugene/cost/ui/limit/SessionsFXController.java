@@ -8,7 +8,9 @@ import org.eugene.cost.data.SessionDetail;
 import org.eugene.cost.config.SpringContext;
 import org.eugene.cost.data.Session;
 import org.eugene.cost.service.ISessionService;
+import org.eugene.cost.ui.common.MessageType;
 import org.eugene.cost.ui.common.UIStarter;
+import org.eugene.cost.ui.common.UIUtils;
 
 public class SessionsFXController {
     @FXML
@@ -59,6 +61,8 @@ public class SessionsFXController {
 
     private void handleApplySessionBtn(){
         if(currentSession == null){
+            UIUtils.showOptionPane("Сессия не выбрана!",
+                    "Информация", MessageType.INFORMATION);
             return;
         }
         limitFXController.setCurrentSession(currentSession);
@@ -68,6 +72,8 @@ public class SessionsFXController {
 
     private void handleRemoveSessionBtn(){
         if(currentSession == null){
+            UIUtils.showOptionPane("Сессия для удаления не выбрана!",
+                    "Предупреждение", MessageType.WARNING);
             return;
         }
         SessionDetail currentSessionDetail = new SessionDetail(
@@ -75,6 +81,8 @@ public class SessionsFXController {
         );
 
         if(sessionDetail != null && sessionDetail.equals(currentSessionDetail)){
+            UIUtils.showOptionPane("Невозможно удалить открытую сессию!",
+                    "Ошибка", MessageType.ERROR);
             return;
         }
         sessionService.delete(currentSession);
@@ -83,6 +91,8 @@ public class SessionsFXController {
 
     private void handleMoreAboutSessionBtn(){
         if(currentSession == null){
+            UIUtils.showOptionPane("Сессия для просмотра не выбрана!",
+                    "Предупреждение", MessageType.WARNING);
             return;
         }
         UIStarter<SessionInfoFXController> sessionInfoFXControllerUIStarter = new UIStarter<SessionInfoFXController>() {

@@ -18,6 +18,7 @@ import org.eugene.cost.data.PaymentOperation;
 import org.eugene.cost.exeption.NotEnoughMoneyException;
 import org.eugene.cost.service.IOperationService;
 import org.eugene.cost.service.IPaymentService;
+import org.eugene.cost.ui.common.MessageType;
 import org.eugene.cost.ui.common.UIUtils;
 import org.springframework.util.StringUtils;
 
@@ -131,11 +132,15 @@ public class OperationFXController {
     private void handleOkBtn(){
         String transactionAmountText = transactionAmount.getText();
         if(!UIUtils.isContainsNumbers(transactionAmountText)){
+            UIUtils.showOptionPane("Сумма операции заполнена некорректно!",
+                    "Ошибка", MessageType.ERROR);
             return;
         }
 
         Payment paymentOneValue = paymentOne.getValue();
         if(paymentOneValue == null){
+            UIUtils.showOptionPane("Платежная система 1 не выбрана!",
+                    "Предупреждение", MessageType.WARNING);
             return;
         }
 
@@ -143,16 +148,22 @@ public class OperationFXController {
 
         OperationType operationTypeValue = operationTypeCB.getValue();
         if(operationTypeValue == null){
+            UIUtils.showOptionPane("Тип операции не выбран!",
+                    "Предупреждение", MessageType.WARNING);
             return;
         }
         if(operationTypeValue == OperationType.TRANSFER){
             if(paymentTwoValue == null){
+                UIUtils.showOptionPane("Платежная система 2 не выбрана!",
+                        "Предупреждение", MessageType.WARNING);
                 return;
             }
         }
 
         String operationDescriptionText = operationDescription.getText();
         if(operationTypeValue != OperationType.TRANSFER && StringUtils.isEmpty(operationDescriptionText)){
+            UIUtils.showOptionPane("Описание операции должно быть заполнено!",
+                    "Предупреждение", MessageType.WARNING);
             return;
         }
 
@@ -167,6 +178,7 @@ public class OperationFXController {
                         transactionAmountText, operationDescriptionText, operationTypeValue, dateOfOperationValue);
             }
         } catch (NotEnoughMoneyException e){
+            UIUtils.showOptionPane(e.getMessage(), "Ошибка", MessageType.ERROR);
             LOGGER.error(e);
             return;
         }

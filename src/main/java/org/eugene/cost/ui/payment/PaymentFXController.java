@@ -16,6 +16,7 @@ import org.eugene.cost.data.Payment;
 import org.eugene.cost.data.PaymentType;
 import org.eugene.cost.service.IOperationService;
 import org.eugene.cost.service.IPaymentService;
+import org.eugene.cost.ui.common.MessageType;
 import org.eugene.cost.ui.common.UIStarter;
 import org.eugene.cost.ui.common.UIUtils;
 import org.eugene.cost.ui.limit.LimitFXController;
@@ -133,6 +134,9 @@ public class PaymentFXController {
     private void handleOperationHistoryBtn(){
         Payment paymentForOperationHistory = getPaymentForOperationHistory();
         if(paymentForOperationHistory == null){
+            UIUtils.showOptionPane("Для просмотра истории операций," +
+                            " необходимо выбрать платежную систему.",
+                    "Информация", MessageType.INFORMATION);
             return;
         }
 
