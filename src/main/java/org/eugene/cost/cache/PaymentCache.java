@@ -7,7 +7,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
-import javax.annotation.PostConstruct;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
@@ -43,8 +42,7 @@ public class PaymentCache {
         return paymentCache.values();
     }
 
-    @PostConstruct
-    private void initialize(){
+    public void initialize(){
         Collection<Payment> payments = fileManager.loadAll(PaymentUtils.PAYMENT_REGEXP, Payment.class).stream()
                 .filter(Objects::nonNull).collect(Collectors.toList());
 
