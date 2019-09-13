@@ -10,95 +10,106 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="525.0" prefWidth="559.0" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.eugene.cost.ui.limit.LimitFXController">
-   <children>
-      <DatePicker fx:id="beginDate" editable="false" layoutX="214.0" layoutY="61.0" prefHeight="25.0" prefWidth="131.0" />
-      <ListView fx:id="buyList" layoutX="30.0" layoutY="143.0" prefHeight="341.0" prefWidth="173.0" />
-      <TextField fx:id="sumLimit" layoutX="224.0" layoutY="20.0" prefHeight="30.0" prefWidth="141.0">
-         <font>
-            <Font size="14.0" />
-         </font>
-      </TextField>
-      <Label layoutX="22.0" layoutY="21.0" text="Введите сумму лимита">
-         <font>
-            <Font size="18.0" />
-         </font>
-      </Label>
-      <Button fx:id="start" layoutX="430.0" layoutY="20.0" mnemonicParsing="false" prefHeight="30.0" prefWidth="108.0" text="Начать">
-         <font>
-            <Font size="14.0" />
-         </font>
-      </Button>
-      <Label layoutX="22.0" layoutY="60.0" text="Выберете период   С">
-         <font>
-            <Font size="18.0" />
-         </font>
-      </Label>
-      <Label layoutX="367.0" layoutY="60.0" text="ПО">
-         <font>
-            <Font size="18.0" />
-         </font>
-      </Label>
-      <DatePicker fx:id="finalDate" editable="false" layoutX="406.0" layoutY="61.0" prefHeight="25.0" prefWidth="131.0" />
-      <DatePicker fx:id="currentDate" editable="false" layoutX="382.0" layoutY="105.0" prefHeight="25.0" prefWidth="156.0" />
-      <Label layoutX="245.0" layoutY="104.0" text="Выберете дату">
-         <font>
-            <Font size="18.0" />
-         </font>
-      </Label>
-      <Label layoutX="28.0" layoutY="104.0" text="Мои покупки за день">
-         <font>
-            <Font size="18.0" />
-         </font>
-      </Label>
-      <Button fx:id="addBuy" layoutX="214.0" layoutY="422.0" mnemonicParsing="false" text="Добавить покупку" />
-      <Button fx:id="removeBuy" layoutX="340.0" layoutY="422.0" mnemonicParsing="false" text="Удалить покупку" />
-      <Button fx:id="moreAboutBuy" layoutX="459.0" layoutY="422.0" mnemonicParsing="false" text="Подробнее" />
-      <TextArea fx:id="descriptionBuy" editable="false" layoutX="220.0" layoutY="182.0" prefHeight="117.0" prefWidth="319.0" />
-      <Label layoutX="227.0" layoutY="152.0" text="Описание покупки">
-         <font>
-            <Font size="18.0" />
-         </font>
-      </Label>
-      <Label layoutX="217.0" layoutY="310.0" text="На сегодня ваш лимит">
-         <font>
-            <Font size="18.0" />
-         </font>
-      </Label>
-      <Label fx:id="currentLimitDay" layoutX="410.0" layoutY="310.0" prefHeight="27.0" prefWidth="141.0" text="0 Руб." textFill="#048c38">
-         <font>
-            <Font size="18.0" />
-         </font>
-      </Label>
-      <Button fx:id="setting" layoutX="459.0" layoutY="139.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="79.0" text="Сессии" />
-      <Label layoutX="216.0" layoutY="381.0" text="Остаток лимита">
-         <font>
-            <Font size="18.0" />
-         </font>
-      </Label>
-      <Label fx:id="currentLimit" layoutX="357.0" layoutY="381.0" prefHeight="27.0" prefWidth="194.0" text="0 Руб." textFill="#048c38">
-         <font>
-            <Font size="18.0" />
-         </font>
-      </Label>
-      <Label layoutX="217.0" layoutY="346.0" text="Затраты за день">
-         <font>
-            <Font size="18.0" />
-         </font>
-      </Label>
-      <Label fx:id="currentRateDay" layoutX="362.0" layoutY="346.0" prefHeight="27.0" prefWidth="177.0" text="0 Руб." textFill="#048c38">
-         <font>
-            <Font size="18.0" />
-         </font>
-      </Label>
-      <Button fx:id="closeDay" layoutX="214.0" layoutY="459.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="156.0" text="Закрыть день" />
-      <Button fx:id="resumeDay" layoutX="383.0" layoutY="459.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="156.0" text="Возобновить день" />
-      <Label layoutX="377.0" layoutY="21.0" text="Руб.">
-         <font>
-            <Font size="18.0" />
-         </font>
-      </Label>
-      <RadioButton fx:id="limitedBuys" layoutX="30.0" layoutY="497.0" mnemonicParsing="false" text="Показать только лимитные покупки" />
-      <RadioButton fx:id="nonLimitedBuys" layoutX="275.0" layoutY="497.0" mnemonicParsing="false" text="Показать только НЕ лимитные покупки" />
-   </children>
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="525.0"
+            prefWidth="559.0" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="org.eugene.cost.ui.limit.LimitFXController">
+   <DatePicker fx:id="beginDate" editable="false" layoutX="214.0" layoutY="61.0" prefHeight="25.0" prefWidth="131.0"/>
+   <ListView fx:id="buyList" layoutX="30.0" layoutY="143.0" prefHeight="341.0" prefWidth="173.0"/>
+   <TextField fx:id="limitAmount" layoutX="224.0" layoutY="20.0" prefHeight="30.0" prefWidth="141.0">
+      <font>
+         <Font size="14.0"/>
+      </font>
+   </TextField>
+   <Label layoutX="22.0" layoutY="21.0" text="Введите сумму лимита">
+      <font>
+         <Font size="18.0"/>
+      </font>
+   </Label>
+   <Button fx:id="startBtn" layoutX="430.0" layoutY="20.0" mnemonicParsing="false" prefHeight="30.0" prefWidth="108.0"
+           text="Начать">
+      <font>
+         <Font size="14.0"/>
+      </font>
+   </Button>
+   <Label layoutX="22.0" layoutY="60.0" text="Выберете период   С">
+      <font>
+         <Font size="18.0"/>
+      </font>
+   </Label>
+   <Label layoutX="367.0" layoutY="60.0" text="ПО">
+      <font>
+         <Font size="18.0"/>
+      </font>
+   </Label>
+   <DatePicker fx:id="finalDate" editable="false" layoutX="406.0" layoutY="61.0" prefHeight="25.0" prefWidth="131.0"/>
+   <DatePicker fx:id="currentDate" editable="false" layoutX="382.0" layoutY="105.0" prefHeight="25.0"
+               prefWidth="156.0"/>
+   <Label layoutX="245.0" layoutY="104.0" text="Выберете дату">
+      <font>
+         <Font size="18.0"/>
+      </font>
+   </Label>
+   <Label layoutX="28.0" layoutY="104.0" text="Мои покупки за день">
+      <font>
+         <Font size="18.0"/>
+      </font>
+   </Label>
+   <Button fx:id="addBuyBtn" layoutX="214.0" layoutY="422.0" mnemonicParsing="false" text="Добавить покупку"/>
+   <Button fx:id="removeBuyBtn" layoutX="340.0" layoutY="422.0" mnemonicParsing="false" text="Удалить покупку"/>
+   <Button fx:id="moreAboutBuyBtn" layoutX="459.0" layoutY="422.0" mnemonicParsing="false" text="Подробнее"/>
+   <TextArea fx:id="buyDescription" editable="false" layoutX="220.0" layoutY="182.0" prefHeight="117.0"
+             prefWidth="319.0"/>
+   <Label layoutX="227.0" layoutY="152.0" text="Описание покупки">
+      <font>
+         <Font size="18.0"/>
+      </font>
+   </Label>
+   <Label layoutX="217.0" layoutY="310.0" text="На сегодня ваш лимит">
+      <font>
+         <Font size="18.0"/>
+      </font>
+   </Label>
+   <Label fx:id="currentDayLimit" layoutX="410.0" layoutY="310.0" prefHeight="27.0" prefWidth="141.0" text="0 Руб."
+          textFill="#048c38">
+      <font>
+         <Font size="18.0"/>
+      </font>
+   </Label>
+   <Button fx:id="sessionsBtn" layoutX="459.0" layoutY="139.0" mnemonicParsing="false" prefHeight="25.0"
+           prefWidth="79.0" text="Сессии"/>
+   <Label layoutX="216.0" layoutY="381.0" text="Остаток лимита">
+      <font>
+         <Font size="18.0"/>
+      </font>
+   </Label>
+   <Label fx:id="currentBalanceLimit" layoutX="357.0" layoutY="381.0" prefHeight="27.0" prefWidth="194.0" text="0 Руб."
+          textFill="#048c38">
+      <font>
+         <Font size="18.0"/>
+      </font>
+   </Label>
+   <Label layoutX="217.0" layoutY="346.0" text="Затраты за день">
+      <font>
+         <Font size="18.0"/>
+      </font>
+   </Label>
+   <Label fx:id="costsPerDay" layoutX="362.0" layoutY="346.0" prefHeight="27.0" prefWidth="177.0" text="0 Руб."
+          textFill="#048c38">
+      <font>
+         <Font size="18.0"/>
+      </font>
+   </Label>
+   <Button fx:id="closeDayBtn" layoutX="214.0" layoutY="459.0" mnemonicParsing="false" prefHeight="25.0"
+           prefWidth="156.0" text="Закрыть день"/>
+   <Button fx:id="resumeDayBtn" layoutX="383.0" layoutY="459.0" mnemonicParsing="false" prefHeight="25.0"
+           prefWidth="156.0" text="Возобновить день"/>
+   <Label layoutX="377.0" layoutY="21.0" text="Руб.">
+      <font>
+         <Font size="18.0"/>
+      </font>
+   </Label>
+   <RadioButton fx:id="limitedBuysRB" layoutX="30.0" layoutY="497.0" mnemonicParsing="false"
+                text="Показать только лимитные покупки"/>
+   <RadioButton fx:id="nonLimitedBuysRB" layoutX="275.0" layoutY="497.0" mnemonicParsing="false"
+                text="Показать только НЕ лимитные покупки"/>
 </AnchorPane>

@@ -4,12 +4,14 @@
 <?import javafx.scene.control.ListView?>
 <?import javafx.scene.layout.AnchorPane?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="410.0" prefWidth="613.0" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.eugene.cost.ui.limit.SettingsFXController">
-   <children>
-      <ListView fx:id="sessionList" layoutX="14.0" layoutY="14.0" prefHeight="344.0" prefWidth="584.0" />
-      <Button fx:id="applySession" layoutX="260.0" layoutY="371.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="93.0" text="Применить" />
-      <Button fx:id="moreAboutSession" layoutX="452.0" layoutY="371.0" mnemonicParsing="false" text="Подробнее" />
-      <Button fx:id="removeSession" layoutX="539.0" layoutY="371.0" mnemonicParsing="false" text="Удалить" />
-      <Button fx:id="graph" layoutX="363.0" layoutY="371.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="79.0" text="График" />
-   </children>
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="410.0"
+            prefWidth="613.0" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="org.eugene.cost.ui.limit.SessionsFXController">
+   <ListView fx:id="sessionList" layoutX="14.0" layoutY="14.0" prefHeight="344.0" prefWidth="584.0"/>
+   <Button fx:id="applySessionBtn" layoutX="260.0" layoutY="371.0" mnemonicParsing="false" prefHeight="25.0"
+           prefWidth="93.0" text="Применить"/>
+   <Button fx:id="moreAboutSessionBtn" layoutX="452.0" layoutY="371.0" mnemonicParsing="false" text="Подробнее"/>
+   <Button fx:id="removeSessionBtn" layoutX="539.0" layoutY="371.0" mnemonicParsing="false" text="Удалить"/>
+   <Button fx:id="graph" layoutX="363.0" layoutY="371.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="79.0"
+           text="График"/>
 </AnchorPane>

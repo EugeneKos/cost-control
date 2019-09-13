@@ -1,178 +1,206 @@
 package org.eugene.cost.ui.payment;
 
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.scene.control.*;
+import javafx.scene.control.Button;
+import javafx.scene.control.ComboBox;
+import javafx.scene.control.DateCell;
+import javafx.scene.control.DatePicker;
+import javafx.scene.control.Label;
+import javafx.scene.control.TextArea;
+import javafx.scene.control.TextField;
 import javafx.stage.Stage;
-import org.eugene.cost.logic.model.payment.bank.Bank;
-import org.eugene.cost.logic.model.payment.op.Debit;
-import org.eugene.cost.logic.model.payment.op.Enrollment;
-import org.eugene.cost.logic.model.payment.op.Operations;
-import org.eugene.cost.logic.util.StringUtil;
 
-import javax.swing.*;
+import org.apache.log4j.Logger;
+import org.eugene.cost.config.SpringContext;
+import org.eugene.cost.data.OperationType;
+import org.eugene.cost.data.Payment;
+import org.eugene.cost.data.PaymentOperation;
+import org.eugene.cost.exeption.NotEnoughMoneyException;
+import org.eugene.cost.service.IOperationService;
+import org.eugene.cost.service.IPaymentService;
+import org.eugene.cost.ui.common.MessageType;
+import org.eugene.cost.ui.common.UIUtils;
+import org.springframework.util.StringUtils;
+
 import java.time.LocalDate;
 import java.util.Set;
 
 public class OperationFXController {
-    @FXML
-    private ComboBox<Bank> paymentSystemOne;
-    @FXML
-    private ComboBox<Bank> paymentSystemTwo;
-    @FXML
-    private ComboBox<Operations> operation;
-    @FXML
-    private Label paymentSystemTwoInfo;
+    private static Logger LOGGER = Logger.getLogger(OperationFXController.class);
 
     @FXML
-    private TextField paySum;
+    private ComboBox<Payment> paymentOne;
     @FXML
-    private TextArea descriptionOperation;
+    private ComboBox<Payment> paymentTwo;
+    @FXML
+    private ComboBox<OperationType> operationTypeCB;
+    @FXML
+    private Label paymentTwoInfo;
 
     @FXML
-    private Button ok;
+    private TextField transactionAmount;
     @FXML
-    private Button cancel;
+    private TextArea operationDescription;
 
     @FXML
-    private DatePicker datePicker;
+    private Button okBtn;
+    @FXML
+    private Button cancelBtn;
 
-    private Stage stage;
+    @FXML
+    private DatePicker dateOfOperation;
 
-    private BankFXController bankFXController;
+    private IPaymentService paymentService;
+    private IOperationService operationService;
 
-    private Bank bankOne;
-    private Bank bankTwo;
+    private Stage primaryStage;
 
-    private Operations op;
+    private PaymentFXController paymentFXController;
 
-    public void initialize(Set<Bank> banks){
-        initMainPaymentSystemAndOperations(banks);
-        paymentSystemOne.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
-            bankOne = newValue;
-            initPaymentSystemToTransfer(banks);
-        });
-        paymentSystemTwo.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> bankTwo = newValue);
+    void init(){
+        paymentService = SpringContext.getBean(IPaymentService.class);
+        operationService = SpringContext.getBean(IOperationService.class);
 
-        operation.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
-            op = newValue;
-            if(op == Operations.TRANSFER){
-                paymentSystemTwo.setVisible(true);
-                paymentSystemTwoInfo.setVisible(true);
-                descriptionOperation.setDisable(true);
-                initPaymentSystemToTransfer(banks);
+        dateOfOperation.setDayCellFactory(param -> colorHandleDateOfOperation());
+
+        paymentOne.getItems().addAll(paymentService.getAll());
+
+        paymentOne.getSelectionModel().selectedItemProperty()
+                .addListener((observable, oldValue, newValue) -> {
+                    initPaymentTwo(newValue);
+                    dateOfOperation.setValue(null);
+                });
+
+        paymentTwo.getSelectionModel().selectedItemProperty()
+                .addListener((observable, oldValue, newValue) -> dateOfOperation.setValue(null));
+
+        operationTypeCB.getItems().addAll(OperationType.values());
+
+        operationTypeCB.getSelectionModel().selectedItemProperty()
+                .addListener((observable, oldValue, newValue) -> {
+                    transferSelected(newValue == OperationType.TRANSFER);
+                    dateOfOperation.setValue(null);
+                });
+
+        okBtn.setOnAction(event -> handleOkBtn());
+        cancelBtn.setOnAction(event -> handleCancelBtn());
+
+    }
+
+    void setPrimaryStage(Stage primaryStage) {
+        this.primaryStage = primaryStage;
+    }
+
+    void setPaymentFXController(PaymentFXController paymentFXController) {
+        this.paymentFXController = paymentFXController;
+    }
+
+    private DateCell colorHandleDateOfOperation() {
+        return new DateCell() {
+            @Override
+            public void updateItem(LocalDate item, boolean empty) {
+                OperationType operationTypeCBValue = operationTypeCB.getValue();
+
+                if(operationTypeCBValue == null
+                        || (operationTypeCBValue == OperationType.TRANSFER && paymentTwo.getValue() == null)
+                        || paymentOne.getValue() == null){
+
+                    setDisable(true);
+                    setStyle(UIUtils.RED_COLOR);
+                    return;
+                }
+
+                LocalDate startDate;
+
+                if(operationTypeCBValue != OperationType.TRANSFER){
+                    startDate = paymentOne.getValue().getDateOfCreation();
+                } else {
+                    startDate = paymentOne.getValue().getDateOfCreation()
+                            .isAfter(paymentTwo.getValue().getDateOfCreation())
+                            ? paymentOne.getValue().getDateOfCreation()
+                            : paymentTwo.getValue().getDateOfCreation();
+                }
+
+                if (item.isBefore(startDate) || item.isAfter(LocalDate.now())) {
+                    setDisable(true);
+                    setStyle(UIUtils.RED_COLOR);
+                }
+            }
+        };
+    }
+
+    private void handleOkBtn(){
+        String transactionAmountText = transactionAmount.getText();
+        if(!UIUtils.isContainsNumbers(transactionAmountText)){
+            UIUtils.showOptionPane("Сумма операции заполнена некорректно!",
+                    "Ошибка", MessageType.ERROR);
+            return;
+        }
+
+        Payment paymentOneValue = paymentOne.getValue();
+        if(paymentOneValue == null){
+            UIUtils.showOptionPane("Платежная система 1 не выбрана!",
+                    "Предупреждение", MessageType.WARNING);
+            return;
+        }
+
+        Payment paymentTwoValue = paymentTwo.getValue();
+
+        OperationType operationTypeValue = operationTypeCB.getValue();
+        if(operationTypeValue == null){
+            UIUtils.showOptionPane("Тип операции не выбран!",
+                    "Предупреждение", MessageType.WARNING);
+            return;
+        }
+        if(operationTypeValue == OperationType.TRANSFER){
+            if(paymentTwoValue == null){
+                UIUtils.showOptionPane("Платежная система 2 не выбрана!",
+                        "Предупреждение", MessageType.WARNING);
+                return;
+            }
+        }
+
+        String operationDescriptionText = operationDescription.getText();
+        if(operationTypeValue != OperationType.TRANSFER && StringUtils.isEmpty(operationDescriptionText)){
+            UIUtils.showOptionPane("Описание операции должно быть заполнено!",
+                    "Предупреждение", MessageType.WARNING);
+            return;
+        }
+
+        LocalDate dateOfOperationValue = dateOfOperation.getValue();
+
+        try{
+            if(dateOfOperationValue == null){
+                operationService.create(new PaymentOperation(paymentOneValue, paymentTwoValue),
+                        transactionAmountText, operationDescriptionText, operationTypeValue);
             } else {
-                paymentSystemTwo.setVisible(false);
-                paymentSystemTwoInfo.setVisible(false);
-                descriptionOperation.setDisable(false);
+                operationService.create(new PaymentOperation(paymentOneValue, paymentTwoValue),
+                        transactionAmountText, operationDescriptionText, operationTypeValue, dateOfOperationValue);
             }
-        });
-
-        ok.setOnAction(this::handleOkBtn);
-        cancel.setOnAction(this::handleCancelBtn);
-    }
-
-    public void setStage(Stage stage) {
-        this.stage = stage;
-    }
-
-    public void setBankFXController(BankFXController bankFXController) {
-        this.bankFXController = bankFXController;
-    }
-
-    private void initMainPaymentSystemAndOperations(Set<Bank> banks){
-        for (Bank bank : banks){
-            paymentSystemOne.getItems().add(bank);
-        }
-        for (Operations operation : Operations.values()){
-            this.operation.getItems().add(operation);
-        }
-    }
-
-    private void initPaymentSystemToTransfer(Set<Bank> banks){
-        paymentSystemTwo.getItems().clear();
-        for (Bank bank : banks){
-            if(!bank.equals(bankOne)){
-                paymentSystemTwo.getItems().add(bank);
-            }
-        }
-    }
-
-    private void handleOkBtn(ActionEvent event){
-        if(bankOne == null) {
-            JOptionPane.showMessageDialog(null,
-                    "Платежная система не была выбрана", "Информация", JOptionPane.INFORMATION_MESSAGE);
+        } catch (NotEnoughMoneyException e){
+            UIUtils.showOptionPane(e.getMessage(), "Ошибка", MessageType.ERROR);
+            LOGGER.error(e);
             return;
         }
-        if(op == null){
-            JOptionPane.showMessageDialog(null,
-                    "Операция не была выбрана", "Информация", JOptionPane.INFORMATION_MESSAGE);
-            return;
-        }
-        if(!checkTextPay()){
-            JOptionPane.showMessageDialog(null,
-                    "Не заполнена или неправильно заполнена сумма операции", "Ошибка", JOptionPane.ERROR_MESSAGE);
-            return;
-        }
-        switch (op){
-            case ENROLLMENT:
-                if(datePicker.getValue() == null){
-                    bankOne.executeOperation(new Enrollment(StringUtil.deleteSpace(paySum.getText()),descriptionOperation.getText()));
-                } else if(checkOperationDate(bankOne, datePicker.getValue())) {
-                    bankOne.executeOperation(new Enrollment(StringUtil.deleteSpace(paySum.getText()),descriptionOperation.getText(), datePicker.getValue()));
-                } else {
-                    JOptionPane.showMessageDialog(null,
-                            "Выбранная дата не соответсвует дате создания платежной системы", "Ошибка", JOptionPane.ERROR_MESSAGE);
-                    return;
-                }
-                break;
-            case DEBIT:
-                if(datePicker.getValue() == null){
-                    bankOne.executeOperation(new Debit(StringUtil.deleteSpace(paySum.getText()),descriptionOperation.getText()));
-                } else if(checkOperationDate(bankOne, datePicker.getValue())) {
-                    bankOne.executeOperation(new Debit(StringUtil.deleteSpace(paySum.getText()),descriptionOperation.getText(), datePicker.getValue()));
-                } else {
-                    JOptionPane.showMessageDialog(null,
-                            "Выбранная дата не соответсвует дате создания платежной системы", "Ошибка", JOptionPane.ERROR_MESSAGE);
-                    return;
-                }
-                break;
-            case TRANSFER:
-                if(bankTwo == null) {
-                    JOptionPane.showMessageDialog(null,
-                            "Платежная система не была выбрана", "Информация", JOptionPane.INFORMATION_MESSAGE);
-                    return;
-                }
-                if(datePicker.getValue() == null){
-                    bankOne.executeOperation(new Debit(StringUtil.deleteSpace(paySum.getText()),"Transfer"));
-                    bankTwo.executeOperation(new Enrollment(StringUtil.deleteSpace(paySum.getText()),"Transfer"));
-                } else if(checkOperationDate(bankOne, datePicker.getValue()) & checkOperationDate(bankTwo, datePicker.getValue())) {
-                    bankOne.executeOperation(new Debit(StringUtil.deleteSpace(paySum.getText()),"Transfer", datePicker.getValue()));
-                    bankTwo.executeOperation(new Enrollment(StringUtil.deleteSpace(paySum.getText()),"Transfer", datePicker.getValue()));
-                } else {
-                    JOptionPane.showMessageDialog(null,
-                            "Выбранная дата не соответсвует дате создания платежной системы", "Ошибка", JOptionPane.ERROR_MESSAGE);
-                    return;
-                }
-                break;
-        }
-        bankFXController.updateBalanceAndHistory();
-        bankFXController.saveBanks();
-        stage.close();
+
+        paymentFXController.updateAllAfterOperation();
+        primaryStage.close();
     }
 
-    private boolean checkTextPay(){
-        if(paySum.getText() == null){
-            return false;
-        }
-        return StringUtil.checkSequence(StringUtil.deleteSpace(paySum.getText()));
+    private void handleCancelBtn(){
+        primaryStage.close();
     }
 
-    private boolean checkOperationDate(Bank bank, LocalDate date){
-        return (bank.getDate().isBefore(date) || bank.getDate().isEqual(date));
+    private void initPaymentTwo(Payment exclude){
+        Set<Payment> payments = paymentService.getAll();
+        payments.remove(exclude);
+        paymentTwo.getItems().clear();
+        paymentTwo.getItems().addAll(payments);
     }
 
-    private void handleCancelBtn(ActionEvent event){
-        stage.close();
+    private void transferSelected(boolean transferType){
+        paymentTwoInfo.setVisible(transferType);
+        paymentTwo.setVisible(transferType);
+        operationDescription.setDisable(transferType);
     }
 }

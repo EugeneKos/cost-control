@@ -9,54 +9,56 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="407.0" prefWidth="449.0" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.eugene.cost.ui.payment.OperationFXController">
-   <children>
-      <TextField fx:id="paySum" layoutX="240.0" layoutY="162.0" prefHeight="30.0" prefWidth="107.0">
-         <font>
-            <Font size="14.0" />
-         </font>
-      </TextField>
-      <TextArea fx:id="descriptionOperation" layoutX="24.0" layoutY="226.0" prefHeight="123.0" prefWidth="400.0" />
-      <Label layoutX="14.0" layoutY="163.0" text="Введите сумму операции">
-         <font>
-            <Font size="18.0" />
-         </font>
-      </Label>
-      <Label layoutX="360.0" layoutY="163.0" text="Руб.">
-         <font>
-            <Font size="18.0" />
-         </font>
-      </Label>
-      <Label layoutX="24.0" layoutY="199.0" text="Описание операции">
-         <font>
-            <Font size="14.0" />
-         </font>
-      </Label>
-      <Button fx:id="ok" layoutX="270.0" layoutY="369.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="71.0" text="Ок" />
-      <Button fx:id="cancel" layoutX="353.0" layoutY="369.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="71.0" text="Отмена" />
-      <ComboBox fx:id="paymentSystemOne" layoutX="270.0" layoutY="14.0" prefHeight="25.0" prefWidth="165.0" />
-      <Label layoutX="14.0" layoutY="13.0" text="Выберите платежную систему">
-         <font>
-            <Font size="18.0" />
-         </font>
-      </Label>
-      <Label layoutX="14.0" layoutY="47.0" text="Выберите операцию">
-         <font>
-            <Font size="18.0" />
-         </font>
-      </Label>
-      <ComboBox fx:id="operation" layoutX="270.0" layoutY="48.0" prefHeight="25.0" prefWidth="165.0" />
-      <Label fx:id="paymentSystemTwoInfo" layoutX="14.0" layoutY="84.0" text="Выберите платежную систему" visible="false">
-         <font>
-            <Font size="18.0" />
-         </font>
-      </Label>
-      <ComboBox fx:id="paymentSystemTwo" layoutX="270.0" layoutY="85.0" prefHeight="25.0" prefWidth="165.0" visible="false" />
-      <Label layoutX="14.0" layoutY="120.0" text="Выберите дату (необязательно)">
-         <font>
-            <Font size="18.0" />
-         </font>
-      </Label>
-      <DatePicker fx:id="datePicker" layoutX="294.0" layoutY="120.0" prefHeight="25.0" prefWidth="132.0" />
-   </children>
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="407.0"
+            prefWidth="449.0" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="org.eugene.cost.ui.payment.OperationFXController">
+   <TextField fx:id="transactionAmount" layoutX="240.0" layoutY="162.0" prefHeight="30.0" prefWidth="107.0">
+      <font>
+         <Font size="14.0"/>
+      </font>
+   </TextField>
+   <TextArea fx:id="operationDescription" layoutX="24.0" layoutY="226.0" prefHeight="123.0" prefWidth="400.0"/>
+   <Label layoutX="14.0" layoutY="163.0" text="Введите сумму операции">
+      <font>
+         <Font size="18.0"/>
+      </font>
+   </Label>
+   <Label layoutX="360.0" layoutY="163.0" text="Руб.">
+      <font>
+         <Font size="18.0"/>
+      </font>
+   </Label>
+   <Label layoutX="24.0" layoutY="199.0" text="Описание операции">
+      <font>
+         <Font size="14.0"/>
+      </font>
+   </Label>
+   <Button fx:id="okBtn" layoutX="270.0" layoutY="369.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="71.0"
+           text="Ок"/>
+   <Button fx:id="cancelBtn" layoutX="353.0" layoutY="369.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="71.0"
+           text="Отмена"/>
+   <ComboBox fx:id="paymentOne" layoutX="270.0" layoutY="14.0" prefHeight="25.0" prefWidth="165.0"/>
+   <Label layoutX="14.0" layoutY="13.0" text="Выберите платежную систему">
+      <font>
+         <Font size="18.0"/>
+      </font>
+   </Label>
+   <Label layoutX="14.0" layoutY="47.0" text="Выберите операцию">
+      <font>
+         <Font size="18.0"/>
+      </font>
+   </Label>
+   <ComboBox fx:id="operationTypeCB" layoutX="270.0" layoutY="48.0" prefHeight="25.0" prefWidth="165.0"/>
+   <Label fx:id="paymentTwoInfo" layoutX="14.0" layoutY="84.0" text="Выберите платежную систему" visible="false">
+      <font>
+         <Font size="18.0"/>
+      </font>
+   </Label>
+   <ComboBox fx:id="paymentTwo" layoutX="270.0" layoutY="85.0" prefHeight="25.0" prefWidth="165.0" visible="false"/>
+   <Label layoutX="14.0" layoutY="120.0" text="Выберите дату (необязательно)">
+      <font>
+         <Font size="18.0"/>
+      </font>
+   </Label>
+   <DatePicker fx:id="dateOfOperation" layoutX="294.0" layoutY="120.0" prefHeight="25.0" prefWidth="132.0"/>
 </AnchorPane>

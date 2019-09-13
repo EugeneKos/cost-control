@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.CheckBox?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextArea?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="453.0"
+            prefWidth="467.0" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="org.eugene.cost.ui.limit.BuyFXController">
+   <Label layoutX="14.0" layoutY="15.0" text="Введите сумму покупки">
+      <font>
+         <Font size="18.0"/>
+      </font>
+   </Label>
+   <TextField fx:id="buyPrice" layoutX="240.0" layoutY="14.0" prefHeight="30.0" prefWidth="139.0">
+      <font>
+         <Font size="14.0"/>
+      </font>
+   </TextField>
+   <Label layoutX="394.0" layoutY="15.0" text="Руб.">
+      <font>
+         <Font size="18.0"/>
+      </font>
+   </Label>
+   <Button fx:id="addBuyBtn" layoutX="264.0" layoutY="414.0" mnemonicParsing="false" text="Добавить покупку"/>
+   <Button fx:id="cancelBtn" layoutX="395.0" layoutY="414.0" mnemonicParsing="false" text="Отмена"/>
+   <CheckBox fx:id="nonLimitedCB" layoutX="30.0" layoutY="419.0" mnemonicParsing="false" text="Не вносить в лимит"/>
+   <Label layoutX="15.0" layoutY="371.0" text="Выберите платежную систему">
+      <font>
+         <Font size="18.0"/>
+      </font>
+   </Label>
+   <ComboBox fx:id="paymentTypeCB" layoutX="286.0" layoutY="372.0" prefHeight="25.0" prefWidth="165.0"/>
+   <Label layoutX="14.0" layoutY="55.0" text="Введите магазин или иное место покупки">
+      <font>
+         <Font size="18.0"/>
+      </font>
+   </Label>
+   <TextField fx:id="shopOrPlaceBuy" layoutX="26.0" layoutY="89.0" prefHeight="29.0" prefWidth="407.0">
+      <font>
+         <Font size="13.0"/>
+      </font>
+   </TextField>
+   <TextArea fx:id="buyDescription" layoutX="29.0" layoutY="152.0" prefHeight="163.0" prefWidth="407.0">
+      <font>
+         <Font size="13.0"/>
+      </font>
+   </TextArea>
+   <Label layoutX="14.0" layoutY="122.0" text="Описание покупки">
+      <font>
+         <Font size="18.0"/>
+      </font>
+   </Label>
+   <Label layoutX="14.0" layoutY="332.0" text="Выберите категорию покупки">
+      <font>
+         <Font size="18.0"/>
+      </font>
+   </Label>
+   <ComboBox fx:id="buyCategoriesCB" layoutX="285.0" layoutY="333.0" prefHeight="25.0" prefWidth="165.0"/>
+</AnchorPane>

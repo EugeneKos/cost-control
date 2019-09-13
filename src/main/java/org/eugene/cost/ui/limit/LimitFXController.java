@@ -1,27 +1,42 @@
 package org.eugene.cost.ui.limit;
 
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.scene.control.*;
+import javafx.scene.control.Button;
+import javafx.scene.control.DateCell;
+import javafx.scene.control.DatePicker;
+import javafx.scene.control.Label;
+import javafx.scene.control.ListView;
+import javafx.scene.control.RadioButton;
+import javafx.scene.control.TextArea;
+import javafx.scene.control.TextField;
 import javafx.scene.paint.Paint;
-import org.eugene.cost.App;
-import org.eugene.cost.logic.exeption.IncorrectDateException;
-import org.eugene.cost.logic.model.payment.bank.Bank;
-import org.eugene.cost.logic.model.payment.op.Enrollment;
-import org.eugene.cost.logic.model.limit.Buy;
-import org.eugene.cost.logic.model.limit.Day;
-import org.eugene.cost.logic.model.limit.Session;
-import org.eugene.cost.logic.model.limit.SessionRepository;
-import org.eugene.cost.logic.util.Calculate;
-import org.eugene.cost.logic.util.FileManager;
-import org.eugene.cost.logic.util.StringUtil;
-import org.eugene.cost.ui.payment.BankFXController;
+import javafx.stage.Stage;
 
-import javax.swing.*;
+import org.apache.log4j.Logger;
+import org.eugene.cost.config.SpringContext;
+import org.eugene.cost.data.Buy;
+import org.eugene.cost.data.BuyFilter;
+import org.eugene.cost.data.Day;
+import org.eugene.cost.data.OperationType;
+import org.eugene.cost.data.Payment;
+import org.eugene.cost.data.PaymentOperation;
+import org.eugene.cost.data.Session;
+import org.eugene.cost.data.SessionDetail;
+import org.eugene.cost.exeption.NotEnoughMoneyException;
+import org.eugene.cost.service.IBuyService;
+import org.eugene.cost.service.IDayService;
+import org.eugene.cost.service.IOperationService;
+import org.eugene.cost.service.IPaymentService;
+import org.eugene.cost.service.ISessionService;
+import org.eugene.cost.ui.common.MessageType;
+import org.eugene.cost.ui.common.UIStarter;
+import org.eugene.cost.ui.common.UIUtils;
+
 import java.time.LocalDate;
-import java.util.Set;
 
 public class LimitFXController {
+    private static Logger LOGGER = Logger.getLogger(LimitFXController.class);
+
     @FXML
     private DatePicker beginDate;
     @FXML
@@ -33,378 +48,348 @@ public class LimitFXController {
     private ListView<Buy> buyList;
 
     @FXML
-    private TextField sumLimit;
+    private TextField limitAmount;
     @FXML
-    private TextArea descriptionBuy;
+    private TextArea buyDescription;
 
     @FXML
-    private Label currentLimit;
+    private Label currentBalanceLimit;
     @FXML
-    private Label currentLimitDay;
+    private Label currentDayLimit;
     @FXML
-    private Label currentRateDay;
+    private Label costsPerDay;
 
     @FXML
-    private Button start;
+    private Button startBtn;
     @FXML
-    private Button addBuy;
+    private Button addBuyBtn;
     @FXML
-    private Button removeBuy;
+    private Button removeBuyBtn;
     @FXML
-    private Button moreAboutBuy;
+    private Button moreAboutBuyBtn;
     @FXML
-    private Button closeDay;
+    private Button closeDayBtn;
     @FXML
-    private Button resumeDay;
+    private Button resumeDayBtn;
     @FXML
-    private Button setting;
+    private Button sessionsBtn;
 
     @FXML
-    private RadioButton limitedBuys;
+    private RadioButton limitedBuysRB;
     @FXML
-    private RadioButton nonLimitedBuys;
+    private RadioButton nonLimitedBuysRB;
 
-    private App app;
+    private ISessionService sessionService;
+    private IDayService dayService;
+    private IBuyService buyService;
 
-    private SessionRepository sessionRepository;
+    private IPaymentService paymentService;
+    private IOperationService operationService;
 
-    private Session session;
-
+    private Session currentSession;
     private Day currentDay;
-
     private Buy currentBuy;
 
-    private Set<Bank> banks;
-
-    private BankFXController bankFXController;
-
-
-    private DateCell colorHandleCurrentDate(DatePicker datePicker) {
-        DateCell dateCell = new DateCell() {
-            @Override
-            public void updateItem(LocalDate item, boolean empty) {
-                if (item.isBefore(beginDate.getValue()) || item.isAfter(finalDate.getValue()) || item.isEqual(finalDate.getValue())) {
-                    setDisable(true);
-                    setStyle("-fx-background-color: #ee4040");
-                } else if (session.getDay(item).isClose()) {
-                    setStyle("-fx-background-color: #1fda1c");
-                }
-            }
-        };
-        return dateCell;
-    }
-
-    private DateCell colorHandleBeginDate(DatePicker datePicker) {
-        DateCell dateCell = new DateCell() {
-            @Override
-            public void updateItem(LocalDate item, boolean empty) {
-                if (item.isBefore(LocalDate.now())) {
-                    setDisable(true);
-                    setStyle("-fx-background-color: #ee4040");
-                }
-            }
-        };
-        return dateCell;
-    }
-
-    private DateCell colorHandleFinalDate(DatePicker datePicker) {
-        DateCell dateCell = new DateCell() {
-            @Override
-            public void updateItem(LocalDate item, boolean empty) {
-                if (item.isBefore(LocalDate.now()) || item.isEqual(LocalDate.now())) {
-                    setDisable(true);
-                    setStyle("-fx-background-color: #ee4040");
-                }
-            }
-        };
-        return dateCell;
-    }
-
     @FXML
-    public void initialize() {
-        beginDate.setDayCellFactory(this::colorHandleBeginDate);
-        finalDate.setDayCellFactory(this::colorHandleFinalDate);
-        start.setOnAction(this::handleBtnStart);
-        setting.setOnAction(this::handleBtnSetting);
-        currentDate.setOnAction(this::handleCurrentDate);
-        currentDate.setDayCellFactory(this::colorHandleCurrentDate);
-        addBuy.setOnAction(this::handleBtnAddBuy);
-        removeBuy.setOnAction(this::handleBtnRemoveBuy);
-        moreAboutBuy.setOnAction(this::handleBtnMoreAboutBuy);
-        closeDay.setOnAction(this::handleBtnCloseDay);
-        resumeDay.setOnAction(this::handleBtnResumeDay);
-        limitedBuys.setOnAction(this::handleLimitedRB);
-        nonLimitedBuys.setOnAction(this::handleNonLimitedRB);
+    public void initialize(){
+        sessionService = SpringContext.getBean(ISessionService.class);
+        dayService = SpringContext.getBean(IDayService.class);
+        buyService = SpringContext.getBean(IBuyService.class);
+
+        paymentService = SpringContext.getBean(IPaymentService.class);
+        operationService = SpringContext.getBean(IOperationService.class);
+
         buyList.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
             currentBuy = newValue;
             displayBuyDescription();
         });
-        loadSessionRepository();
-        disableBtnAfterInitSession(true);
+
+        beginDate.setDayCellFactory(param -> colorHandleBeginDate());
+        finalDate.setDayCellFactory(param -> colorHandleFinalDate());
+        currentDate.setDayCellFactory(param -> colorHandleCurrentDate());
+
+        currentDate.setOnAction(event -> handleCurrentDate());
+
+        initBtnHandles();
+
+        disableBtnBeforeChooseSession(true);
     }
 
-    private void loadSessionRepository() {
-        sessionRepository = (SessionRepository) FileManager.loadRepository("sessions");
-        if (sessionRepository == null) {
-            sessionRepository = new SessionRepository();
-        }
+    void setCurrentSession(Session currentSession) {
+        this.currentSession = currentSession;
     }
 
-    public void setApp(App app) {
-        this.app = app;
+    private DateCell colorHandleBeginDate() {
+        return new DateCell(){
+            @Override
+            public void updateItem(LocalDate item, boolean empty) {
+                if (item.isBefore(LocalDate.now())) {
+                    setDisable(true);
+                    setStyle(UIUtils.RED_COLOR);
+                }
+            }
+        };
     }
 
-    public void setBanks(Set<Bank> banks) {
-        this.banks = banks;
+    private DateCell colorHandleFinalDate() {
+        return new DateCell() {
+            @Override
+            public void updateItem(LocalDate item, boolean empty) {
+                if (item.isBefore(LocalDate.now()) || item.isEqual(LocalDate.now())) {
+                    setDisable(true);
+                    setStyle(UIUtils.RED_COLOR);
+                }
+            }
+        };
     }
 
-    public void setBankFXController(BankFXController bankFXController) {
-        this.bankFXController = bankFXController;
+    private DateCell colorHandleCurrentDate() {
+        return new DateCell(){
+            @Override
+            public void updateItem(LocalDate item, boolean empty) {
+                if (item.isBefore(beginDate.getValue()) || item.isAfter(finalDate.getValue())) {
+                    setDisable(true);
+                    setStyle(UIUtils.RED_COLOR);
+                }
+                else if(dayService.getDayByDate(currentSession, item).isClose()){
+                    setStyle(UIUtils.GREEN_COLOR);
+                }
+            }
+        };
     }
 
-    public Session getSession() {
-        return session;
-    }
-
-    private void handleCurrentDate(ActionEvent event) {
+    private void handleCurrentDate() {
         LocalDate current = currentDate.getValue();
-        currentDay = session.getDay(current);
-        setButtonOnCloseDay(currentDay.isClose());
-        updateBuyList();
-        updateLimitsAndRate();
+        currentDay = dayService.getDayByDate(currentSession, current);
+        displayLimitsAndCost();
+        displayBuyList();
+        disableBtnAfterCloseDay(currentDay.isClose());
     }
 
-    private void updateBuyList() {
-        buyList.getItems().clear();
-        currentBuy = null;
-        for (Buy buy : currentDay.getBuyList()) {
-            if (limitedBuys.isSelected()) {
-                if (buy.isLimited()) {
-                    buyList.getItems().add(buy);
-                }
-            } else if (nonLimitedBuys.isSelected()) {
-                if (!buy.isLimited()) {
-                    buyList.getItems().add(buy);
-                }
-            } else {
-                buyList.getItems().add(buy);
-            }
-        }
+    private void initBtnHandles(){
+        startBtn.setOnAction(event -> handleStartBtn());
+        addBuyBtn.setOnAction(event -> handleAddBuyBtn(false));
+        moreAboutBuyBtn.setOnAction(event -> handleMoreAboutBuyBtn());
+        removeBuyBtn.setOnAction(event -> handleRemoveBuyBtn());
+        limitedBuysRB.setOnAction(event -> handleLimitedRB());
+        nonLimitedBuysRB.setOnAction(event -> handleNonLimitedRB());
+        closeDayBtn.setOnAction(event -> handleCloseDayBtn());
+        resumeDayBtn.setOnAction(event -> handleResumeDayBtn());
+        sessionsBtn.setOnAction(event -> handleSessionsBtn());
     }
 
-    private void updateLimitsAndRate() {
-        currentLimit.setText(session.getBalance() + " Руб.");
-        if (session.getBalance().contains("-")) {
-            currentLimit.setTextFill(Paint.valueOf("red"));
-        } else {
-            currentLimit.setTextFill(Paint.valueOf("green"));
-        }
-        if (currentDay != null) {
-            if (currentDay.isClose()) {
-                currentLimitDay.setText("День закрыт");
-                currentLimitDay.setTextFill(Paint.valueOf("red"));
-            } else {
-                currentLimitDay.setText(currentDay.getLimit() + " Руб.");
-                if (currentDay.getLimit().contains("-")) {
-                    currentLimitDay.setTextFill(Paint.valueOf("red"));
-                } else {
-                    currentLimitDay.setTextFill(Paint.valueOf("green"));
-                }
-            }
-            currentRateDay.setText(calculateLimitedOrNonLimitedBuy() + " Руб.");
-        }
-    }
-
-    private String calculateLimitedOrNonLimitedBuy() {
-        String rate = "0";
-        rate = calculateRateOnDay(rate, currentDay, limitedBuys, nonLimitedBuys);
-        return rate;
-    }
-
-    static String calculateRateOnDay(String rate, Day currentDay, RadioButton limitedBuys, RadioButton nonLimitedBuys) {
-        for (Buy buy : currentDay.getBuyList()) {
-            if (limitedBuys.isSelected()) {
-                if (buy.isLimited()) {
-                    rate = Calculate.plus(rate, buy.getPrice());
-                }
-            } else if (nonLimitedBuys.isSelected()) {
-                if (!buy.isLimited()) {
-                    rate = Calculate.plus(rate, buy.getPrice());
-                }
-            } else {
-                rate = Calculate.plus(rate, buy.getPrice());
-            }
-        }
-        return rate;
-    }
-
-    private void handleBtnStart(ActionEvent event) {
-        String limit = StringUtil.deleteSpace(sumLimit.getText());
-        if (!StringUtil.checkSequence(limit)) {
-            JOptionPane.showMessageDialog(null,
-                    "Ошибка заполнения лимита!", "Ошибка", JOptionPane.ERROR_MESSAGE);
+    private void handleStartBtn(){
+        if(UIUtils.isNull(limitAmount.getText()) || beginDate.getValue() == null || finalDate.getValue() == null){
+            UIUtils.showOptionPane("Невозможно создать новый лимит! \n"
+                            + "Для создания нового лимита заполните все необходимые поля.",
+                    "Ошибка", MessageType.ERROR);
             return;
         }
-        if (beginDate.getValue() == null || finalDate.getValue() == null) {
-            JOptionPane.showMessageDialog(null,
-                    "Начальная и конечная даты сессии не установлены!",
-                    "Ошибка", JOptionPane.ERROR_MESSAGE);
+        limitAmount.setText(UIUtils.deleteSpace(limitAmount.getText()));
+        if(!UIUtils.isContainsNumbers(limitAmount.getText())){
+            UIUtils.showOptionPane("Невозможно создать новый лимит! \n"
+                            + "Сумма лимита указана некорректно.",
+                    "Ошибка", MessageType.ERROR);
+            return;
+        }
+        currentSession = sessionService.create(limitAmount.getText(), beginDate.getValue(), finalDate.getValue());
+        afterApplySession(false);
+    }
+
+    private void handleLimitedRB() {
+        if (limitedBuysRB.isSelected()) {
+            nonLimitedBuysRB.setSelected(false);
+        }
+        displayBuyList();
+        displayLimitsAndCost();
+    }
+
+    private void handleNonLimitedRB() {
+        if (nonLimitedBuysRB.isSelected()) {
+            limitedBuysRB.setSelected(false);
+        }
+        displayBuyList();
+        displayLimitsAndCost();
+    }
+
+    private void handleAddBuyBtn(boolean changeBuy){
+        LimitFXController limitFXController = this;
+        UIStarter<BuyFXController> moreFXControllerUIStarter = new UIStarter<BuyFXController>() {
+            @Override
+            public void controllerSetting(BuyFXController controller, Stage primaryStage) {
+                controller.setCurrentSession(currentSession);
+                controller.setCurrentDay(currentDay);
+                controller.setPrimaryStage(primaryStage);
+                controller.setLimitFXController(limitFXController);
+                controller.setCurrentBuy(currentBuy);
+                controller.setChangeBuy(changeBuy);
+                controller.init();
+            }
+        };
+        moreFXControllerUIStarter.start("buy-window.fxml", "Управление покупками");
+    }
+
+    private void handleMoreAboutBuyBtn(){
+        if(currentBuy == null){
+            UIUtils.showOptionPane("Покупка не выбрана!",
+                    "Информация", MessageType.INFORMATION);
+            return;
+        }
+        handleAddBuyBtn(true);
+    }
+
+    private void handleRemoveBuyBtn() {
+        if (currentBuy == null) {
+            return;
+        }
+        Payment payment = paymentService.getByIdentify(currentBuy.getPaymentIdentify());
+        if(payment == null){
+            UIUtils.showOptionPane("Платежная система данной покупки не найдена. \n"
+                    + "Удаление покупки невозможно!", "Ошибка", MessageType.ERROR);
             return;
         }
         try {
-            session = new Session(limit, beginDate.getValue(), finalDate.getValue());
-            session.calculateMediumLimit();
-            sessionRepository.addSession(session);
-            currentDate.setValue(beginDate.getValue());
-            currentDay = session.getDay(beginDate.getValue());
-            setButtonOnCloseDay(currentDay.isClose());
-            updateLimitsAndRate();
-            disableBtnBeforeInitSession(true);
-            disableBtnAfterInitSession(false);
-            FileManager.saveRepository(sessionRepository);
-        } catch (IncorrectDateException e) {
-            JOptionPane.showMessageDialog(null,
-                    "Некорректно выставлены начальная и конечная даты сессии!",
-                    "Ошибка", JOptionPane.ERROR_MESSAGE);
-        }
-    }
+            operationService.create(new PaymentOperation(payment, null), currentBuy.getPrice(),
+                    "Отмена покупки. " + currentBuy.getShopOrPlaceBuy()
+                            + ": " + currentBuy.getDescriptionBuy(),
+                    OperationType.ENROLLMENT);
 
-    private void handleBtnSetting(ActionEvent event) {
-        app.openSetting(this, sessionRepository, session == null);
-    }
-
-    private void handleBtnAddBuy(ActionEvent event) {
-        app.openMore(this, null, banks, currentDay, bankFXController);
-    }
-
-    private void handleBtnRemoveBuy(ActionEvent event) {
-        if (currentBuy == null) {
-            JOptionPane.showMessageDialog(null,
-                    "Покупка не выбрана!", "Информация", JOptionPane.INFORMATION_MESSAGE);
+        } catch (NotEnoughMoneyException e) {
+            LOGGER.error(e);
             return;
         }
-        currentDay.removeBuy(currentBuy, session);
-        for (Bank bank : banks){
-            if(bank.equals(currentBuy.getPayment())){
-                bank.executeOperation(new Enrollment(currentBuy.getPrice(),
-                        "Отмена списание средств [ "+currentBuy.getShopOrPlaceBuy()+" ]"));
+        buyService.removeBuy(currentBuy, currentDay, currentSession);
+        sessionService.update(currentSession);
+        displayLimitsAndCost();
+        displayBuyList();
+    }
+
+    private void handleCloseDayBtn() {
+        dayService.closeDay(currentDay);
+        sessionService.calculateMediumLimit(currentSession);
+        displayLimitsAndCost();
+        disableBtnAfterCloseDay(true);
+    }
+
+    private void handleResumeDayBtn() {
+        dayService.resumeDay(currentDay);
+        sessionService.calculateMediumLimit(currentSession);
+        displayLimitsAndCost();
+        disableBtnAfterCloseDay(false);
+    }
+
+    private void handleSessionsBtn(){
+        LimitFXController limitFXController = this;
+        UIStarter<SessionsFXController> sessionsFXControllerUIStarter = new UIStarter<SessionsFXController>() {
+            @Override
+            public void controllerSetting(SessionsFXController controller, Stage primaryStage) {
+                controller.setLimitFXController(limitFXController);
+                controller.setPrimaryStage(primaryStage);
+                if(currentSession != null){
+                    controller.setSessionDetail(new SessionDetail(
+                            currentSession.getLimit(), currentSession.getBeginDate(), currentSession.getFinalDate()
+                    ));
+                }
+                controller.init();
             }
-        }
-        buyList.getItems().remove(currentBuy);
-        bankFXController.updateBalanceAndHistory();
-        bankFXController.saveBanks();
-        updateLimitsAndRate();
-        FileManager.saveRepository(sessionRepository);
+        };
+        sessionsFXControllerUIStarter.start("sessions-window.fxml", "Управление лимитами");
     }
 
-    private void handleBtnMoreAboutBuy(ActionEvent event) {
-        if (currentBuy == null) {
-            JOptionPane.showMessageDialog(null,
-                    "Покупка не выбрана!", "Информация", JOptionPane.INFORMATION_MESSAGE);
+    void afterApplySession(boolean loadedSession){
+        if(loadedSession){
+            limitAmount.setText(currentSession.getLimit());
+            beginDate.setValue(currentSession.getBeginDate());
+            finalDate.setValue(currentSession.getFinalDate());
+        }
+        currentDate.setValue(currentSession.getBeginDate());
+        currentDay = dayService.getDayByDate(currentSession, currentSession.getBeginDate());
+        limitAmount.setEditable(false);
+        beginDate.setDisable(true);
+        finalDate.setDisable(true);
+        startBtn.setDisable(true);
+        displayLimitsAndCost();
+        displayBuyList();
+        disableBtnBeforeChooseSession(false);
+        disableBtnAfterCloseDay(currentDay.isClose());
+    }
+
+    void displayLimitsAndCost() {
+        String balance = currentSession.getBalance();
+        displayLabel(currentBalanceLimit, balance + UIUtils.RUB, balance.contains("-"));
+        if(currentDay == null){
             return;
         }
-        app.openMore(this, currentBuy, banks, currentDay, bankFXController);
-    }
-
-    private void handleBtnCloseDay(ActionEvent event) {
-        currentDay.setClose(true);
-        session.calculateMediumLimit();
-        updateLimitsAndRate();
-        setButtonOnCloseDay(true);
-        FileManager.saveRepository(sessionRepository);
-    }
-
-    private void handleBtnResumeDay(ActionEvent event) {
-        currentDay.setClose(false);
-        session.calculateMediumLimit();
-        updateLimitsAndRate();
-        setButtonOnCloseDay(false);
-        FileManager.saveRepository(sessionRepository);
-    }
-
-    private void handleLimitedRB(ActionEvent event) {
-        if (limitedBuys.isSelected()) {
-            nonLimitedBuys.setSelected(false);
-        }
-        updateBuyList();
-        updateLimitsAndRate();
-    }
-
-    private void handleNonLimitedRB(ActionEvent event) {
-        if (nonLimitedBuys.isSelected()) {
-            limitedBuys.setSelected(false);
-        }
-        updateBuyList();
-        updateLimitsAndRate();
-    }
-
-    private void setButtonOnCloseDay(boolean isCloseDay) {
-        resumeDay.setDisable(!isCloseDay);
-        addBuy.setDisable(isCloseDay);
-        removeBuy.setDisable(isCloseDay);
-        moreAboutBuy.setDisable(isCloseDay);
-        closeDay.setDisable(isCloseDay);
-    }
-
-    private void displayBuyDescription() {
-        if (currentBuy == null) {
-            descriptionBuy.setText("");
-            return;
-        }
-        descriptionBuy.setText(currentBuy.getDescriptionBuy());
-    }
-
-    public void addBuyIntoCurrentDay(Buy buy) {
-        currentDay.addBuy(buy, session);
-        updateBuyList();
-        updateLimitsAndRate();
-        FileManager.saveRepository(sessionRepository);
-    }
-
-    public void applyChangeBuyIntoCurrentDay(Buy currentBuy, Buy newBuy) {
-        currentDay.removeBuy(currentBuy, session);
-        //currentDay.addBuy(currentBuyIntoBuyList, newBuy, session);
-        currentDay.addBuy(newBuy, session);
-        updateBuyList();
-        updateLimitsAndRate();
-        FileManager.saveRepository(sessionRepository);
-    }
-
-    public void applySession(Session session) {
-        this.session = session;
-        this.session.autoCloseDays();
-        disableBtnBeforeInitSession(true);
-        disableBtnAfterInitSession(false);
-        beginDate.setValue(session.getBeginDate());
-        finalDate.setValue(session.getFinalDate());
-        sumLimit.setText(session.getLimit());
-        if(session.isActiveSession()){
-            currentDate.setValue(LocalDate.now());
-            currentDay = session.getDay(LocalDate.now());
+        if(currentDay.isClose()){
+            displayLabel(currentDayLimit, "День закрыт", currentDay.isClose());
         } else {
-            currentDate.setValue(beginDate.getValue());
-            currentDay = session.getDay(beginDate.getValue());
+            String dayLimit = currentDay.getLimit();
+            displayLabel(currentDayLimit, dayLimit + UIUtils.RUB, dayLimit.contains("-"));
         }
-        setButtonOnCloseDay(currentDay.isClose());
-        updateLimitsAndRate();
-        FileManager.saveRepository(sessionRepository);
+        displayCostPerDay();
     }
 
-    private void disableBtnBeforeInitSession(boolean disable) {
-        sumLimit.setEditable(!disable);
-        beginDate.setDisable(disable);
-        finalDate.setDisable(disable);
-        start.setDisable(disable);
+    private void displayCostPerDay(){
+        if(!limitedBuysRB.isSelected() && !nonLimitedBuysRB.isSelected()){
+            costsPerDay.setText(buyService.getCostsBuys(currentDay,
+                    new BuyFilter(null, BuyFilter.Limit.ALL)) + UIUtils.RUB);
+
+            return;
+        }
+        costsPerDay.setText(buyService.getCostsBuys(currentDay,
+                new BuyFilter(null,
+                        (limitedBuysRB.isSelected() ? BuyFilter.Limit.YES : BuyFilter.Limit.NO)))
+                + UIUtils.RUB);
     }
 
-    private void disableBtnAfterInitSession(boolean disable) {
+    private void displayLabel(Label label, String text, boolean condition){
+        label.setText(text);
+        if(condition){
+            label.setTextFill(Paint.valueOf("red"));
+        } else {
+            label.setTextFill(Paint.valueOf("green"));
+        }
+    }
+
+    void displayBuyList() {
+        buyList.getItems().clear();
+        if(!limitedBuysRB.isSelected() && !nonLimitedBuysRB.isSelected()){
+            buyList.getItems().addAll(buyService.getAllBuysByDay(currentDay,
+                    new BuyFilter(null, BuyFilter.Limit.ALL)));
+
+            return;
+        }
+        buyList.getItems().addAll(buyService.getAllBuysByDay(currentDay,
+                new BuyFilter(null,
+                        (limitedBuysRB.isSelected() ? BuyFilter.Limit.YES : BuyFilter.Limit.NO)
+                )
+        ));
+    }
+
+    private void displayBuyDescription(){
+        if(currentBuy != null){
+            buyDescription.setText(currentBuy.getDescriptionBuy());
+        } else {
+            buyDescription.setText("");
+        }
+    }
+
+    private void disableBtnBeforeChooseSession(boolean disable){
         currentDate.setDisable(disable);
-        addBuy.setDisable(disable);
-        removeBuy.setDisable(disable);
-        moreAboutBuy.setDisable(disable);
-        closeDay.setDisable(disable);
-        resumeDay.setDisable(disable);
-        limitedBuys.setDisable(disable);
-        nonLimitedBuys.setDisable(disable);
+        addBuyBtn.setDisable(disable);
+        removeBuyBtn.setDisable(disable);
+        moreAboutBuyBtn.setDisable(disable);
+        closeDayBtn.setDisable(disable);
+        resumeDayBtn.setDisable(disable);
+        limitedBuysRB.setDisable(disable);
+        nonLimitedBuysRB.setDisable(disable);
+    }
+
+    private void disableBtnAfterCloseDay(boolean disable){
+        addBuyBtn.setDisable(disable);
+        removeBuyBtn.setDisable(disable);
+        moreAboutBuyBtn.setDisable(disable);
+        closeDayBtn.setDisable(disable);
+        resumeDayBtn.setDisable(!disable);
     }
 }

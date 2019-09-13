@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.DatePicker?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ListView?>
+<?import javafx.scene.control.RadioButton?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.Pane?>
+
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="505.0" prefWidth="759.0" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.eugene.cost.ui.payment.OperationHistoryFXController">
+   <BorderPane prefHeight="483.0" prefWidth="673.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+      <top>
+         <Pane prefHeight="41.0" prefWidth="673.0" BorderPane.alignment="CENTER">
+            <RadioButton fx:id="descendingRB" layoutX="201.0" layoutY="12.0" mnemonicParsing="false" text="По убыванию" />
+            <RadioButton fx:id="increaseRB" layoutX="80.0" layoutY="12.0" mnemonicParsing="false" text="По возрастанию" />
+            <DatePicker fx:id="beginHistoriesDate" editable="false" layoutX="395.0" layoutY="8.0" prefHeight="25.0" prefWidth="117.0" />
+            <DatePicker fx:id="finalHistoriesDate" editable="false" layoutX="547.0" layoutY="8.0" prefHeight="25.0" prefWidth="117.0" />
+            <Label layoutX="7.0" layoutY="12.0" text="Сортировка" />
+            <Button fx:id="showHistoryBtn" layoutX="678.0" layoutY="8.0" mnemonicParsing="false" text="Показать" />
+            <Label layoutX="323.0" layoutY="12.0" text="Период    С" />
+            <Label layoutX="520.0" layoutY="12.0" text="ПО" />
+         </Pane>
+      </top>
+      <center>
+         <ListView fx:id="operationList" prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER" />
+      </center>
+   </BorderPane>
+</AnchorPane>
