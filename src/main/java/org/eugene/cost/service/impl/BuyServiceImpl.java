@@ -9,7 +9,9 @@ import org.eugene.cost.service.IBuyService;
 import org.eugene.cost.service.util.Calculate;
 import org.springframework.stereotype.Service;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 @Service
@@ -85,5 +87,25 @@ public class BuyServiceImpl implements IBuyService {
             day.setLimit(Calculate.plus(day.getLimit(), buy.getPrice()));
             session.setBalance(Calculate.plus(session.getBalance(), buy.getPrice()));
         }
+    }
+
+    @Override
+    public Map<String, Double> getLimitBuyCostsByCategories(Session session) {
+        return getBuyCostsByCategories(session, BuyFilter.Limit.YES);
+    }
+
+    @Override
+    public Map<String, Double> getNonLimitBuyCostsByCategories(Session session) {
+        return getBuyCostsByCategories(session, BuyFilter.Limit.NO);
+    }
+
+    private Map<String, Double> getBuyCostsByCategories(Session session, BuyFilter.Limit limit){
+        Map<String, Double> limitBuyCosts = new HashMap<>();
+        List<Day> days = session.getDays();
+        for (BuyCategories buyCategory : BuyCategories.values()){
+            String costsBuys = getCostsBuys(days, new BuyFilter(buyCategory, limit));
+            limitBuyCosts.put(buyCategory.getName(), Double.valueOf(costsBuys));
+        }
+        return limitBuyCosts;
     }
 }
