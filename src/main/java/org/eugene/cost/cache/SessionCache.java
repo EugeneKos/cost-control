@@ -8,7 +8,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
-import javax.annotation.PostConstruct;
 import java.time.LocalDate;
 import java.util.Collection;
 import java.util.HashMap;
@@ -46,8 +45,7 @@ public class SessionCache {
         return sessionCache.values();
     }
 
-    @PostConstruct
-    private void initialize(){
+    public void initialize(){
         Collection<Session> sessions = fileManager.loadAll(SessionUtils.SESSION_REGEXP, Session.class).stream()
                 .filter(Objects::nonNull).collect(Collectors.toList());
 

@@ -2,6 +2,9 @@ package org.eugene.cost.file.impl;
 
 import org.eugene.cost.file.DefaultFileMaster;
 import org.eugene.cost.file.FileManager;
+import org.eugene.cost.file.encryption.EncryptionService;
+
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.io.File;
@@ -11,6 +14,12 @@ import java.util.stream.Collectors;
 
 @Service
 public class BasicFileManager<T> extends DefaultFileMaster<T> implements FileManager<T> {
+
+    @Autowired
+    public BasicFileManager(EncryptionService<byte[]> encryptionService) {
+        super(encryptionService);
+    }
+
     @Override
     public Collection<T> loadAll(String regexpFileNames, Class<T> clazz) {
         Set<String> fileNames = searchFiles(regexpFileNames);
