@@ -10,7 +10,7 @@ import org.eugene.cost.service.IBuyService;
 
 import java.util.Map;
 
-public class BarChartFXController {
+public class SessionChartFXController {
     @FXML
     private BarChart<String, Number> barChart;
 

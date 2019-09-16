@@ -9,7 +9,7 @@ import org.eugene.cost.data.SessionDetail;
 import org.eugene.cost.config.SpringContext;
 import org.eugene.cost.data.Session;
 import org.eugene.cost.service.ISessionService;
-import org.eugene.cost.ui.chart.BarChartFXController;
+import org.eugene.cost.ui.chart.SessionChartFXController;
 import org.eugene.cost.ui.common.MessageType;
 import org.eugene.cost.ui.common.UIStarter;
 import org.eugene.cost.ui.common.UIUtils;
@@ -115,18 +115,18 @@ public class SessionsFXController {
                     "Предупреждение", MessageType.WARNING);
             return;
         }
-        UIStarter<BarChartFXController> barChartFXControllerUIStarter = new UIStarter<BarChartFXController>() {
+        UIStarter<SessionChartFXController> sessionChartFXControllerUIStarter = new UIStarter<SessionChartFXController>() {
             @Override
             protected boolean isResizable() {
                 return true;
             }
 
             @Override
-            public void controllerSetting(BarChartFXController controller, Stage primaryStage) {
+            public void controllerSetting(SessionChartFXController controller, Stage primaryStage) {
                 controller.setCurrentSession(currentSession);
                 controller.init();
             }
         };
-        barChartFXControllerUIStarter.start("bar-chart.fxml", "Диаграмма покупок");
+        sessionChartFXControllerUIStarter.start("session-chart-window.fxml", "Диаграмма покупок");
     }
 }
