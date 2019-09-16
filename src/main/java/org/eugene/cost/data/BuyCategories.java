@@ -1,6 +1,6 @@
 package org.eugene.cost.data;
 
-public enum  BuyCategories {
+public enum BuyCategories {
     PRODUCT("Продукты", ShortName.P), ALCOHOL("Алкоголь", ShortName.AL), BAR("Бар", ShortName.B),
 
     RESTAURANT("Ресторан", ShortName.R), CLOTHES("Одежда", ShortName.C), OTHER("Прочее", ShortName.O),

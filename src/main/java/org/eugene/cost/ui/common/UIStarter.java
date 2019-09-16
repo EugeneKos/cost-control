@@ -4,6 +4,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
+
 import org.eugene.cost.exeption.ApplicationError;
 
 public abstract class UIStarter<T> {
@@ -17,12 +18,16 @@ public abstract class UIStarter<T> {
             controllerSetting(controller, primaryStage);
             Scene scene = new Scene(panel);
             primaryStage.setTitle(title);
-            primaryStage.setResizable(false);
+            primaryStage.setResizable(isResizable());
             primaryStage.setScene(scene);
             primaryStage.show();
         } catch (Exception e){
             throw new ApplicationError("Ошибка запуска приложения", e);
         }
+    }
+
+    protected boolean isResizable(){
+        return false;
     }
 
     public abstract void controllerSetting(T controller, Stage primaryStage);

@@ -12,6 +12,6 @@
            prefWidth="93.0" text="Применить"/>
    <Button fx:id="moreAboutSessionBtn" layoutX="452.0" layoutY="371.0" mnemonicParsing="false" text="Подробнее"/>
    <Button fx:id="removeSessionBtn" layoutX="539.0" layoutY="371.0" mnemonicParsing="false" text="Удалить"/>
-   <Button fx:id="graph" layoutX="363.0" layoutY="371.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="79.0"
+   <Button fx:id="graphBtn" layoutX="363.0" layoutY="371.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="79.0"
            text="График"/>
 </AnchorPane>

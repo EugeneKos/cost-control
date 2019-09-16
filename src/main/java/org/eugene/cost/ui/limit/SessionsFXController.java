@@ -4,10 +4,12 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.ListView;
 import javafx.stage.Stage;
+
 import org.eugene.cost.data.SessionDetail;
 import org.eugene.cost.config.SpringContext;
 import org.eugene.cost.data.Session;
 import org.eugene.cost.service.ISessionService;
+import org.eugene.cost.ui.chart.SessionChartFXController;
 import org.eugene.cost.ui.common.MessageType;
 import org.eugene.cost.ui.common.UIStarter;
 import org.eugene.cost.ui.common.UIUtils;
@@ -23,7 +25,7 @@ public class SessionsFXController {
     @FXML
     private Button removeSessionBtn;
     @FXML
-    private Button graph;
+    private Button graphBtn;
 
     private Stage primaryStage;
 
@@ -45,6 +47,7 @@ public class SessionsFXController {
         applySessionBtn.setOnAction(event -> handleApplySessionBtn());
         removeSessionBtn.setOnAction(event -> handleRemoveSessionBtn());
         moreAboutSessionBtn.setOnAction(event -> handleMoreAboutSessionBtn());
+        graphBtn.setOnAction(event -> handleGraphBtn());
     }
 
     void setLimitFXController(LimitFXController limitFXController) {
@@ -104,5 +107,26 @@ public class SessionsFXController {
             }
         };
         sessionInfoFXControllerUIStarter.start("sessions-info-window.fxml", "Детализация о лимите");
+    }
+
+    private void handleGraphBtn(){
+        if(currentSession == null){
+            UIUtils.showOptionPane("Сессия для построения графика не выбрана!",
+                    "Предупреждение", MessageType.WARNING);
+            return;
+        }
+        UIStarter<SessionChartFXController> sessionChartFXControllerUIStarter = new UIStarter<SessionChartFXController>() {
+            @Override
+            protected boolean isResizable() {
+                return true;
+            }
+
+            @Override
+            public void controllerSetting(SessionChartFXController controller, Stage primaryStage) {
+                controller.setCurrentSession(currentSession);
+                controller.init();
+            }
+        };
+        sessionChartFXControllerUIStarter.start("session-chart-window.fxml", "Диаграмма покупок");
     }
 }

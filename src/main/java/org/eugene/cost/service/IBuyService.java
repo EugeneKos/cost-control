@@ -7,6 +7,7 @@ import org.eugene.cost.data.Day;
 import org.eugene.cost.data.Session;
 
 import java.util.List;
+import java.util.Map;
 
 public interface IBuyService {
     String getCostsBuys(Day day, BuyFilter filter);
@@ -18,4 +19,7 @@ public interface IBuyService {
                BuyCategories buyCategories, String paymentIdentify, Day day, Session session);
 
     void removeBuy(Buy buy, Day day, Session session);
+
+    Map<String, Double> getLimitBuyCostsByCategories(Session session);
+    Map<String, Double> getNonLimitBuyCostsByCategories(Session session);
 }

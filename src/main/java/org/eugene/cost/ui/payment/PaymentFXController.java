@@ -7,8 +7,8 @@ import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import javafx.scene.control.RadioButton;
 import javafx.scene.image.ImageView;
-
 import javafx.stage.Stage;
+
 import org.eugene.cost.config.SpringContext;
 import org.eugene.cost.data.Operation;
 import org.eugene.cost.data.OperationFilter;
@@ -16,6 +16,7 @@ import org.eugene.cost.data.Payment;
 import org.eugene.cost.data.PaymentType;
 import org.eugene.cost.service.IOperationService;
 import org.eugene.cost.service.IPaymentService;
+import org.eugene.cost.ui.chart.PaymentChartInitFXController;
 import org.eugene.cost.ui.common.MessageType;
 import org.eugene.cost.ui.common.UIStarter;
 import org.eugene.cost.ui.common.UIUtils;
@@ -91,6 +92,7 @@ public class PaymentFXController {
 
         imageCard.setOnMouseClicked(event -> handleImageCard());
         imageCash.setOnMouseClicked(event -> handleImageCash());
+        imageGraph.setOnMouseClicked(event -> handleImageGraph());
 
         limitControlBtn.setOnAction(event -> handleLimitControlBtn());
         financeControlBtn.setOnAction(event -> handleFinanceControlBtn());
@@ -150,6 +152,14 @@ public class PaymentFXController {
         };
         operationHistoryFXControllerUIStarter.start("operation-history-window.fxml",
                 "История операций: " + paymentForOperationHistory.getIdentify());
+    }
+
+    private void handleImageGraph(){
+        UIStarter<PaymentChartInitFXController> paymentChartInitFXControllerUIStarter = new UIStarter<PaymentChartInitFXController>() {
+            @Override
+            public void controllerSetting(PaymentChartInitFXController controller, Stage primaryStage) {}
+        };
+        paymentChartInitFXControllerUIStarter.start("payment-chart-init-window.fxml", "Построение графиков");
     }
 
     private void handleIncreaseRB(){
