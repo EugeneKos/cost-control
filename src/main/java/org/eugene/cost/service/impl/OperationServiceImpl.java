@@ -106,7 +106,7 @@ public class OperationServiceImpl implements IOperationService {
 
     private String debitBalance(Payment payment, String transactionAmount) throws NotEnoughMoneyException {
         String debit = Calculate.minus(payment.getBalance(), transactionAmount);
-        if(Integer.parseInt(debit) < 0){
+        if(Double.parseDouble(debit) < 0){
             throw new NotEnoughMoneyException("Ошибка операции " + OperationType.DEBIT.toString()
                     + ": Недостаточно средсв на " + payment.getIdentify());
         }
