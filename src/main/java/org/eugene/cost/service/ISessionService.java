@@ -16,4 +16,6 @@ public interface ISessionService {
 
     void calculateMediumLimit(Session session);
     void autoCloseDays(Session session);
+
+    boolean isActive(Session session);
 }

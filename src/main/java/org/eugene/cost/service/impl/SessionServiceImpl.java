@@ -128,4 +128,15 @@ public class SessionServiceImpl implements ISessionService {
         }
         calculateMediumLimit(session);
     }
+
+    @Override
+    public boolean isActive(Session session) {
+        boolean activeSessionConditionOne = session.getBeginDate().isBefore(LocalDate.now())
+                || session.getBeginDate().isEqual(LocalDate.now());
+
+        boolean activeSessionConditionTwo = session.getFinalDate().isAfter(LocalDate.now())
+                || session.getFinalDate().isEqual(LocalDate.now());
+
+        return activeSessionConditionOne && activeSessionConditionTwo;
+    }
 }

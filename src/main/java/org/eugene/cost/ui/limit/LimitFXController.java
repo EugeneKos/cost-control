@@ -302,8 +302,13 @@ public class LimitFXController {
             beginDate.setValue(currentSession.getBeginDate());
             finalDate.setValue(currentSession.getFinalDate());
         }
-        currentDate.setValue(currentSession.getBeginDate());
-        currentDay = dayService.getDayByDate(currentSession, currentSession.getBeginDate());
+        if(sessionService.isActive(currentSession)){
+            currentDate.setValue(LocalDate.now());
+            currentDay = dayService.getDayByDate(currentSession, LocalDate.now());
+        } else {
+            currentDate.setValue(currentSession.getBeginDate());
+            currentDay = dayService.getDayByDate(currentSession, currentSession.getBeginDate());
+        }
         limitAmount.setEditable(false);
         beginDate.setDisable(true);
         finalDate.setDisable(true);

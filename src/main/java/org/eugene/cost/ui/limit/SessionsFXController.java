@@ -68,6 +68,7 @@ public class SessionsFXController {
                     "Информация", MessageType.INFORMATION);
             return;
         }
+        sessionService.autoCloseDays(currentSession);
         limitFXController.setCurrentSession(currentSession);
         limitFXController.afterApplySession(true);
         primaryStage.close();
