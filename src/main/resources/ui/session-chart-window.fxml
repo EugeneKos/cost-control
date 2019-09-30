@@ -3,18 +3,17 @@
 <?import javafx.scene.chart.BarChart?>
 <?import javafx.scene.chart.CategoryAxis?>
 <?import javafx.scene.chart.NumberAxis?>
+<?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.AnchorPane?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="450.0"
-            prefWidth="641.0" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1"
-            fx:controller="org.eugene.cost.ui.chart.SessionChartFXController">
-    <BarChart fx:id="barChart" prefHeight="450.0" prefWidth="641.0" AnchorPane.bottomAnchor="0.0"
-              AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="-0.33333333333337123" AnchorPane.topAnchor="0.0">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="450.0" prefWidth="641.0" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.eugene.cost.ui.chart.SessionChartFXController">
+    <BarChart fx:id="barChart" prefHeight="411.0" prefWidth="641.0" AnchorPane.bottomAnchor="39.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
       <xAxis>
-          <CategoryAxis side="BOTTOM"/>
+          <CategoryAxis side="BOTTOM" />
       </xAxis>
       <yAxis>
-          <NumberAxis side="LEFT"/>
+          <NumberAxis side="LEFT" />
       </yAxis>
     </BarChart>
+   <TextField fx:id="pointValue" editable="false" layoutX="43.0" layoutY="411.0" prefHeight="25.0" prefWidth="201.0" AnchorPane.bottomAnchor="9.0" AnchorPane.leftAnchor="33.0" />
 </AnchorPane>

@@ -85,12 +85,12 @@ public class PaymentChartFXController {
             Double value = dateDoubleMap.get(currentDate);
             if(value != null){
                 dataSeries.getData().add(new XYChart.Data<>(DateUtils.dateToString(currentDate), value));
-                for (XYChart.Data data : dataSeries.getData()){
-                    data.getNode().setOnMouseClicked(event ->
-                            pointValue.setText("Текущее значение: " + data.getYValue()));
-                }
             }
             currentDate = currentDate.plusDays(1);
+        }
+        for (XYChart.Data data : dataSeries.getData()){
+            data.getNode().setOnMouseClicked(event ->
+                    pointValue.setText("Текущее значение: " + data.getYValue()));
         }
     }
 }
