@@ -186,7 +186,7 @@ public class BuyFXController {
             operationService.create(new PaymentOperation(currentPayment, null), buyPrice.getText(),
                     "Покупка. " + shopOrPlaceBuy.getText()
                             + ": " + buyDescription.getText(),
-                    OperationType.DEBIT);
+                    OperationType.DEBIT, currentDay.getDate());
 
         } catch (NotEnoughMoneyException e) {
             UIUtils.showOptionPane("Невозможно совершить данную операцию! \n"
