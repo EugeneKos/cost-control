@@ -11,7 +11,7 @@ import java.util.Properties;
 public final class PropertyLoader {
     private static Logger LOGGER = Logger.getLogger(PropertyLoader.class);
 
-    private static final String PROPERTIES_FILE = "config/cost-control-config.properties";
+    private static final String PROPERTIES_FILE = "etc/cost-control-config.properties";
 
     private static final Properties properties = new Properties();
 
