@@ -14,6 +14,7 @@ public interface IBuyService {
     String getCostsBuys(List<Day> days, BuyFilter filter);
 
     List<Buy> getAllBuysByDay(Day day, BuyFilter filter);
+    List<Buy> getAllBuysBySession(Session session, BuyFilter filter);
 
     Buy addBuy(String price, String shopOrPlaceBuy, String descriptionBuy, boolean limited,
                BuyCategories buyCategories, String paymentIdentify, Day day, Session session);

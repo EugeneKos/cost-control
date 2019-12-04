@@ -10,6 +10,7 @@ import org.eugene.cost.service.util.Calculate;
 import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -40,6 +41,15 @@ public class BuyServiceImpl implements IBuyService {
         return day.getBuys().stream()
                 .filter(buy -> filtering(buy, filter))
                 .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<Buy> getAllBuysBySession(Session session, BuyFilter filter) {
+        List<Buy> buys = new LinkedList<>();
+        for (Day day : session.getDays()){
+            buys.addAll(getAllBuysByDay(day, filter));
+        }
+        return buys;
     }
 
     private boolean filtering(Buy buy, BuyFilter filter){

@@ -33,7 +33,9 @@ public class SessionInfoFXController {
     @FXML
     private ListView<String> dayList;
     @FXML
-    private ListView<Buy> buyList;
+    private ListView<Buy> buyOnDayList;
+    @FXML
+    private ListView<Buy> buyOnCategoryList;
 
     @FXML
     private TextArea buyDescription;
@@ -84,7 +86,10 @@ public class SessionInfoFXController {
         dayList.getSelectionModel().selectedItemProperty()
                 .addListener((observable, oldValue, newValue) -> handleDayList(newValue));
 
-        buyList.getSelectionModel().selectedItemProperty()
+        buyOnDayList.getSelectionModel().selectedItemProperty()
+                .addListener((observable, oldValue, newValue) -> displayBuyDescription(newValue));
+
+        buyOnCategoryList.getSelectionModel().selectedItemProperty()
                 .addListener((observable, oldValue, newValue) -> displayBuyDescription(newValue));
 
         limitedBuysRB.setOnAction(event -> handleLimitedBuysRB());
@@ -115,31 +120,35 @@ public class SessionInfoFXController {
 
         currentDateOfDay.setText(dateOfDay);
         displayCostsPerDay();
-        displayBuyList();
+        displayBuyOnDayList();
     }
 
     private void handleComboBoxCategories(){
         displayCostsPerDay();
-        displayBuyList();
+        displayBuyOnDayList();
         displayCostsPerLimit();
+        displayBuyOnCategoryList();
     }
 
     private void handleLimitedBuysRB() {
         if (limitedBuysRB.isSelected()) {
             nonLimitedBuysRB.setSelected(false);
         }
-        displayCostsPerDay();
-        displayBuyList();
-        displayCostsPerLimit();
+        displayAllByHandleRB();
     }
 
     private void handleNonLimitedBuysRB() {
         if (nonLimitedBuysRB.isSelected()) {
             limitedBuysRB.setSelected(false);
         }
+        displayAllByHandleRB();
+    }
+
+    private void displayAllByHandleRB(){
         displayCostsPerDay();
-        displayBuyList();
+        displayBuyOnDayList();
         displayCostsPerLimit();
+        displayBuyOnCategoryList();
     }
 
     private void handleCloseBtn(){
@@ -164,19 +173,35 @@ public class SessionInfoFXController {
         displayCosts(costsPerDay, Collections.singletonList(currentDay));
     }
 
-    private void displayBuyList(){
+    private void displayBuyOnDayList(){
         if(currentDay == null){
             return;
         }
-        buyList.getItems().clear();
+        buyOnDayList.getItems().clear();
 
         if(!limitedBuysRB.isSelected() && !nonLimitedBuysRB.isSelected()){
-            buyList.getItems().addAll(buyService.getAllBuysByDay(currentDay,
+            buyOnDayList.getItems().addAll(buyService.getAllBuysByDay(currentDay,
                     new BuyFilter(currentBuyCategory, BuyFilter.Limit.ALL)));
 
             return;
         }
-        buyList.getItems().addAll(buyService.getAllBuysByDay(currentDay,
+        buyOnDayList.getItems().addAll(buyService.getAllBuysByDay(currentDay,
+                new BuyFilter(currentBuyCategory,
+                        (limitedBuysRB.isSelected() ? BuyFilter.Limit.YES : BuyFilter.Limit.NO)
+                )
+        ));
+    }
+
+    private void displayBuyOnCategoryList(){
+        buyOnCategoryList.getItems().clear();
+
+        if(!limitedBuysRB.isSelected() && !nonLimitedBuysRB.isSelected()){
+            buyOnCategoryList.getItems().addAll(buyService.getAllBuysBySession(currentSession,
+                    new BuyFilter(currentBuyCategory, BuyFilter.Limit.ALL)));
+
+            return;
+        }
+        buyOnCategoryList.getItems().addAll(buyService.getAllBuysBySession(currentSession,
                 new BuyFilter(currentBuyCategory,
                         (limitedBuysRB.isSelected() ? BuyFilter.Limit.YES : BuyFilter.Limit.NO)
                 )
