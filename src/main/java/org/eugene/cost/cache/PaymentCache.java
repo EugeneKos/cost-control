@@ -4,7 +4,6 @@ import org.eugene.cost.data.Payment;
 import org.eugene.cost.file.FileManager;
 import org.eugene.cost.service.util.PaymentUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
 import java.util.Collection;
@@ -20,7 +19,7 @@ public class PaymentCache {
     private FileManager<Payment> fileManager;
 
     @Autowired
-    public PaymentCache(@Qualifier("basicFileManager") FileManager<Payment> fileManager) {
+    public PaymentCache(FileManager<Payment> fileManager) {
         this.fileManager = fileManager;
     }
 

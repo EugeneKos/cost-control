@@ -1,9 +1,10 @@
 package org.eugene.cost.service.impl;
 
-import org.eugene.cost.config.SpringConfiguration;
+import org.eugene.cost.config.ServiceSpringConfiguration;
 import org.eugene.cost.data.Day;
 import org.eugene.cost.data.Session;
 import org.eugene.cost.service.ISessionService;
+
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -15,7 +16,7 @@ import java.time.LocalDate;
 import java.util.List;
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(classes = SpringConfiguration.class)
+@ContextConfiguration(classes = ServiceSpringConfiguration.class)
 public class SessionServiceImplTest {
     @Autowired
     private ISessionService sessionService;

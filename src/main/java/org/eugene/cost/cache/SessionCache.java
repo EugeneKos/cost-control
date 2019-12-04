@@ -5,7 +5,6 @@ import org.eugene.cost.data.SessionDetail;
 import org.eugene.cost.file.FileManager;
 import org.eugene.cost.service.util.SessionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -22,7 +21,7 @@ public class SessionCache {
     private FileManager<Session> fileManager;
 
     @Autowired
-    public SessionCache(@Qualifier("basicFileManager") FileManager<Session> fileManager) {
+    public SessionCache(FileManager<Session> fileManager) {
         this.fileManager = fileManager;
     }
 

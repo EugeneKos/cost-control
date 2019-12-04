@@ -7,7 +7,6 @@ import org.eugene.cost.file.FileManager;
 import org.eugene.cost.service.IPaymentService;
 import org.eugene.cost.service.util.PaymentUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -22,8 +21,7 @@ public class PaymentServiceImpl implements IPaymentService {
     private FileManager<Payment> fileManager;
 
     @Autowired
-    public PaymentServiceImpl(PaymentCache paymentCache,
-                              @Qualifier("basicFileManager") FileManager<Payment> fileManager) {
+    public PaymentServiceImpl(PaymentCache paymentCache, FileManager<Payment> fileManager) {
 
         this.paymentCache = paymentCache;
         this.fileManager = fileManager;
