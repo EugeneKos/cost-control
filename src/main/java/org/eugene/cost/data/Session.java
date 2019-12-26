@@ -6,7 +6,7 @@ import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.List;
 
-public class Session implements Serializable {
+public class Session implements Serializable, Comparable<Session> {
     private static final long serialVersionUID = 8928578891058423136L;
 
     private final String limit;
@@ -54,5 +54,10 @@ public class Session implements Serializable {
     @Override
     public String toString() {
         return SessionUtils.getSessionDescription(limit, beginDate, finalDate);
+    }
+
+    @Override
+    public int compareTo(Session session) {
+        return this.finalDate.compareTo(session.finalDate);
     }
 }

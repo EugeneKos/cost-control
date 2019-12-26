@@ -14,6 +14,9 @@ import org.eugene.cost.ui.common.MessageType;
 import org.eugene.cost.ui.common.UIStarter;
 import org.eugene.cost.ui.common.UIUtils;
 
+import java.util.Collections;
+import java.util.List;
+
 public class SessionsFXController {
     @FXML
     private ListView<Session> sessionList;
@@ -40,7 +43,10 @@ public class SessionsFXController {
     void init(){
         sessionService = SpringContext.getBean(ISessionService.class);
 
-        sessionList.getItems().addAll(sessionService.getAll());
+        List<Session> sessions = sessionService.getAll();
+        Collections.sort(sessions);
+
+        sessionList.getItems().addAll(sessions);
         sessionList.getSelectionModel().selectedItemProperty()
                 .addListener((observable, oldValue, newValue) -> currentSession = newValue);
 
